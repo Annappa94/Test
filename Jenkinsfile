@@ -39,6 +39,19 @@ pipeline {
                         WORKING_DIR = 'farms'
                         CDN_DIST = 'E37R80ADENNX4X'
                     } 
+                        if (params.ENV_TYPE == 'staging') {
+                        NG_COMMAND = "node --max_old_space_size=6144 ./node_modules/@angular/cli/bin/ng build"
+                        RM_SLACK_CHANNEL = "rm-svc-staging-deployments"
+                        RM_SLACK_TOKEN = "08db7e7a-e27d-4760-8295-06fb022bfe05"
+
+                        AWS_CREDENTIALS = 'svc_ui_deploy_staging'
+                        REGION = 'ap-south-1'
+                        S3_BUCKET = 'occ-staging'
+                        S3_BUCKET_DIST = 'dist/components/farms/'
+                        S3_BUCKET_ARTIFACT_DIST = 'artifacts/farms/'
+                        WORKING_DIR = 'farms'
+                        CDN_DIST = 'E37R80ADENNX4X'
+                    } 
                     if (params.ENV_TYPE == 'production') {
                         NG_COMMAND = "node --max_old_space_size=10240 ./node_modules/@angular/cli/bin/ng build --configuration=production --output-hashing=all"
                         RM_SLACK_CHANNEL = "rm-svc-prod-deployments"
