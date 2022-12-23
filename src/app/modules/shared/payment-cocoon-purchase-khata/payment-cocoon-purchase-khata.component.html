@@ -1,0 +1,113 @@
+<ng-container *ngIf="!isListingPage">
+    <button matTooltip="Pay Now" class="btn btn-sm btn-icon float-right" 
+    *ngIf="orderDetails?.orderPaymentStatus == 'Pending' && rolesService.checkAccess(user.roles, {type: 'actions', component: 'CocoonOrderDetailsComponent', action: 'payment'})" 
+            (click)="payNow(payment, orderDetails)"> 
+             <i class="fas fa-money-check-alt text-success"></i>
+    </button>
+</ng-container>
+
+<ng-container *ngIf="isListingPage">
+<span matTooltip="Add Payment" class="btn btn-icon btn-sm mr-1 mt-1" 
+    *ngIf="orderDetails?.orderPaymentStatus.toUpperCase() === 'PENDING' && rolesService.checkAccess(user.roles, {type: 'actions', component: 'CocoonOrdersComponent', action: 'payment'})"
+      (click)="payNow(payment, orderDetails)">
+  <i class="fas fa-money-check-alt text-success"></i>
+</span>
+</ng-container>
+
+
+ <div class="payment-confirmation-preview">
+            <div>
+                <form [formGroup]="reelerPaymentForm">
+                    <ng-template #payment let-c="close" let-d="dismiss">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Payment Details</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>Code : <strong>{{paymentDetail?.code}}</strong></p>
+                            <p>Cost Per Kg : <strong>Rs. {{paymentDetail?.sellingPricePerKg?.toFixed(2)}}</strong></p>
+                            <p>Total Weight : <strong>{{paymentDetail?.totalWeight}} kgs</strong></p>
+                            <p *ngIf="orderDetails?.grossAmount">Gross Amount : <strong>Rs. {{paymentDetail?.grossAmount?.toLocaleString('en-IN')}}</strong></p>
+                            <p *ngIf="orderDetails?.discount > 0">Discount : <strong>Rs. {{paymentDetail?.discount?.toLocaleString('en-IN')}}</strong></p>
+                            <p>Total Amount : <strong>Rs. {{paymentDetail?.totalAmount?.toLocaleString('en-IN')}}</strong></p>
+                            <p>Due Amount : <strong>Rs. <span class="text-danger h2">{{highlightText[0]}}</span><span *ngIf="highlightText[1]">.{{highlightText[1]}}</span></strong></p>
+                            <p *ngIf="reelerPaymentForm.get('paymentMode').value == 'Mudra'">Available Mudra Credit Limit : Rs. <strong class="text-danger h4">{{masterLoanInfo?.availableCreditLimit}}</strong></p>
+                            <div>Payment Mode: 
+                                <mat-radio-group formControlName="paymentMode" class="pr-0">
+                                    <mat-radio-button class="example-margin col-4" value="Self">
+                                        Self
+                                    </mat-radio-button> 
+                                    <ng-container *ngIf="masterLoanInfoResponseArray.length && !mudraSalesPayment">
+                                        <mat-radio-button class="example-margin col-4" value="Mudra">
+                                            Mudra
+                                        </mat-radio-button>
+                                    </ng-container>
+                                </mat-radio-group>
+                              </div>
+                            <div class="form form-label-right">
+                                <div class="form-group row">
+          
+                                    <div class="col-lg-6 mt-2">
+                                        <label class="form-label">Amount<span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control form-control-lg" name="amount"
+                                          placeholder="amount" autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('amount')"
+                                          [class.is-valid]="isControlValidForReeler('amount')" formControlName="amount" />
+                                        <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'amount')">
+                                            Amount is required
+                                        </div>
+                                        <div style="color: #F64E60;" *ngIf="reelerPaymentForm.value.amount > paymentDetail.dueAmount">
+                                            Amount Exceeds
+                                        </div>
+                                        <div style="color: #F64E60;" *ngIf="reelerPaymentForm.get('paymentMode').value == 'Mudra' && reelerPaymentForm.value.amount > masterLoanInfo?.availableCreditLimit">
+                                            Available Credit Limit: {{masterLoanInfo?.availableCreditLimit}}
+                                        </div>
+                                    </div>
+          
+                                    <div class="col-lg-6 mt-2">
+                                        <label class="form-label">Reference Number<span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control form-control-lg" name="referenceNumber"
+                                          [readonly]="reelerPaymentForm.get('paymentMode').value == 'Mudra'"
+                                          [ngClass]="reelerPaymentForm.get('paymentMode').value == 'Mudra'?'form-control-solid':''"
+                                          placeholder="Reference Number" autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('referenceNumber')"
+                                          [class.is-valid]="isControlValidForReeler('referenceNumber')" formControlName="referenceNumber" />
+                                        <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'referenceNumber')">
+                                            Reference Number is required
+                                        </div>
+                                    </div>
+                                </div>
+                                <ng-container *ngIf="reelerPaymentForm.get('paymentMode').value == 'Mudra'">
+                                    <div class="row mx-0 justify-content-end" *ngIf="!reelerPaymentForm.get('otpGenerated').value">
+                                        <button type="button" class="btn btn-sm btn-success" (click)="generateOTP()">Generate OTP</button>
+                                    </div>
+
+                                    <div class="row" *ngIf="reelerPaymentForm.get('otpGenerated').value">
+                                        <div class="col-lg-12 mt-2">
+                                            <label class="form-label">Enter the OTP<span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control form-control-lg" name="otp"
+                                              placeholder="enter the otp" autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('otp')"
+                                              [class.is-valid]="isControlValidForReeler('otp')" formControlName="otp" />
+                                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'otp')">
+                                                OTP is required
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-12 d-flex justify-content-end" [ngClass]="{'mt-2': !reelerPaymentForm.get('otp').value}">
+                                            <span class="font-weight-bold cursor-pointer text-warning" *ngIf="reelerPaymentForm.get('setResend').value && timeLeft == 0" (click)="generateOTP()">
+                                              RESEND OTP
+                                            </span>
+                                            <p *ngIf="timeLeft > 0 && reelerPaymentForm.get('setResend').value"> <span class="text-warning"><b>Resend OTP in (00:{{timeLeft}})</b></span></p>
+                                        </div>
+                                    </div>
+
+
+                                </ng-container>
+                            </div>
+                        </div>
+          
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click');reelerPaymentForm.reset();">Cancel</button>
+                            <button type="button" class="btn btn-sm btn-success" (click)="reelerPayment()" [disabled]="reelerPaymentForm.invalid || this.reelerPaymentForm?.value?.amount > paymentDetail?.dueAmount || reelerPaymentForm.get('paymentMode').value == 'Mudra' && reelerPaymentForm.value.amount > masterLoanInfo?.availableCreditLimit">Pay Now</button>
+                        </div>
+                    </ng-template>
+                </form>
+            </div>
+          </div>

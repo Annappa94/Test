@@ -1,0 +1,16 @@
+<ng-container *ngIf="isDisplay">
+      <div *ngFor="let list of approvalList" class="row flex-column mx-0">
+        <div class="d-flex">
+          <div *ngFor="let item of list.transition.targetApplicableActions | keyvalue : originalOrder" (click)="markAS(item.value,item.key,list)">
+            <button class="btn m-3"   *ngIf="item.key&&!defaultIcon && !(item.key == 'Reject' && disableRejectButton)" [disabled]="!list.enabled" [ngClass]="item.key == 'Reject' ?'btn-warning':'btn-primary'">
+              {{item.key}}
+            </button>
+            <ng-container *ngIf="defaultIcon">
+              <i *ngIf="item.key == 'Reject'" class="fas fa-undo text-danger cursor-pointer ml-3 mt-1" [matTooltip]="item.key"></i>
+              <i *ngIf="item.key !== 'Reject'" class="flaticon2-accept text-success ml-3 cursor-pointer" [matTooltip]="item.key"></i>
+            </ng-container>
+          </div> 
+        </div>
+        <div *ngIf="!list.enabled" class="text-warning mx-3">{{list?.pendingAction}}</div>
+      </div>
+</ng-container>

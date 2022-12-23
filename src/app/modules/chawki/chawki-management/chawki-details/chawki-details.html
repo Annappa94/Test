@@ -1,0 +1,550 @@
+<div class="bg-white rounded mb-4 d-flex align-items-center py-2 sticky-header justify-content-between">
+    <ul id="breadcrumbs" *ngIf="chawkiDetails">
+        <li><span style="cursor: pointer;" class="hover-item" (click)="goBack()">All CRC's</span></li>
+        <li><span>{{chawkiDetails?.code}}</span></li>
+    </ul>
+    <div>
+        <app-back-button></app-back-button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-4">
+
+        <!--begin::Card-->
+        <div class="card card-custom gutter-b">
+            <!--begin::Body-->
+            <div class="card-body pt-4">
+                <!--begin::Toolbar-->
+                <div class="d-flex justify-content-between align-items-baseline mt-5 mb-2">
+                    <div class="font-size-h5 mb-3">Chawki Profile</div>
+                    <button class="btn btn-outline-success btn-sm " (click)="editChawki()" *ngIf="user.role !== 'READADMIN' && !chawkiDetails?.isApproved">Edit</button>
+                    <button class="btn btn-outline-success btn-sm " (click)="editChawki()" *ngIf="(user.role !== 'READADMIN' && user.role !== 'FarmInputAgent' ) && chawkiDetails?.isApproved">Edit</button>
+
+                </div>
+                <div class="d-flex align-items-center mb-7">
+                    <!--begin::Pic-->
+                    <div class="flex-shrink-0 mr-4 mt-lg-0 mt-3">
+                        
+                        <div class="image-input image-input-outline" id="kt_profile_avatar">
+                            <div *ngIf="!previewImage && chawkiDetails?.initial" class="symbol symbol-lg-75 symbol-square symbol-secondary">
+                                <span class="symbol-label font-size-h3 font-weight-boldest">{{chawkiDetails?.initial}}</span>
+                            </div>
+                            <img *ngIf="previewImage" class="image-input-wrapper" [src]="previewImage || './assets/media/users/blank.png'"/>
+                            <label *ngIf="user.role !== 'READADMIN'" class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                              data-action="change"
+                              data-toggle="tooltip"
+                              title=""
+                              data-original-title="Change avatar"
+                            >
+                              <i class="fa fa-pen icon-sm text-muted"></i>
+                              <input
+                                type="file"
+                                name="profile_avatar"
+                                accept=".png, .jpg, .jpeg"
+                                (change)="onImageUpload($event);"
+                              />
+                              <input type="hidden" name="profile_avatar_remove" />
+                            </label>
+                            <span
+                              class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                              data-action="cancel"
+                              data-toggle="tooltip"
+                              title=""
+                              data-original-title="Cancel avatar"
+                            >
+                              <i class="ki ki-bold-close icon-xs text-muted"></i>
+                            </span>
+                            <span
+                              *ngIf="previewImage && user.role !== 'READADMIN'"
+                              class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                              (click)="remove()"
+                              data-action="remove"
+                              data-toggle="tooltip"
+                              title=""
+                              data-original-title="Remove avatar"
+                            >
+                              <i class="ki ki-bold-close icon-xs text-muted"></i>
+                            </span>
+                          </div>
+                    </div>
+                    <!--end::Pic-->
+                    <!--begin::Title-->
+                    <!--end::Title-->
+                    <div class="d-flex flex-column">
+                        <span class="text-success font-weight-bold font-size-h4 mb-0">{{chawkiDetails?.name}}</span>
+                    </div>
+                </div>
+                <!--end::Toolbar-->
+
+                <div class="my-2" *ngIf="chawkiDetails">
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Created Date:</span>
+                        <span class="text-dark font-weight-bold">{{chawkiDetails.createdDate}}</span>
+                    </div>
+                </div>
+
+                <div class="my-2" *ngIf="chawkiDetails">
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Updated Date:</span>
+                        <span class="text-dark font-weight-bold">{{chawkiDetails.lastModifiedDate}}</span>
+                    </div>
+                </div>
+
+                <p class="mt-4 mb-4">
+                    <span class="text-success font-weight-bold pr-1">Chawki SOP</span>
+                </p>
+                <div class="mb-7">
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="chawkiDetails?.name">
+                        <span class="text-muted font-weight-bold mr-2">Name:</span>
+                        <span class="text-dark font-weight-bold">{{chawkiDetails?.name}}</span>
+                        
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="chawkiDetails?.phone">
+                        <span class="text-muted font-weight-bold mr-2">Phone:</span>
+                        <span class="text-dark font-weight-bold">{{chawkiDetails?.phone}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="chawkiDetails?.nearestRmCenterName">
+                        <span class="text-muted font-weight-bold mr-2">Center:</span>
+                        <span class="text-dark font-weight-bold">{{chawkiDetails?.nearestRmCenterName}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="chawkiDetails?.kycPANNumber">
+                        <span class="text-muted font-weight-bold mr-2">PAN Number:</span>
+                        <span class="text-dark font-weight-bold">{{chawkiDetails?.kycPANNumber}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="chawkiDetails?.kycAdhaarNumber">
+                        <span class="text-muted font-weight-bold mr-2">Adhaar Number:</span>
+                        <span class="text-dark font-weight-bold">{{chawkiDetails?.kycAdhaarNumber}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="chawkiDetails?.govRegistrationId">
+                        <span class="text-muted font-weight-bold mr-2">Govt Registration Id:</span>
+                        <span class="text-dark font-weight-bold">{{chawkiDetails?.govRegistrationId}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="chawkiDetails?.priceForWhite > 0">
+                        <span class="text-muted font-weight-bold mr-2">Buying Price <small>(per DFL)</small> for White:</span>
+                        <span class="text-dark font-weight-bold">Rs. {{chawkiDetails?.crcPriceForWhite}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="chawkiDetails?.priceForWhite > 0">
+                        <span class="text-muted font-weight-bold mr-2">Discount Price <small>(per DFL)</small> for White:</span>
+                        <span class="text-dark font-weight-bold">Rs. {{chawkiDetails?.crcDiscountForWhite}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="chawkiDetails?.priceForWhite > 0">
+                        <span class="text-muted font-weight-bold mr-2">Actual Buying Price <small>(per DFL)</small> for White:</span>
+                        <span class="text-dark font-weight-bold">Rs. {{chawkiDetails?.actualBuyingPriceForWhite}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="chawkiDetails?.priceForWhite > 0">
+                        <span class="text-muted font-weight-bold mr-2">Selling Price <small>(per DFL)</small> for White:</span>
+                        <span class="text-dark font-weight-bold">Rs. {{chawkiDetails?.priceForWhite}}</span>
+                    </div>
+
+                  
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="chawkiDetails?.priceForGold > 0">
+                        <span class="text-muted font-weight-bold mr-2">Buying Price <small>(per DFL)</small> for Gold:</span>
+                        <span class="text-dark font-weight-bold">Rs. {{chawkiDetails?.crcPriceForGold}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="chawkiDetails?.priceForGold > 0">
+                        <span class="text-muted font-weight-bold mr-2"> Discount Price <small>(per DFL)</small> for Gold:</span>
+                        <span class="text-dark font-weight-bold">Rs. {{chawkiDetails?.crcDiscountForGold}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="chawkiDetails?.priceForGold > 0">
+                        <span class="text-muted font-weight-bold mr-2">Actual Buying Price <small>(per DFL)</small> for Gold:</span>
+                        <span class="text-dark font-weight-bold">Rs. {{chawkiDetails?.actualBuyingPriceForGold}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="chawkiDetails?.priceForGold > 0">
+                        <span class="text-muted font-weight-bold mr-2">Selling Price <small>(per DFL)</small> for Gold:</span>
+                        <span class="text-dark font-weight-bold">Rs. {{chawkiDetails?.priceForGold}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="chawkiDetails?.nurseryArea">
+                        <span class="text-muted font-weight-bold mr-2">Nursery Area:</span>
+                        <span class="text-dark font-weight-bold">{{chawkiDetails?.nurseryArea}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="chawkiDetails?.averageSizeOfBatch">
+                        <span class="text-muted font-weight-bold mr-2">Average size of batch:</span>
+                        <span class="text-dark font-weight-bold">{{chawkiDetails?.averageSizeOfBatch}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="chawkiDetails?.batchesPerMonth">
+                        <span class="text-muted font-weight-bold mr-2">Batches/Month:</span>
+                        <span class="text-dark font-weight-bold">{{chawkiDetails?.batchesPerMonth}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted mr-2 font-weight-bold">Has IOT:</span>
+                        <span *ngIf="iotDeviceList?.length" class="dot1"></span>
+                        <span *ngIf="!iotDeviceList?.length" class="dot"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center" *ngIf="iotDeviceDate">
+                        <span class="text-muted font-weight-bold mr-2">Iot device date:</span>
+                        <span class="text-dark-75 font-weight-bold">{{iotDeviceDate}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="chawkiDetails?.crcCapacity">
+                        <span class="text-muted font-weight-bold mr-2">CRC Capacity:</span>
+                        <span class="text-dark font-weight-bold">{{chawkiDetails?.crcCapacity}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="chawkiDetails?.sourceOfEggs">
+                        <span class="text-muted font-weight-bold mr-2">Source Of Eggs:</span>
+                        <span class="text-dark font-weight-bold">{{chawkiDetails?.sourceOfEggs}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="chawkiDetails?.disinfectionMgmt">
+                        <span class="text-muted font-weight-bold mr-2">How is disinfection managed ?:</span>
+                        <span class="text-dark font-weight-bold">{{chawkiDetails?.disinfectionMgmt}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="chawkiDetails">
+                        <span class="text-muted font-weight-bold mr-2">Equipments:</span>
+                        <span class="text-dark font-weight-bold">
+                            <span class="label label-primary label-pill label-inline mr-2"
+                                *ngFor="let item of chawkiDetails.equipments">{{globalService.getDisplayChawkiEquipments(item) | titlecase}}</span>
+                            </span>
+                    </div>
+
+                </div>
+
+                <p class="mt-4 mb-2">
+                    <span class="text-success font-weight-bold pr-1">Address</span>
+                </p>
+                <p>
+                    <span class="text-muted font-weight-bolder mr-2">
+                        {{chawkiDetails?.address?.address}}, {{chawkiDetails?.address?.village}},
+                        {{chawkiDetails?.address?.taluk}}, {{chawkiDetails?.address?.city}}
+                    </span><br />
+                    <span class="text-muted font-weight-bolder mr-2 pt-2">{{chawkiDetails?.address?.district ?
+                        chawkiDetails?.address?.district + ' District, ' : ''}} {{chawkiDetails?.address?.state}}
+                        {{chawkiDetails?.address?.pincode}}</span>
+                </p>
+
+                <p class="mt-4">
+                    <span class="text-success font-weight-bold pr-1">Bank Details</span>
+                </p>
+                <div class="mb-7">
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Account Holder Name:</span>
+                        <span class="text-dark font-weight-bold">{{chawkiDetails?.bankDetails?.beneficiaryName}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Account Number:</span>
+                        <span class="text-dark font-weight-bold">{{chawkiDetails?.bankDetails?.accountNumber}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Bank Name:</span>
+                        <span class="text-dark font-weight-bold">{{chawkiDetails?.bankDetails?.bankName}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">IFSC Code:</span>
+                        <span class="text-dark font-weight-bold">{{chawkiDetails?.bankDetails?.ifscCode}}</span>
+                    </div>
+
+                </div>
+
+                <p class="mt-4">
+                    <span class="text-success font-weight-bold pr-1">Documents</span>
+                </p>
+                <div class="mb-7">
+                    <div class="d-flex justify-content-between align-items-center my-4" *ngIf="chawkiDetails?.regCertificateUrl">
+                        <span class="text-muted font-weight-bold mr-2">Registration Certificate:</span>
+                        <span (click)="showImage(chawkiDetails?.regCertificateUrl)" class="text-success cursor-pointer">
+                            <!-- <a href="{{chawkiDetails?.regCertificateUrl }}" target="_blank"> -->
+                                Click to View
+                            <!-- </a> -->
+                        </span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-4" *ngIf="chawkiDetails?.trainingCertificateUrl">
+                        <span class="text-muted font-weight-bold mr-2">Training Certificate:</span>
+                        <span (click)="showImage(chawkiDetails?.trainingCertificateUrl)" class="text-success cursor-pointer">
+                            Click to View
+                            <!-- <img [src]="chawkiDetails?.trainingCertificateUrl" class="mw-100" style="height: 200px;"> -->
+                            <!-- <a href="{{chawkiDetails?.trainingCertificateUrl }}" target="_blank">
+                                Click to View
+                            </a> -->
+                        </span>
+                        
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-4" *ngIf="chawkiDetails?.nurseryAreaPhotoUrl">
+                        <span class="text-muted font-weight-bold mr-2">Nursery Area Photo:</span>
+                        <span>
+                            <!-- <img [src]="chawkiDetails?.nurseryAreaPhotoUrl" class="mw-100 " style="height: 200px;"> -->
+                            <a href="{{ chawkiDetails?.nurseryAreaPhotoUrl }}" target="_blank">
+                                Click to View
+                            </a>
+                        </span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-4" *ngIf="chawkiDetails?.chawkiInfrastructureImageUrls?.length">
+                        <span class="text-muted font-weight-bold mr-2">CRC Photos:</span>
+                        <div class="d-flex flex-column">
+                            <span *ngFor="let img of chawkiDetails?.chawkiInfrastructureImageUrls">
+                                <a href="{{ img }}" target="_blank">
+                                    Click to View
+                                </a>
+                            </span> 
+                        </div>
+                        
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-4" *ngIf="chawkiDetails?.chawkiImageUrls?.length">
+                        <span class="text-muted font-weight-bold mr-2">Chawki Images:</span>
+                        <div>
+                            <span *ngFor="let img of chawkiDetails?.chawkiImageUrls" class="d-flex flex-column ">
+                                <!-- <img [src]="img" class="mw-100" style="height: 200px;"> -->
+                                <a href="{{ img }}" target="_blank">
+                                    Click to View
+                                </a>
+                            </span>
+                        </div>
+                        
+                    </div>
+
+                </div>
+
+
+            </div>
+            <!--end::Body-->
+        </div>
+        <!--end::Card-->
+
+        <ng-container *ngIf="iotDevicePaymentList?.length">
+            <div class="mt-4" *ngFor="let item of iotDevicePaymentList">
+        
+                <div class="card card-custom " >    
+                    <div class="card-body my-2">
+        
+                        <div class="d-flex justify-content-between align-items-baseline">
+                            <div class="font-size-h5 font-weight-bold text-success">Payments</div>
+                            
+                            <button matTooltip="Pay Now" class="btn btn-sm btn-icon float-right" 
+                            *ngIf="item?.paymentStatus == 'Pending'" 
+                                    (click)="payNow(payment, item)">
+                                <i class="fas fa-money-check-alt text-success"></i>
+                            </button>
+                        </div>
+                        <div class="mt-4">
+                            <div class="d-flex justify-content-between align-items-cente my-2">
+                                <span class="text-muted font-weight-bold mr-2">Device:</span>
+                                <span class="text-success cursor-pointer font-weight-bold" matTooltip="Device details"
+                                    (click)="goToDeviceDetails(item?.deviceId)">{{item?.deviceName ? item?.deviceName : item?.deviceId}}</span>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-cente my-2">
+                                <span class="text-muted font-weight-bold mr-2">Price:</span>
+                                <span class="text-dark-75 font-weight-bold">{{item?.price.toLocaleString('en-IN')}}</span>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="item?.cgst > 0">
+                                <span class="text-muted font-weight-bold mr-2">CGST:</span>
+                                <span class="text-dark-75 font-weight-bold">{{item?.cgst.toLocaleString('en-IN')}}</span>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="item?.sgst > 0">
+                                <span class="text-muted font-weight-bold mr-2">SGST:</span>
+                                <span class="text-dark-75 font-weight-bold">{{item?.sgst.toLocaleString('en-IN')}}</span>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="item?.igst > 0">
+                                <span class="text-muted font-weight-bold mr-2">IGST:</span>
+                                <span class="text-dark-75 font-weight-bold">{{item?.igst.toLocaleString('en-IN')}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-cente my-2">
+                                <span class="text-muted font-weight-bold mr-2">Total Amount:</span>
+                                <span class="text-dark-75 font-weight-bold">{{item?.totalAmount.toLocaleString('en-IN')}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-cente my-2">
+                                <span class="text-muted font-weight-bold mr-2">Deposit Amount:</span>
+                                <span class="text-success font-weight-bold">{{item?.depositAmount.toLocaleString('en-IN')}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="item?.amountPaid">
+                                <span class="text-muted font-weight-bold mr-2">Paid Amount:</span>
+                                <span class="text-success font-weight-bold">{{item?.amountPaid.toLocaleString('en-IN')}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="item?.dueAmount > 0">
+                                <span class="text-muted font-weight-bold mr-2">Due Amount:</span>
+                                <span class="text-danger font-weight-bold">{{item?.dueAmount.toLocaleString('en-IN')}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-cente my-2">
+                                <span class="text-muted font-weight-bold mr-2">Tenure:</span>
+                                <span class="text-dark-75 font-weight-bold">{{item?.tenure}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-cente my-2">
+                                <span class="text-muted font-weight-bold mr-2">Payment Status:</span>
+                                <span [ngClass]="{'text-danger font-weight-bold': item?.paymentStatus == 'Pending', 'text-success font-weight-bold': item?.paymentStatus != 'Pending'}">{{item?.paymentStatus}}</span>
+                            </div>
+
+                        </div>
+        
+        
+                        <div class="example example-basic mt-6" *ngIf="item?.paymentHistory">
+                            <div class="">
+                                <div class="timeline timeline-2">
+                                    <div class="timeline-bar"></div>
+        
+                                    <!-- REPEAT for NO OF PAYMENTS-->
+                                    <div class="timeline-item" *ngFor="let history of item?.paymentHistory">
+                                        <span class="timeline-badge bg-success cursor-pointer" (click)="openPaymentDetails(paymentDetails, history)"></span>
+                                        <div class="timeline-content d-flex align-items-center justify-content-between">
+                                            <span class="mr-3 font-weight-bold text-dark-75 font-size-sm d-flex flex-column">Rs. {{history?.amountPaid.toLocaleString('en-IN')}}
+                                                <span class="label label-inline label-outline-success h-100">
+                                                    {{utils.getDisplayTime(history.paymentDate)}}</span>
+                                               </span>
+                                            <span class="mr-3 font-weight-bold text-success font-size-sm">
+                                                <a title="View Invoice" *ngIf="history.paymentReceiptUrl && user.role !== 'READADMIN'" href="{{ history.paymentReceiptUrl }}" target="_blank">
+                                                    VIEW RECIEPT
+                                                  </a>
+                                            </span>
+                                            <!-- <span class="text-muted font-italic text-right font-size-xs">{{utils.getDisplayTime(history.paymentDate)}}</span> -->
+                                        </div>
+                                    </div>
+        
+                                </div>
+                                <!--end::Timeline-->
+                            </div>
+                        </div>
+        
+                    </div>
+                    <!--end: Card Body-->
+                </div>
+                <!--end: List Widget 9-->
+            </div>
+        </ng-container>
+
+
+    </div>
+    <div class="col-lg-8 col-md-8 col-sm-8">
+
+        <app-chawki-batch-listing [chawkiId]="id" [newRecordRefresh]="newRecordRefresh" >
+                <div *ngIf="chawkiDetails?.isApproved == true">
+                  <button *ngIf="user.role !== 'READADMIN'" type="button" class="btn btn-sm btn-success mr-2" (click)="createNewBatch();">+ New Batch</button>
+                </div>
+        </app-chawki-batch-listing>
+
+        <app-chawki-order-listing [chawkiId]="id"></app-chawki-order-listing>
+        
+    </div>
+</div>
+
+<div class="details-confirmation-preview">
+    <div>
+        <ng-template #deleteLot let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Delete</h4>
+            </div>
+            <div class="modal-body">
+                <p><strong>Are You Sure You Want To Delete This Chawki?</strong></p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+                <button type="button" class="btn btn-sm btn-success" (click)="deleteCurrentChawki()">Yes</button>
+            </div>
+        </ng-template>
+    </div>
+</div>
+
+
+<div class="payment-confirmation-preview">
+    <div>
+        <form [formGroup]="iotDevicePaymentForm">
+            <ng-template #payment let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Payment Details</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Device : <strong>{{paymentDetail.deviceName}}</strong></p>
+                    <p>Net Amount : <strong>Rs. {{paymentDetail.totalAmount.toLocaleString('en-IN')}}</strong></p>
+                    <p>Total Pending Amount : <strong>Rs. {{paymentDetail.dueAmount.toLocaleString('en-IN')}}</strong></p>
+                    <p *ngIf="paymentDetail.paid">Total Amount Paid : <strong>Rs. {{paymentDetail.paid.toLocaleString('en-IN')}}</strong></p>
+                    <p>Due Amount : <strong>Rs. {{paymentDetail.dueAmount.toLocaleString('en-IN')}}</strong></p>
+                    <div class="form form-label-right">
+                        <div class="form-group row">
+                            <div class="col-lg-4 mt-2">
+                                <label class="form-label">Amount<span class="text-danger">*</span></label>
+                                <input type="number" class="form-control form-control-lg form-control-solid" name="amount"
+                                  placeholder="amount" autocomplete="off" [class.is-invalid]="isControlInvalidForIot('amount')"
+                                  [class.is-valid]="isControlValidForIot('amount')" formControlName="amount" />
+                                <div class="invalid-feedback" *ngIf="controlHasErrorForIot('required', 'amount')">
+                                    Amount is required
+                                </div>
+                                <div style="color: #F64E60;" *ngIf="iotDevicePaymentForm.value.amount > paymentDetail.dueAmount">
+                                    Amount Exceeds
+                                </div>
+                            </div>
+  
+                            <div class="col-lg-4 mt-2">
+                                <label class="form-label">Reference Number<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-lg" name="referenceNumber"
+                                  placeholder="Reference Number" autocomplete="off" [class.is-invalid]="isControlInvalidForIot('referenceNumber')"
+                                  [class.is-valid]="isControlValidForIot('referenceNumber')" formControlName="referenceNumber" />
+                                <div class="invalid-feedback" *ngIf="controlHasErrorForIot('required', 'referenceNumber')">
+                                    Reference Number is required
+                                </div>
+                                
+                            </div>
+
+                            <div class="col-lg-4 mt-2">
+                                <label>Payment Mode</label>
+                                <select class="form-control form-control-lg" formControlName="paymentMode" name="paymentMode">
+                                  <option value="Online">Online</option>
+                                  <option value="Cash">Cash</option>
+                                  <option value="Others">Other</option>
+                                </select>
+                              </div>
+                           
+                        </div>
+                    </div>
+                </div>
+  
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+                    <button type="button" class="btn btn-sm btn-success" (click)="iotDevicePayment()" [disabled]="iotDevicePaymentForm.invalid || this.iotDevicePaymentForm.value.amount > paymentDetail.dueAmount">Pay Now</button>
+                </div>
+            </ng-template>
+        </form>
+    </div>
+  </div>
+
+  <div>
+    <ng-template #paymentDetails let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <h4 class="modal-title">Payment Details</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Amount Paid: <strong>{{paymentDetail.amountPaid.toLocaleString('en-IN')}}</strong></p>
+            <p>Payment Date: <strong>{{utils.getDisplayTime(paymentDetail.paymentDate)}}</strong></p>
+            <p>Reference Number: <strong>{{paymentDetail.referenceNumber}}</strong></p>
+            <p>Payment Mode: <strong>{{paymentDetail.paymentMode}}</strong></p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">Ok</button>
+        </div>
+    </ng-template>
+</div>
+
+<div class="symbol symbol-50 symbol-light mr-1 cursor-pointer" *ngIf="modelImageUrl" appNoRightClick>
+
+    <!-- The Modal -->
+    <div id="reviewModel" class="modal" [ngClass]="{'display-block' : expandImage, 'display-none' : !expandImage}">
+  
+      <!-- The Close Button -->
+      <span class="close" (click)="expandImage = false">&times;</span>
+  
+      <!-- Modal Content (The Image) -->
+      <img class="modal-content" *ngIf="!modelImageUrl?.includes('.pdf')" [src]="modelImageUrl">
+      <pdf-viewer *ngIf="modelImageUrl?.includes('.pdf')" src="{{modelImageUrl}}"></pdf-viewer>
+    </div>
+    <!-- </span> -->
+  </div>
+

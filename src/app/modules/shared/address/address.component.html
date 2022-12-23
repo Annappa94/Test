@@ -1,0 +1,65 @@
+<ngb-accordion #acc11="ngbAccordion">
+      <ngb-panel id="toggle-address">
+        <ng-template ngbPanelTitle>
+          <span class="ard-header--title text-success">{{title}} <span class="text-danger" *ngIf="manditory">*</span></span>
+        </ng-template>
+        <ng-template ngbPanelContent>
+          <div class="row" [formGroup]="addressForm">
+            <div class="col-lg-3 mt-2">
+              <label class="form-label">Address <span class="text-danger" *ngIf="manditory">*</span></label>
+              <input type="text" class="form-control form-control-lg" name="Address"
+                placeholder="Address" autocomplete="off" formControlName="address" />
+            </div>
+            <div class="col-lg-3 mt-2">
+              <label class="form-label">Village</label>
+              <input type="text" class="form-control form-control-lg" name="Village"
+                placeholder="Village" autocomplete="off" formControlName="village" />
+            </div>
+            <div class="col-lg-3 mt-2">
+              <label class="form-label">City</label>
+              <input type="text" class="form-control form-control-lg" name="city"
+                placeholder="City" autocomplete="off" formControlName="city" />
+            </div>
+            <div class="col-lg-3 mt-2">
+              <label class="form-label">District</label>
+              <input type="text" class="form-control form-control-lg" name="District"
+                placeholder="District" autocomplete="off" formControlName="district" />
+            </div>
+            <div class="col-lg-3 mt-2">
+              <label class="form-label">Taluk</label>
+              <input type="text" class="form-control form-control-lg" name="Taluk"
+                placeholder="Taluk" autocomplete="off" formControlName="taluk" />
+            </div>
+            <div class="col-lg-3 mt-2">
+              <label class="form-label">Region <span class="text-danger" *ngIf="manditory">*</span></label>
+              <input type="text" class="form-control form-control-lg" name="region"
+                placeholder="Region" autocomplete="off" formControlName="region" />
+            </div>
+            <div class="col-lg-3 mt-2">
+              <label class="form-label">State <span class="text-danger" *ngIf="manditory">*</span> </label>
+              <input type="text" class="form-control form-control-lg" name="State"
+                placeholder="State" autocomplete="off" formControlName="state" />
+            </div>
+            <div class="col-lg-3 mt-2">
+              <label class="form-label">PIN Code</label>
+              <input type="text" class="form-control form-control-lg" name="PIN Code"
+                placeholder="PIN Code" autocomplete="off" formControlName="pincode" />
+            </div>
+            
+            <ng-container *ngIf="isLatAndLong">
+                <div class="col-lg-3 mt-2">
+                    <label class="form-label">Latitude</label>
+                    <input type="text" readonly class="form-control form-control-lg" name="Latitude"
+                      placeholder="Latitude" autocomplete="off" formControlName="latitude" />
+                  </div>
+                  <div class="col-lg-3 mt-2">
+                    <label class="form-label">Longitude</label>
+                    <input type="text" readonly class="form-control form-control-lg" name="Longitude"
+                      placeholder="Longitude" autocomplete="off" formControlName="longitude" />
+                  </div>
+            </ng-container>
+
+          </div>
+        </ng-template>
+      </ngb-panel>
+</ngb-accordion>

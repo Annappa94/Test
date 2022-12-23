@@ -1,0 +1,210 @@
+<div class="card card-custom gutter-b">
+  <div class="card-header">
+      <div class="card-title">
+        <h6>Bales Sales Production</h6>
+          <h3 class="card-label"></h3>
+      </div>
+      <div class="card-toolbar">
+          <div>
+              <button type="button" class="btn btn-sm btn-success mr-19" (click)="sartProcess(balesProcessStart)">START NEW PROCESS</button>
+          </div>
+      </div>
+  </div>
+  <div class="table-responsive angular-bootstrap-table">
+      <table id="excel-table" class="table table-head-custom table-vertical-center overflow-hidden">
+          <thead>
+            <th></th>
+              <th name="code">
+                  PROCESS ID
+              </th>
+
+              <th name="name">
+                  GINNING MILL
+              </th>
+              <th name="phone">
+                  STATUS
+              </th>
+              <th name="phone">
+                  CREATED BY
+              </th>
+              <th name="phone">
+                 ACTION
+              </th>
+          </thead>
+          <tbody>
+              <tr *ngFor="let item of productionBaleList">
+                  <td></td>
+                  <td>{{item?.code}}</td>
+                  <td>{{item?.ginnerData?.name}}</td>
+                  <td>{{item?.processStatus}}</td>
+                  <td>{{item?.createdBy}}</td>
+                  <td *ngIf="item?.createdBy != userType?.phonenumber">N/A</td>
+                  <td>
+                    <button type="button" class="btn btn-sm btn-warning mr-2" *ngIf="item?.processStatus == 'ENDPRODUCTION' && item?.createdBy == userType?.phonenumber" (click)="recordBalesData(bales,item)">Record Bales</button>
+                    <button type="button" class="btn btn-sm btn-danger mr-2"  *ngIf="item?.processStatus != 'ENDPRODUCTION' && item?.createdBy == userType?.phonenumber" (click)="endTheProcess(item)">End Process</button>
+                  </td>
+              </tr>
+          </tbody>
+      </table>
+      <div class="row">
+        <div class="ml-5 mr-2">
+          <nav aria-label="Page navigation example">
+            <ul class="pagination">
+              <li class="page-item">
+                <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(0)"
+                  href="javascript:void(0);">
+                  <span aria-hidden="true">&laquo;&laquo;</span>
+                  <span class="sr-only">First</span>
+                </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}"
+                  (click)="onPageChange(paginationData.currentPage - 1)" href="javascript:void(0);">
+                  <span aria-hidden="true">&laquo;</span>
+                  <span class="sr-only">Previous</span>
+                </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" *ngIf="paginationData?.currentPage !== 0 && paginationData?.currentPage !== 1"
+                  (click)="onPageChange(paginationData?.currentPage - 2)" href="javascript:void(0);">{{
+                  paginationData?.currentPage -1 }}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" *ngIf="paginationData?.currentPage !== 0"
+                  (click)="onPageChange(paginationData?.currentPage - 1)" href="javascript:void(0);">{{
+                  paginationData?.currentPage}}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link active" href="javascript:void(0);">{{ paginationData?.currentPage + 1 }}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link"
+                  *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1"
+                  (click)="onPageChange(paginationData?.currentPage + 1)" href="javascript:void(0);">{{
+                  paginationData?.currentPage + 2 }}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link"
+                  *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1 && paginationData?.currentPage !== paginationData.pages.length - 2"
+                  (click)="onPageChange(paginationData?.currentPage + 2)" href="javascript:void(0);">{{
+                  paginationData?.currentPage + 3 }}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link"
+                  [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}"
+                  (click)="onPageChange(paginationData.currentPage + 1)" href="javascript:void(0);">
+                  <span aria-hidden="true">&raquo;</span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link"
+                  [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}"
+                  (click)="onPageChange(paginationData.pages.length - 1)" href="javascript:void(0);">
+                  <span aria-hidden="true">&raquo;&raquo;</span>
+                  <span class="sr-only">Last</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <div class="mr-2">
+          <select class="custom-select" style="height: calc(1.2em + 1rem + 2px); padding: 0.35rem 2rem 0.35rem 1rem;"
+            [(ngModel)]="paginationData.pageSize" (change)="onPageSizeChange()">
+            <option [ngValue]="10">10 per page</option>
+            <option [ngValue]="50">50 per page</option>
+            <option [ngValue]="100">100 per page</option>
+          </select>
+        </div>
+        <div class="pt-2">
+    
+        </div>
+      </div>
+  </div>
+</div> 
+
+<div class="delete-confirmation-preview">
+  <ng-template #bales let-c="close" let-d="dismiss">
+      <div class="modal-header">
+          <h3>Bales Production</h3>
+      </div>
+      <div class="modal-body">
+          <!-- Start Existing Loan Profile -->
+  <div class="col-lg-12 mt-3" [formGroup]="balesProductionCreateform">
+      <div class="col-lg-4 mt-2">
+          <label class="font-weight-bolder">Number of bales<span class="text-danger">*</span></label>
+        <input type="number" class="form-control form-control-lg" placeholder="Bales" formControlName="numberOfBales">
+      </div>
+      <ng-container formArrayName="rowsArray">
+        <p class="mt-3 mb-0 font-weight-bolder">Bale Weight (Kgs)</p>
+
+          <div class="row" >
+              <ng-container class="row m-2" *ngFor="let defaultersList of balesProductionCreateform.get('rowsArray')['controls']; let rowsArrayIndex = index;"
+              [formGroupName]="rowsArrayIndex">
+              <div class="m-3 col-md-3">
+                <div class=" mt-2 d-flex align-items-center">
+                  <label>{{rowsArrayIndex +1}}</label>
+                  <input type="number" class="ml-2 form-control form-control-lg" placeholder="Kgs" formControlName="row" (input)="OnchangeInputValue()">
+                </div>   
+                              
+                  <!-- {{balesProductionCreateform.get('rowsArray').get('row')}} -->
+                  <!-- <div class="col-lg-2 mt-5">
+                      <div class="form-group">
+                      <button 
+                          (click)="addrowsArrayIndex()" *ngIf="balesProductionCreateform.get('rowsArray')['controls'].length-1==rowsArrayIndex">
+                      </button> 
+                       <button
+                          (click)="removerowsArrayIndex(rowsArrayIndex)" *ngIf="balesProductionCreateform.get('rowsArray')['controls'].length>1" >
+                      </button>
+                      </div>
+                  </div> -->
+              </div>
+              </ng-container>
+          </div>
+
+        </ng-container>
+        <p>Total Weight : {{totalvalue}}</p>  
+
+    </div>
+    <!--End Existing Loan Profile -->
+          </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">CLEAR</button>
+          <button type="button" class="btn btn-sm btn-success" [disabled]="disableToSave || balesProductionCreateform.invalid" (click)="recordBalesToEndProduction()">Save</button>
+      </div>
+  </ng-template>
+</div>
+
+
+<div class="delete-confirmation-preview">
+<ng-template #balesProcessStart let-c="close" let-d="dismiss" [formGroup]="formGroup">
+    <div class="modal-header">
+        <h3>Ginning Mill List</h3>
+    </div>
+    <div class="modal-body">
+      <div class="col-lg-12 mt-2 selectWrapper">
+        <h4 class="mb-4 text-success">Select  Ginning Mill<span class="text-danger">*</span> </h4>
+        <ng-select class=" " 
+          placeholder="Please enter the name or mobile number"
+          (search)='getGinnerList($event)' [(ngModel)]="selectedGinner" (change)="onChangeGinner($event)" formControlName="ginnerList">
+          <ng-container *ngFor="let item of ginnerData" >
+            <ng-option [value]="item">{{ item?.name }} - {{ item?.phone }}</ng-option>
+          </ng-container>
+        </ng-select>
+
+      </div>
+      <!-- <div class="col-lg-12 mt-2 selectWrapper">
+        <h4 class="mb-4 text-success">Select Production Line </h4>
+        <ng-select class=" " 
+          placeholder="Please Select Production Line" (change)="onchangeProdctionLine($event)">
+          <ng-option *ngFor="let item of productionLineArray" [value]="item">Production Line {{ item+1 }}</ng-option>
+        </ng-select>
+
+      </div> -->
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">CLEAR</button>
+        <button type="button" class="btn btn-sm btn-success" (click)="startBaleProduction()" [disabled]="formGroup.invalid">Save</button>
+    </div>
+</ng-template>
+</div>

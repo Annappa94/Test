@@ -1,0 +1,14 @@
+<app-paginated-table [titleOfTable]="' Oil  mills'"
+ [tableHeaders]="tableHeaders"
+ (infoFromTable)="tableInfo($event)"
+ [rowDataList]="rowDataList"
+ [totalRecords]="totalRecords"
+ (onPageChange)="onPageChange($event)"
+ [searchClass]="'col-lg-11'"
+ [searchHint]="'By Name  and Phone'">
+  <div class="card-toolbar New">
+    <div>
+    <button type="button" class="btn btn-sm btn-success mr-2" routerLink="/resha-farms/oil-spinning-mills/crud"> + Add Oil Mill</button>
+    </div>
+  </div>
+</app-paginated-table>

@@ -1,0 +1,131 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">Assign lot to the tables</h3>
+        </div>
+    </div>
+    <div class="card-body pt-0">
+        <div class="form form-label-right">
+            <div class="form-group row">
+                <div class="col-lg-12">
+                    <div class="column" *ngIf="filteredArray.length">
+                        <div class="row border-bottom" *ngFor="let item of filteredArray; let i = index;">
+
+                            <h5 class="mt-2 col-lg-12">Lane {{i+1}}</h5>
+                            <div *ngFor="let table of item" class="m-2 text-center cursor-pointer">
+                                <div class="">
+                                    <div class="row border rounded border-success h-26px w-60px bg-success-o-10 ml-2"
+                                    >
+                                    <!-- [ngClass]="{'border-right':(table.partition.length - j) !==1}"  -->
+                        <!-- "step == 'step1' ? 'my_class1' : 'my_class2'" -->
+
+                                        <div style="line-height: 26px;"
+                                            *ngFor="let partition of table.partition; let j=index;"
+                                            class="w-50 h-100 partition"
+                                            [ngClass]="{
+                                            'border-right':(table.partition.length - j) !==1,
+                                            'selected': selectedTable === table.warehouseTableInstanceId && selectedPartitionId == partition.partitionId,
+                                            'greyOut':!partition.available && !(selectedTable === table.warehouseTableInstanceId && selectedPartitionId == partition.partitionId)}"
+
+                                            (click)="getPartitionDetails(table.warehouseTableInstanceId,partition.partitionId)">
+                                            {{partition.partitionName ? partition.partitionName : 'A'}}</div>
+                                    </div>
+                                    <div class="ml-3">T{{table.table}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column" *ngIf="partitionInstance">
+                <ng-container [formGroup]="partitions">
+                        
+                    <ng-container formArrayName="baseList">
+                           <ng-container  *ngFor="let partition of partitions.get('baseList')['controls']; let index = index">
+
+                            <ng-conatiner  *ngIf="partition.value.flagForUI" [formGroupName]="index"> 
+
+                                <div class="mb-2 mt-2">
+                                    <h5 class="">Table Details: T{{partitionInstance?.table}}</h5>
+                                    <div class="row">
+                                    <div class="col-lg-2">
+                                        <label class="form-label">Select Lot<span class="text-danger">*</span></label>
+                                        <ng-select class="mb-2" placeholder="search" formControlName="entityId" (click)="onlotSelection(index,partition.value.partitionId)" (clear)="cocoolLot=null" >
+                                              <ng-option *ngFor="let item of cocoolLotArray"  [value]="item">
+                                                {{ item }}
+                                              </ng-option>
+                                          </ng-select>
+                                          
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <label class="form-label">Minimum Bid Price<span class="text-danger">*</span></label>
+                                        <input type="number" 
+                                        class="form-control form-control-lg"
+                                        placeholder="Minimum bid price" 
+                                        autocomplete="off" 
+                                        [class.is-invalid]="partitions.get('baseList')['controls'][index].get('minBidPrice').invalid&&(
+                                        partitions.get('baseList')['controls'][index].get('minBidPrice').dirty||
+                                        partitions.get('baseList')['controls'][index].get('minBidPrice').touched)"
+                                        formControlName="minBidPrice"/>
+                                    </div>
+                                    <div class="col-lg-8 d-flex mt-3" *ngIf="cocoolLot">
+                                        <div class="p-6">
+                                            <div class="text-muted">Lot Weight: <b>{{cocoolLot?.lotWeight ? cocoolLot?.lotWeight :''}} kgs</b></div>
+                                            <div class="text-muted">Alloted Weight: <b class="text-warning font-size-h4">{{cocoolLot?.allotedQuantity ? cocoolLot?.allotedQuantity?.toFixed(2) :0}} kgs</b></div>
+                                        </div>
+                                        <div class="p-6">
+                                            <div class="text-muted">Available Weight: <b class="text-success font-size-h4">{{cocoolLot?.availableQuantity ? cocoolLot?.availableQuantity?.toFixed(2) :0}} kgs</b></div>
+                                            <!-- <div class="text-muted">Price/Kg: <b class="text-success font-size-h4">{{cocoolLot?.pricePerKg ? cocoolLot?.pricePerKg :0}} Rs</b></div> -->
+                                            
+                                        </div>
+                                        <div class="p-6">
+                                            <div class="text-muted">Cocoon Type: <b>{{cocoolLot?.type ? cocoolLot?.type :''}}</b></div>
+                                            <div class="text-muted">Grade: <b>{{cocoolLot?.grade ? cocoolLot?.grade :''}}</b></div>
+                                        </div>
+                                        <div class="p-6">
+                                            <div class="text-muted">Renditta: <b>{{cocoolLot?.rmGrade ? cocoolLot?.rmGrade :''}}</b></div>
+                                        </div>
+                                        <div class="p-6">
+                                            <button type="submit" class="btn btn-danger" (click)="detachCocoonLot(partition)" >Delete Entity</button>
+                                        </div>
+                                    </div>                             
+                                    </div>             
+                                </div>
+    
+                                <div class="row border-top">
+                                    <ng-container>
+                                        <div class="col-lg-1 mt-10 text-center h5">{{partition?.value?.partitionName}}</div>
+                                        <div class="col-lg-11"  formArrayName="racks">
+                                            <div class="row">
+
+                                                <div class="col-lg-2 mt-2" *ngFor="let rack of partitions.get('baseList')['controls'][index].get('racks')['controls']; let i=index;" >
+                                                    <ng-container [formGroupName]="i">
+                                                    <label class="form-label">Rack{{rack?.value?.rackIdx}}</label>
+                                                    <input type="number" class="form-control form-control-lg" placeholder="Capacity in KGs"
+                                                        autocomplete="off" formControlName="occupiedCapacity" (input)="partitionAllotedChanges(partitions.get('baseList')['controls'][index],i)"
+                                                        [class.is-invalid]="partitions.get('baseList')['controls'][index].get('racks')['controls'][i].get('occupiedCapacity').invalid"
+                                                        />
+                                                    <p class="text-warning">Total capacity: {{rack?.value?.capacity}} kgs.</p>
+                                                   </ng-container>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                                <p *ngIf="totalOccupiedCapacity>cocoolLot?.availableQuantity" class="text-danger text-lg-right" >You have entered more than available lot weight!</p>
+                                <div class="card-toolbar float-right">
+                                    <button type="submit" class="btn text-white btn-sm p-3 mr-5 btn-bg-warning" (click)="clearPartition(index)">Clear</button>
+                                    <app-back-button></app-back-button>
+                                    <button type="submit" class="btn btn-success" (click)="onSubmit(partition?.value)" [disabled]="partition.invalid || totalOccupiedCapacity>cocoolLot?.availableQuantity">Save</button>
+                                </div>
+
+                            </ng-conatiner>
+
+                           </ng-container>
+                    </ng-container>
+
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,607 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">Cotton Details</h3>
+        </div>
+        <div class="card-toolbar">
+
+        </div>
+    </div>
+
+    <!-- Yarn FORM -->
+    <div class="card-body pt-0">
+        <div class="form form-label-right">
+            <div class="form-group row pt-0">
+                <div class="col-lg-12">
+
+                    <div [formGroup]="cottonCreateForm">
+                        <div class="row">
+                            <div class="col-lg-2 mb-4" *ngIf="id">
+                                <label class="form-label">Cotton Code</label>
+                                <input type="text" class="form-control form-control-lg form-control-solid" name="code"
+                                    placeholder="Yarn Code" autocomplete="off" readonly formControlName="code" />
+                            </div>
+                            <div class="col-lg-9 mt-4" *ngIf="id"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3 mt-4" *ngIf="id">
+                                <label>Select farmer</label>
+                                <select class="form-control form-control-lg form-control-solid"
+                                    [ngClass]="{'app-disable': id}" formControlName="farmer" name="reeler">
+                                    <option *ngFor="let item of farmerList" [value]="item.id">{{ item.name }}
+                                        - {{ item.phone }}</option>
+                                </select>
+                            </div>
+
+                            <div *ngIf="!id" class="col-lg-3 mt-4 selectWrapper">
+                                <label class="w-100 d-flex justify-content-between">
+                                    <span>Select Farmer<span
+                                        class="text-danger">*</span></span><span><a class="text-primary cursor-pointer"
+                                        (click)="open(content)">+ New Farmer</a></span>
+                                </label>
+                                <ng-select class=""  (change)="onSelectCottonFarmer($event,cottonFarmerBank)" formControlName="farmer"
+                                    placeholder="Please enter mobile number" (clear)="clearAllTheFields()"
+                                    (search)='getFarmerList($event)' [(ngModel)]="selectedFarmer">
+                                    <ng-option *ngFor="let item of farmerList" [value]="item.id">{{ item.name
+                                        }} - {{ item.phone }} <span class="text-success">[{{item.productType}}]</span> </ng-option>
+                                </ng-select>
+                            </div>
+                            <div class="col-lg-1"></div>
+                            <div class="col-lg-8" *ngIf="selectedFarmerBankDetails">
+                                <h4>Bank Details</h4>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <p for=""><b>A/C Holder Name: </b>{{selectedFarmerBankDetails.beneficiaryName}}</p>
+                                        <p for=""><b>A/C Number: </b>{{selectedFarmerBankDetails.accountNumber}}</p>
+                                        <p for=""><b>IFSC code:</b> {{selectedFarmerBankDetails.ifscCode}}</p>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <p for=""><b>Bank Name: </b>{{selectedFarmerBankDetails.bankName}}</p>
+                                        <p for=""><b>Branch Name: </b>{{selectedFarmerBankDetails.branchName}}</p>
+                                    </div>    
+                                </div>
+                                          
+                            </div>
+                        </div>
+                        <hr>
+
+                        <div class="row">
+
+                            <!-- <div class="col-lg-3 mt-4" *ngIf="id">
+                                <label>Select farmer</label>
+                                <select class="form-control form-control-lg form-control-solid"
+                                    [ngClass]="{'app-disable': id}" formControlName="farmer" name="reeler">
+                                    <option *ngFor="let item of farmerList" [value]="item.id">{{ item.name }}
+                                        - {{ item.phone }}</option>
+                                </select>
+                            </div>
+
+                            <div *ngIf="!id" class="col-lg-3 mt-4 selectWrapper">
+                                <label class="w-100 d-flex justify-content-between">
+                                    <span>Select Farmer<span
+                                        class="text-danger">*</span></span><span><a class="text-primary cursor-pointer"
+                                        (click)="open(content)">+ New Farmer</a></span>
+                                </label>
+                                <ng-select class=""  (change)="onSelectCottonFarmer($event,cottonFarmerBank)" formControlName="farmer"
+                                    placeholder="Please enter mobile number" (clear)="clearAllTheFields()"
+                                    (search)='getFarmerList($event)' [(ngModel)]="selectedFarmer">
+                                    <ng-option *ngFor="let item of farmerList" [value]="item.id">{{ item.name
+                                        }} - {{ item.phone }} <span class="text-success">[{{item.productType}}]</span> </ng-option>
+                                </ng-select>
+                            </div> -->
+
+                            <div class="col-lg-3 mt-4" *ngIf="!id">
+                                <label>RM Center<span class="text-danger">*</span></label>
+                                <select class="form-control form-control-lg" formControlName="center" name="type" placeholder="Select Type">
+                                    <option [value]="center.id" *ngFor="let center of centerList">{{center?.centerName}}</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3 mt-4" *ngIf="id">
+                                <label>RM Center<span class="text-danger">*</span></label>
+                                <select class="form-control form-control-lg" formControlName="center" name="type" placeholder="Select Type" disabled>
+                                    <option [value]="center.id" *ngFor="let center of centerList">{{center?.centerName}}</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3 mt-4" *ngIf="!id">
+                                <label>Transaction Type<span class="text-danger">*</span></label>
+                                <select class="form-control form-control-lg" formControlName="transactionType"
+                                    name="yarnCocoonType" placeholder="Select Type" (change)="onTransactionTypeChange()">
+                                    <option value="REGULAR">Regular</option>
+                                    <option value="MANUFACTURING">Manufacturing</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3 mt-4" *ngIf="id">
+                                <label>Transaction Type<span class="text-danger">*</span></label>
+                                <select class="form-control form-control-lg" formControlName="transactionType"
+                                    name="yarnCocoonType" placeholder="Select Type" disabled>
+                                    <option value="REGULAR">Regular</option>
+                                    <option value="MANUFACTURING">Manufacturing</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-lg-3 mt-2 selectWrapper" *ngIf="cottonCreateForm.get('transactionType').value == 'MANUFACTURING' && !id">
+                                <label class="w-100 d-flex justify-content-between">
+                                    <span>Select Ginner <span class="text-danger" *ngIf="removeAddStar">*</span></span>
+                                </label>
+                                <ng-select class="form-control form-control-lg form-control-solid disabled" formControlName="ginner"
+                                  placeholder="Please enter the name or mobile number"
+                                  (search)='getGinnerList($event)' disabled>
+                                  <ng-option *ngFor="let item of ginnerData" [value]="item.id">{{ item?.name }} - {{ item?.phone }}</ng-option>
+                                </ng-select>
+                        
+                            </div>
+
+                            <div class="col-lg-3 mt-2 selectWrapper" *ngIf="cottonCreateForm.get('transactionType').value == 'MANUFACTURING' && id">
+                                <label class="w-100 d-flex justify-content-between">
+                                    <span>Select Ginner <span class="text-danger" *ngIf="removeAddStar">*</span></span>
+                                </label>
+                                <select class="form-control form-control-lg form-control-solid " formControlName="ginner"
+                                  placeholder="Please enter the name or mobile number"
+                                  (search)='getGinnerList($event)' disabled>
+                                  <option *ngFor="let item of ginnerData" [value]="item.id">{{ item?.name }} - {{ item?.phone }}</option>
+                                </select>
+                        
+                            </div>
+
+                            <div class="col-lg-3 mt-4">
+                                <label>Cotton Type<span class="text-danger">*</span></label>
+                                <select class="form-control form-control-lg" formControlName="cottonType" name="type" placeholder="Select Type">
+                                    <option value="BTCOTTON">BT Cotton</option>
+                                    <option value="DCHCOTTON">DCH Cotton</option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-3 mt-4">
+                                <label>Select RM grade<span class="text-danger">*</span></label>
+                                <select class="form-control form-control-lg" formControlName="grade"
+                                    name="yarnCocoonType" placeholder="Select Type">
+                                    <option value="Reshamandi A">Reshamandi A</option>
+                                    <option value="Reshamandi A+">Reshamandi A+</option>
+                                    <option value="Reshamandi B">Reshamandi B</option>
+                                    <option value="Reshamandi B+">Reshamandi B+</option>
+                                    <option value="Reshamandi C">Reshamandi C</option>
+                                    <option value="Reshamandi C+">Reshamandi C+</option>
+                                </select>
+                            </div>
+
+
+                            <div class="col-lg-3 mt-4">
+                                <label class="form-label">Micronaire value</label>
+                                <input type="number" class="form-control form-control-lg" name="leafCountX"  placeholder="Micronaire value" autocomplete="off" formControlName="micronaire" />
+                            </div>
+
+                            <div class="col-lg-3 mt-4">
+                                <label class="form-label">Moisture Content (in %)</label>
+                                <input type="number" class="form-control form-control-lg" name="leafCountX"  placeholder="Moisture Content (in %)" autocomplete="off" formControlName="moistureInPercentage" />
+                                <div *ngIf="cottonCreateForm.get('moistureInPercentage').value>16" style="color:red;">Moisture Content Should be less than 16</div>
+                            </div>
+
+
+                            <div class="col-lg-3 mt-4">
+                                <label class="form-label">Staple length(in mm) </label>
+                                <input type="number" class="form-control form-control-lg" name="leafCountX"  placeholder="Staple length" autocomplete="off" formControlName="stapleLengthInMm" />
+                            </div>
+
+                            <div class="col-lg-3 mt-3 selectWrapper" *ngIf="!id">
+                                <label class="form-label">Representive <small>(Sold by)</small><span class="text-danger"> *</span></label>
+                                <ng-select class="form-control form-control-lg form-control-solid select-custom"
+                                  formControlName="rmRepresentative">
+                                  <ng-option *ngFor="let item of usersList" [value]="item">{{ item.name }} - {{ item.phone }} <span
+                                      *ngIf="item.role">- {{item.role}}</span></ng-option>
+                                </ng-select>
+                            </div>
+
+    
+                            <div class="col-lg-3 mt-3" *ngIf="id">
+                                <label class="form-label">Representive</label>
+                                <div class="form-control form-control-lg form-control-solid">
+                                  {{cottonCreateForm.get('rmRepresentativeName').value}} - {{cottonCreateForm.get('rmRepresentativePhone').value}}
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 mt-4">
+                                <label class="form-label">Received Weight (in Kgs)<span class="text-danger">*</span></label>
+                                <input type="number" class="form-control form-control-lg" name="leafCountX"  placeholder="Received Weight in Kgs" autocomplete="off" formControlName="recivedWeight" />
+                            </div>
+
+                            <div class="col-lg-3 mt-4">
+                                <label class="form-label">Weight Deduction  (in Kgs)<span class="text-danger"> *</span></label>
+                                <input type="number" class="form-control form-control-lg" name="leafCountX"  placeholder="Weight Deduction in Kgs" autocomplete="off" formControlName="weightDeduction" />
+                            </div>
+
+
+                            <div class="col-lg-3 mt-4">
+                                <label class="form-label">Actual Weight (in Kgs)</label>
+                                <input type="number" class="form-control form-control-lg form-control-solid" name="leafCountX"  readonly="true"  placeholder="0" autocomplete="off" formControlName="lotWeight" />
+                            </div>
+
+
+                            <div class="col-lg-3 mt-4">
+                                <label class="form-label">Rate <small>(per/kg)</small><span class="text-danger">*</span></label>
+                                <input  type="number" class="form-control form-control-lg " name="pricePerKg" placeholder="Rate/Kg" autocomplete="off" formControlName="ratePerKg" />
+                                <div class="valid-feedback" >Rate was entered correct </div>
+                                <div class="invalid-feedback"> Rate is required</div>
+                            </div>
+
+
+                            <div class="col-lg-3 mt-4" *ngIf="cottonCreateForm.get('transactionType').value == 'MANUFACTURING'">
+                                <label class="form-label">Labour Cost(Rs)<span class="text-danger">*</span></label>
+                                <input type="number" class="form-control form-control-lg"
+                                    name="labourCost"placeholder="Labour Cost" autocomplete="off"
+                                    formControlName="labourCost" />
+                            </div>
+
+                            <div class="col-lg-3 mt-4">
+                                <label class="form-label">Gross Total(Rs)<span class="text-danger">*</span></label>
+                                <input type="number" class="form-control form-control-lg form-control-solid"
+                                    name="totalPreTaxPrice" readonly placeholder="Including Tax" autocomplete="off"
+                                    formControlName="grossTotal" />
+                            </div>
+
+                            <!-- Hidden this fields based on Derepak request RMFARMS-176 -->
+
+                            <!-- <div class="col-lg-12 row">
+
+                                <div class="col-lg-3 mt-4">
+                                    <label>Within State ?<span class="text-danger">*</span></label>
+                                    <select class="form-control form-control-lg" formControlName="withInState" name="inState"
+                                        placeholder="Within State ?">
+                                        <option [value]="true">Same State</option>
+                                        <option [value]="false">Out Of state</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-lg-2 mt-4">
+                                    <label class="form-label">SGST <small>2.5%</small> <span
+                                            class="text-danger">*</span></label>
+                                    <input type="number" class="form-control form-control-lg form-control-solid" name="sgst"
+                                        readonly placeholder="2.5%" autocomplete="off" formControlName="sgst" />
+                                </div>
+    
+                                <div class="col-lg-2 mt-4">
+                                    <label class="form-label">CGST <small>2.5%</small><span
+                                            class="text-danger">*</span></label>
+                                    <input type="number" class="form-control form-control-lg form-control-solid" name="cgst"
+                                        readonly placeholder="2.5%" autocomplete="off" formControlName="cgst" />
+                                </div>
+    
+                                <div class="col-lg-2 mt-4">
+                                    <label class="form-label">IGST <small>5%</small><span
+                                            class="text-danger">*</span></label>
+                                    <input type="number" class="form-control form-control-lg form-control-solid" name="igst"
+                                        readonly placeholder="5%" autocomplete="off" formControlName="igst" />
+                                </div>
+    
+                                <div class="col-lg-3 mt-4">
+                                    <label class="form-label">Net Amount (Rs)<span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control form-control-lg form-control-solid"
+                                        name="totalPrice" readonly placeholder="Total" autocomplete="off"
+                                        formControlName="netAmount" />
+                                </div>
+
+                            </div> -->
+                             <!-- Coupons Started -->
+                             <div class="col-lg-6 mt-4">
+                                <div class="row">
+                                    <div class="col-7">
+                                        <label class="form-label">Coupon Code</label>
+                                        <input type="text" class="form-control form-control-lg" name="couponCode"
+                                            placeholder="Redeem Coupon" autocomplete="off"
+                                            formControlName="couponCode" />
+                                    </div>
+                                    <div class="col-5 d-flex align-items-end mb-2">
+                                        <button type="submit" class="btn btn-sm btn-success font-weight-bold"
+                                            [disabled]="cottonCreateForm.get('couponAmount').value > 0"
+                                            (click)="redeemCode(cottonCreateForm.value)">Redeem</button>
+                                        <button type="submit"
+                                            class="btn btn-sm btn-bg-danger ml-2 font-weight-bold text-white"
+                                            [disabled]="cottonCreateForm.get('couponAmount').value == 0" (click)="cancelCouponRedeem()">Clear</button>
+                                    </div>
+                                    <div class="text-success pl-3" *ngIf="couponValid">{{couponMsg}}</div>
+                                    <div class="text-danger pl-3" *ngIf="!couponValid">{{couponMsg}}</div>
+                                </div>
+                                <ng-container *ngIf="couponList?.length">
+                                    <div class="row mx-0 mt-2">
+                                        <span
+                                            class="label label-outline-info label-pill label-inline mr-2 cursor-pointer mt-2"
+                                            *ngFor="let coupon of couponList" (click)="couponClicked(coupon)">
+                                            {{coupon}}
+                                        </span>
+                                    </div>
+                                </ng-container>
+
+                            </div>
+                            <!-- Coupons Completed -->
+
+                            <div class="col-lg-3 mt-4">
+                                <label class="form-label">Net Payable Amount (Rs)<span class="text-danger">*</span></label>
+                                <input type="number" class="form-control form-control-lg form-control-solid"
+                                    name="totalPrice" readonly placeholder="Total" autocomplete="off"
+                                    formControlName="netPayableAmount" />
+                            </div>
+
+                            <div class="col-lg-3 mt-4">
+                                <label>Payment by</label>
+                                <select class="form-control form-control-lg" formControlName="creditDays"
+                                    name="paymentAfterDays" placeholder="Payment type">
+                                    <option value="1">Today</option>
+                                    <option value="3">3 Days</option>
+                                    <option value="7">7 Days</option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-3 mt-4">
+                                <label class="form-label">Logistics Cost(Rs)<span class="text-danger">*</span></label>
+                                <input type="number" class="form-control form-control-lg"
+                                    name="logisticsCost"placeholder="Logistics Cost" autocomplete="off"
+                                    formControlName="logisticsCost" />
+                            </div>
+
+                            <div class="col-lg-3 mt-4" *ngIf="cottonCreateForm.get('transactionType').value != 'MANUFACTURING'">
+                                <label class="form-label">Labour Cost(Rs)</label>
+                                <input type="number" class="form-control form-control-lg"
+                                    name="labourCost"placeholder="Labour Cost" autocomplete="off"
+                                    formControlName="labourCost" />
+                            </div>
+                            
+                            <div class="col-lg-3 mt-4">
+                                <label class="form-label">Total Logistics Cost(Rs)<span class="text-danger">*</span></label>
+                                <input type="number" class="form-control form-control-lg form-control-solid"
+                                    name="totalLogisticsCost"placeholder="Labour Cost" autocomplete="off"
+                                    formControlName="totalLogisticsCost" readonly/>
+                                    
+                            </div>
+
+                            <div class="col-lg-3 mt-4">
+                                <label class="form-label">Vehicle Number<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-lg"
+                                    name="totalPreTaxPrice"placeholder="Vehicle Number" autocomplete="off"
+                                    formControlName="vehicleNumber" />
+                            </div>
+                           
+                            <div class="col-lg-12 mt-6">
+                                <bank-form [layouttype]="'page'" [accname]="true" [accnumber]="true" [ifsccode]="true" [bankname]="true" [branchname]="true" [isVerfied]="true" #bank></bank-form>
+                            </div>
+
+                              <div class="col-lg-12 mt-6">
+                                <address-pincode-form [address] [village] [layouttype]="'page'"></address-pincode-form>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!-- Coupons Started -->
+                            <!-- <div class="col-lg-6 mt-4">
+                                <div class="row">
+                                    <div class="col-7">
+                                        <label class="form-label">Coupon Code</label>
+                                        <input type="text" class="form-control form-control-lg" name="couponCode"
+                                            placeholder="Redeem Coupon" autocomplete="off"
+                                            formControlName="couponCode" />
+                                    </div>
+                                    <div class="col-5 d-flex align-items-end mb-2">
+                                        <button type="submit" class="btn btn-sm btn-success font-weight-bold"
+                                            [disabled]="cottonCreateForm.get('couponAmount').value > 0"
+                                            (click)="redeemCode(cottonCreateForm.value)">Redeem</button>
+                                        <button type="submit"
+                                            class="btn btn-sm btn-bg-danger ml-2 font-weight-bold text-white"
+                                            [disabled]="cottonCreateForm.get('couponAmount').value == 0" (click)="cancelCouponRedeem()">Clear</button>
+                                    </div>
+                                    <div class="text-success pl-3" *ngIf="couponValid">{{couponMsg}}</div>
+                                    <div class="text-danger pl-3" *ngIf="!couponValid">{{couponMsg}}</div>
+                                </div>
+                                <ng-container *ngIf="couponList?.length">
+                                    <div class="row mx-0 mt-2">
+                                        <span
+                                            class="label label-outline-info label-pill label-inline mr-2 cursor-pointer mt-2"
+                                            *ngFor="let coupon of couponList" (click)="couponClicked(coupon)">
+                                            {{coupon}}
+                                        </span>
+                                    </div>
+                                </ng-container>
+
+                            </div> -->
+<!-- Coupons Completed -->
+
+
+                            <!-- Cotton Images -->
+
+                            <div class="col-md-12 col-lg-12 col-12">
+                                <span [formGroup]="cottonCreateForm.get('cottonImages')">
+                                   <div class="card card-custom" >
+                                       <div class="row">
+
+                                        <div class="col-lg-6">
+                                            <div class="row">
+                                               <div class="col-md-6 col-lg-6 col-12">
+                                                <label class="mt-5">Moisture Content Image</label><br>
+                                                   <div class="image-input image-input-outline m-1"
+                                                   id="kt_profile_avatar">
+                                                   <img class="image-input-wrapper"
+                                                       [src]="cottonCreateForm.get('moistureImage').value ||'./assets/media/users/blank.png'" />
+                                                   <label
+                                                       class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                                       data-action="change" data-toggle="tooltip" title=""
+                                                       data-original-title="Change avatar">
+                                                       <i class="fa fa-pen icon-sm text-muted"></i>
+                                                       <input type="file" name="profile_avatar"
+                                                           accept=".png, .jpg, .jpeg, .MP4, .FLV"
+                                                           (change)="onImageUpload($event, -1,'moistureImage');" 
+                                                           />
+                                                       <input type="hidden" name="profile_avatar_remove" />
+                                                   </label>
+                                                   <span
+                                                       class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                                       data-action="cancel" data-toggle="tooltip" title=""
+                                                       data-original-title="Cancel avatar">
+                                                       <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                                   </span>
+                                                   </div>
+                                               </div>
+
+                                               <div class="col-md-6 col-lg-6 col-12">
+                                                <label class="mt-5">Weigh Bridge Image<span class="text-danger">*</span></label><br>
+                                                   <div class="image-input image-input-outline m-1"
+                                                   id="kt_profile_avatar">
+                                                   <img class="image-input-wrapper"
+                                                       [src]="cottonCreateForm.get('weighBridgeImage').value ||'./assets/media/users/blank.png'" />
+                                                   <label
+                                                       class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                                       data-action="change" data-toggle="tooltip" title=""
+                                                       data-original-title="Change avatar">
+                                                       <i class="fa fa-pen icon-sm text-muted"></i>
+                                                       <input type="file" name="profile_avatar"
+                                                           accept=".png, .jpg, .jpeg, .MP4, .FLV"
+                                                           (change)="onImageUpload($event, -1,'weighBridgeImage');" 
+                                                           />
+                                                       <input type="hidden" name="profile_avatar_remove" />
+                                                   </label>
+                                                   <span
+                                                       class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                                       data-action="cancel" data-toggle="tooltip" title=""
+                                                       data-original-title="Cancel avatar">
+                                                       <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                                   </span>
+                                               </div>
+                                               </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6">
+                                            <label class="mt-5">Cotton Images<span class="text-danger">*</span></label>
+                                            <div class="row"  *ngFor="let cat of  cottonCreateForm.get('cottonImages')['controls']; let index=index" [formGroupName]="index">
+                         
+                                              <div class="col-lg-4 col-3 col-md-3">
+                                                 <div class="image-input image-input-outline m-1"
+                                                 id="kt_profile_avatar">
+                                                 <img class="image-input-wrapper"
+                                                     [src]="cottonCreateForm.get('cottonImages')['controls'][index].value.url ||'./assets/media/users/blank.png'" />
+                                                 <label
+                                                     class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                                     data-action="change" data-toggle="tooltip" title=""
+                                                     data-original-title="Change avatar">
+                                                     <i class="fa fa-pen icon-sm text-muted"></i>
+                                                     <input type="file" name="profile_avatar"
+                                                         accept=".png, .jpg, .jpeg, .MP4, .FLV"
+                                                         (change)="onImageUpload($event, index);" 
+                                                         />
+                                                     <input type="hidden" name="profile_avatar_remove" />
+                                                 </label>
+                                                 <span
+                                                     class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                                     data-action="cancel" data-toggle="tooltip" title=""
+                                                     data-original-title="Cancel avatar">
+                                                     <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                                 </span>
+                                              </div>
+                                        
+ 
+                                                 </div>
+                                                <div>
+                                                 <div class="d-flex justify-content-center align-items-center mt-lg-8 mt-3 px-5">
+                                                   <button matTooltip="Add" type="button" class="btn btn-icon btn-success btn-xs mb-6" (click)="addCottonImages()">
+                                                       <i class="flaticon-add-circular-button"></i>
+                                                    </button>
+                                                     <button matTooltip="Remove" type="button" class="btn ml-2 btn-icon btn-danger btn-xs mb-6" (click)="deleteCottonImages(index)" *ngIf="index!=0">
+                                                     <i class="flaticon-cancel"></i>
+                                                    </button>
+                                                </div>
+                                                </div>
+                 
+                                            </div>
+                                        </div>
+
+                                       </div>
+
+
+                                   </div>
+                               </span>
+                            </div>
+                            
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div *ngIf="requestAPI != responseAPI">
+                <p class="text-warning">Image Uploading ...</p>
+            </div>
+            <div class="card-toolbar float-lg-right">
+                <button type="button" class="btn btn-sm btn-secondary mr-2" [routerLink]="['/resha-farms/cottonlot']">Cancel</button>
+                <submit-button [disabledButton]="requestAPI!=responseAPI||cottonCreateForm.invalid" (clickButton)="onSubmit(cottonCreateForm.value)"></submit-button>
+                <!-- [loading]="loading"  -->
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<div class="create-new-farmer">
+    <div>
+        <ng-template #content let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Create New Farmer</h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-12">
+                    <div class="row" [formGroup]="farmerCreateForm">
+                        <div class="col-lg-12 mt-2">
+                            <label class="form-label">Name<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="name" placeholder="Name"
+                                autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('name')"
+                                [class.is-valid]="isControlValidForReeler('name')" formControlName="name" />
+                            <div class="valid-feedback" *ngIf="isControlValidForReeler('name')">Name was entered correct</div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'name')">Name isrequired</div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('pattern', 'name')">Name should not contain digits</div>
+                        </div>
+                        <div class="col-lg-12 mt-2">
+                            <label class="form-label">Mobile Number<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="phone"
+                                placeholder="Mobile Number" autocomplete="off"
+                                [class.is-invalid]="isControlInvalidForReeler('phone')"
+                                [class.is-valid]="isControlValidForReeler('phone')" formControlName="phone" />
+                            <div class="valid-feedback" *ngIf="isControlValidForReeler('phone')">Mobile number was
+                                entered correct
+                            </div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'phone')">Mobile
+                                number is
+                                required</div>
+                        </div>
+                        <div class="col-lg-12 mt-2">
+                            <label>Select Center<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg" formControlName="center" name="Center"
+                                placeholder="Select Center">
+                                <option *ngFor="let item of centerList" [value]="item.id">{{item.centerName}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+                <button type="button" class="btn btn-sm btn-success" [disabled]="farmerCreateForm.invalid"
+                    (click)="createFarmer(farmerCreateForm.value)">Save</button>
+            </div>
+        </ng-template>
+    </div>
+</div>
+
+
+<div class="example-preview">
+    <div>
+        <ng-template #cottonFarmerBank let-c="close" let-d="dismiss">
+            <div class="modal-body">
+                <div class="font-weight-bold my-2 font-size-h6 pt-3">
+                    <p>Kindly Verify Famer Bank details</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="doNotProceed()">Cancel</button>
+                <button type="button" class="btn btn-primary" (click)="gotoCottonFarmer()">Proceed</button>
+            </div>
+        </ng-template>
+    </div>
+</div>

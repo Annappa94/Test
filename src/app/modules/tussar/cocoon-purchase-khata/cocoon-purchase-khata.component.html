@@ -1,0 +1,35 @@
+<app-paginated-table [rowDataList]="rowDataList" [tableHeaders]="tableHeaders" [totalRecords]="totalRecords"
+  (infoFromTable)="infoFromTable($event)" (onPageChange)="onPageChange($event)" (listenAndRefreshPayment)="listenAndRefreshPayment()"
+  [titleOfTable]="'Cocoon Purchase Khata'" [searchClass]="'col-lg-11'" [searchHint]="'By id'">
+
+</app-paginated-table>
+
+<div class="details-confirmation-preview">
+  <div>
+          <ng-template #paymentDetailesHtml let-c="close" let-d="dismiss">
+              <div class="modal-header">
+                  <h4 class="modal-title">Details</h4>
+              </div>
+              <div class="modal-body">
+                  <ng-container *ngIf="reelerKhataList?.length">
+                      <div *ngFor="let item of reelerKhataList">
+                        <p>Amount : <strong>Rs. {{item.amount.toLocaleString('en-IN')}}</strong></p>
+                        <p>Reference Number : <strong> {{item.referenceNumber}}</strong></p>
+                        <p>Date : <strong>{{item.lastModifiedDate}} </strong></p>
+                        <hr>
+                    </div>
+                    </ng-container>
+    
+                    <ng-container *ngIf="!reelerKhataList?.length">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <strong> No Payments For This Cocoon Order</strong>
+                      </div>
+                    </ng-container>
+              </div>
+
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-sm btn-success" (click)="c('Close click')">Ok</button>
+              </div>
+          </ng-template>
+  </div>
+</div>

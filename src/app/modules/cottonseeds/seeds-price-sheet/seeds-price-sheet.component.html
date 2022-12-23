@@ -1,0 +1,122 @@
+
+<div class="square square-lg">
+    
+    <div class="card card-custom gutter-b">
+        <div class="section_with__border mt-2">
+        <!-- <div class="card-header">
+            <div class="col-sm-6">
+                <div class="card card-stretch gutter-b">
+                    <div class="card-body cursor-pointer" >  
+                        <span
+                            class="card-title font-weight-bolder text-success font-size-h2 mb-0 d-block"></span>
+                           
+                        <span class="font-weight-bold text-muted font-size-sm"><h5 style="text-align: center;">BT Cotton Price</h5> </span>
+                    </div>
+            </div>
+            </div>
+        </div> -->
+        <div class="row mx-0 d-flex align-itmes-center" style="width: 83%;margin-bottom: 30px;">
+            <div class="col-md-3 col mt-2 mx-1" >
+                
+                <p class=" font-size-h5 font-weight-bolder m-0" style="text-align: center;">
+                    Warehouse Id
+                </p>
+                <!-- <div class="vl"></div> -->
+            </div>
+            <div class="col-md-3 col mt-2 mx-1" >
+                
+                <p class=" font-size-h5 font-weight-bolder m-0" style="text-align: center;">
+                    Warehouse
+                </p>
+                <!-- <div class="vl"></div> -->
+            </div>
+            <div class="col-md-3 col mt-2 mx-0">
+                <p class=" font-size-h5 font-weight-bolder m-0" style="text-align: center;">Grade A</p>
+            </div>
+        </div>
+        <!-- <div class="col-sm-6">
+                <div class="card card-stretch gutter-b" style="background-color: rgb(30, 158, 255);">
+                    <div class="card-body cursor-pointer">
+                        <span
+                            class="card-title font-weight-bolder text-success font-size-h2 mb-0 d-block"></span>
+                        <span class="font-weight-bold text-muted font-size-sm" ><h5 style="color:block;">Warehouse</h5></span>
+                        <div class="vl"></div>
+                    </div>   
+            </div>
+                 <div class="card card-stretch gutter-b">
+                    <div class="card-body cursor-pointer">
+                        <span
+                            class="card-title font-weight-bolder text-success font-size-h2 mb-0 d-block"></span>
+                        <span class="font-weight-bold text-muted font-size-sm">Price per Candy</span>
+                    </div>
+                
+            </div>
+            </div> -->
+            
+        <div *ngIf="!editPricesheet">
+            <div class="row mx-0" *ngFor="let candyPriceSheet of latestPriceSheet; let i=index;">
+                <div class="col-md-3">
+                    <span class="text-success font-size-h5">
+                        <small><h6 class="text-center">{{candyPriceSheet?.event?.params?.id}}</h6></small>
+                      </span>
+                </div>
+                <div class="col-md-3 col mt-2"  >
+                    <span class="text-success font-size-h5">
+                      <small><h6>{{candyPriceSheet?.event?.params?.warehouseName}}</h6></small>
+                    </span>
+                </div>
+                <div class="col-md-1 col px-3">
+                    <div class="form-group mb-1">
+                        <small>Min</small>
+                        <input class="form-control" type="number" [value]="candyPriceSheet?.conditions[0]?.value[0]" disabled>
+                        
+                    </div>
+                </div>
+                <div class="col-md-1 col px-3">
+                    <div class="form-group">
+                        <small>Max</small>
+                        <input class="form-control"  type="number" [value]="candyPriceSheet?.conditions[0]?.value[1]" disabled>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="m-4" *ngIf="!editPricesheet">Click <button type="button" class="btn btn-success" (click)="ShoweditPriceSheet()">Here</button> to edit the Price sheet </p>
+        <div class="card-body" [formGroup]="candyRateCreationForm" *ngIf="editPricesheet">
+            <div formArrayName="wareHouseList">
+                <div class="row" *ngFor="let bank of candyRateCreationForm.get('wareHouseList')['controls']; let i=index;"
+                [formGroupName]="i">
+                    <div class="col-md-3">
+                        <span class="text-success font-size-h5">
+                            <small><h6 class="text-center">{{bank.value.id}}</h6></small>
+                        </span>
+                    </div>
+                    <div class="col-md-3 col mt-2"  >
+                        <span class="text-success font-size-h5">
+                          <small><h6>{{bank.value.warehouseName}}</h6></small>
+                        </span>
+                    </div>
+                    <div class="col-md-1 col px-3">
+                        <div class="form-group mb-1">
+                            <small>Min</small>
+                            <input class="form-control" type="number" required formControlName="rmGradeAminPrice" (input)="onVlueChange(i, 'MIN')">
+                        </div>
+                    </div>
+                    <div class="col-md-1 col px-3">
+                        <div class="form-group">
+                            <small>Max</small>
+                            <input class="form-control"  type="number" formControlName="rmGradeAmaxPrice" required  (input)="onVlueChange(i, 'MAX')">
+                        </div>
+                    </div>
+                    
+    
+                    <p class="col-md-4 text-danger d-flex align-items-center">{{bank.value.errorMessage}}</p>
+                </div>
+                
+            </div>
+        
+            <div class="d-flex  w-100 mr-4 justify-content-end">
+                <button type="button" class="btn btn-sm btn-secondary mr-2" (click)="editPricesheet = false">Cancel</button>
+                <button type="button" class="btn btn-success" (click)="createCandyPriceSheet(candyRateCreationForm.value)">Save</button>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,40 @@
+.app-disable{
+    pointer-events: none;
+    cursor: no-drop;
+}
+.selectWrapper .form-control-solid{
+    padding: 0 !important;
+    
+}
+.csbProof_label {
+    background: #F4F6F9;
+    padding: 10px;
+    font-size: 16px;
+}
+.image-input [data-action=change] {
+    bottom: -11px !important;
+    top: unset !important;
+    background-color: #D1D8FC !important;
+}
+.coupon_code_with_close_mark {
+    display: flex;
+    align-items: center;
+    border: 1px solid;
+    width: 100%;
+    height: calc(1.5em + 1.65rem + 2px);
+    padding: 0.65rem 1rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #3F4254;
+    background-color: #ffffff;
+    background-clip: padding-box;
+    border: 1px solid #E4E6EF;
+    border-radius: 0.42rem;
+    box-shadow: none;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    input {
+        border: none;
+        outline: 0;
+    }
+}

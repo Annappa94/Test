@@ -1,0 +1,23 @@
+<div class="row" [formGroup]="form">
+    <div class="col-lg-6 col-12 pb-3">
+        <!-- <label for="name">Available on<span class="text-danger">*</span></label> -->
+        <mat-form-field class="w-100 cursor-pointer"  appearance="none" (click)="dp.open()">
+          <input class="cursor-pointer"formControlName="start" matInput [matDatepicker]="dp"
+          (click)="dp.open()" readonly>
+          <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+          <mat-datepicker #dp disabled="false"></mat-datepicker>
+        </mat-form-field>
+        <small class="form-text text-muted"><b>Filter</b> by {{startTitle}}</small>
+    </div>
+    <div class="col-lg-6 col-12 pb-3">
+        <!-- <label for="name">Available on<span class="text-danger">*</span></label> -->
+        <mat-form-field class="w-100 cursor-pointer"  appearance="none" (click)="dp2.open()">
+          <input class="cursor-pointer" formControlName="end" matInput [matDatepicker]="dp2"
+          (click)="dp2.open()" readonly>
+          <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
+          <mat-datepicker #dp2 disabled="false"></mat-datepicker>
+        </mat-form-field>
+        <small class="form-text text-muted"><b>Filter</b> by {{endTitle}}</small>
+    </div>
+
+</div>

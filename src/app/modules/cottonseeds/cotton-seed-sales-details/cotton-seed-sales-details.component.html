@@ -1,0 +1,270 @@
+<div class="bg-white rounded mb-4 d-flex align-items-center py-2 sticky-header justify-content-between">
+  <ul id="breadcrumbs">
+    <li>
+      <span style="cursor: pointer" class="hover-item" (click)="goBack()"
+        >All Seeds Order List</span
+      >
+    </li>
+    <li>
+      <span>{{ seedsorderDetails?.id }}</span>
+    </li>
+  </ul>
+  <div>
+    <button
+      class="btn btn-secondary btn-sm font-weight-bolder font-size-sm py-3 px-6 mr-5"
+      (click)="goBack()"
+    >
+      Back
+    </button>
+  </div>
+</div>
+
+
+
+<div class="row">
+    <div class="col-lg-4 mt-4">
+        <div class="card card-custom gutter-b">
+            <div class="card-body pt-4">
+                <p class="mt-4">
+                    <span class="text-success font-weight-bold pr-1">Seeds Sales Order Details</span>
+                </p>
+                <div class="mb-7">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Code:</span>
+                        <span class="text-dark-75 font-weight-bold">{{seedsorderDetails?.code}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Seeds Sales Order Type:</span>
+                        <span class="text-dark-75 font-weight-bold">{{seedsorderDetails?.cottonSeedsSalesOrderType}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Created by:</span>
+                        <span class="text-dark-75 font-weight-bold">{{seedsorderDetails?.createdBy}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Created Date:</span>
+                        <span class="text-dark-75 font-weight-bold">{{seedsorderDetails?.createdDate}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Last Modified Date:</span>
+                        <span class="text-dark-75 font-weight-bold">{{seedsorderDetails?.lastModifiedDate}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Last Modified By:</span>
+                        <span class="text-dark-75 font-weight-bold">{{seedsorderDetails?.lastModifiedBy}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Order Status:</span>
+                        <span class="text-dark-75 font-weight-bold">{{seedsorderDetails?.orderStatus}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Selling Weight:</span>
+                        <span class="text-dark-75 font-weight-bold">{{seedsorderDetails?.sellingWeight}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Deduction:</span>
+                        <span class="text-dark-75 font-weight-bold">{{seedsorderDetails?.deduction}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Actual Selling Weight:</span>
+                        <span class="text-dark-75 font-weight-bold">{{seedsorderDetails?.actualSellingWeight}}</span>
+                    </div>
+                    
+
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Selling Price /kg:</span>
+                        <span class="text-dark-75 font-weight-bold">{{seedsorderDetails?.sellingPricePerKg}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Gross Total:</span>
+                        <span class="text-dark-75 font-weight-bold">{{seedsorderDetails?.grossTotal}}</span>
+                    </div>
+                    
+                    
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Discount:</span>
+                        <span class="text-dark-75 font-weight-bold">{{seedsorderDetails?.discountAmount}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Pre Tax Amount:</span>
+                        <span class="text-dark-75 font-weight-bold">{{seedsorderDetails?.preTaxAmount}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Cgst:</span>
+                        <span class="text-dark-75 font-weight-bold">{{seedsorderDetails?.cgst}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Sgst:</span>
+                        <span class="text-dark-75 font-weight-bold">{{seedsorderDetails?.sgst}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Igst:</span>
+                        <span class="text-dark-75 font-weight-bold">{{seedsorderDetails?.igst}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Net Amount:</span>
+                        <span class="text-dark-75 font-weight-bold">{{seedsorderDetails?.netAmount}}</span>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Hamali Deduction:</span>
+                        <span class="text-dark-75 font-weight-bold">{{seedsorderDetails?.hamaliDeduction}}</span>
+                    </div>
+                    
+
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Weigh Bridge Charges:</span>
+                        <span class="text-dark-75 font-weight-bold">{{seedsorderDetails?.weighBridgeCharges}}</span>
+                    </div>
+
+
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Credit Days:</span>
+                        <span class="text-dark-75 font-weight-bold">{{seedsorderDetails?.creditDays}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Payment Status:</span>
+                        <span class="text-dark-75 font-weight-bold">{{seedsorderDetails?.paymentStatus}}</span>
+                    </div>
+
+
+                    <p class="mt-7 mb-2">
+                        <span class="text-success-75 font-weight-bolder pr-1">Oil Mill Details</span>
+                    </p>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Oil Mill:</span>
+                        <span class="text-dark-75 font-weight-bold">{{seedsorderDetails?.oilMillId}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Oil Mill Name:</span>
+                        <span class="text-dark-75 font-weight-bold">{{seedsorderDetails?.oilMillName}}</span>
+                    </div>
+
+
+
+
+                    
+
+                    <p class="mt-7 mb-2">
+                        <span class="text-success-75 font-weight-bolder pr-1">Address</span>
+                    </p>
+                    <p>
+                        <span class="text-muted font-weight-bolder mr-2">
+                            {{seedsorderDetails?.shippingAddress?.address}} {{seedsorderDetails?.shippingAddress?.village}}
+                            {{seedsorderDetails?.shippingAddress?.taluk}} {{seedsorderDetails?.shippingAddress?.city}}
+                        </span><br /><br />
+                        <span class="text-muted font-weight-bolder mr-2 pt-2">{{seedsorderDetails?.shippingAddress?.district ?
+                            seedsorderDetails?.shippingAddress?.district + ' District, ' : ''}} {{seedsorderDetails?.shippingAddress?.state}},
+                            {{seedsorderDetails?.shippingAddress?.pincode}}</span>
+                    </p>
+
+                    
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="col-lg-5 mt-4">
+        <div class="card card-custom mt-4">
+            <h6 class="text-success headingalign">Seeds Order Items</h6>
+            <div class="table-responsive">
+                <table class="table table-borderless table-vertical-center">
+                    <thead>
+                        <tr>
+                            <th class="p-0 min-w-70px headingalign">Seeds Lot Id's</th>
+                            <th class="p-0 min-w-70px headingalign">Selling Weight</th>
+                            <th class="p-0 min-w-70px headingalign">Actual Selling Weight</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngIf="seedsorderDetails?.cottonSeedsOrderItems?.length !== 0; else emptyTemplate">
+                            <tr *ngFor="let item of seedsorderDetails?.cottonSeedsOrderItems">
+
+
+                                <td class="headingalign">
+                                    <span class="font-weight-bold d-block font-size-md">{{item?.cottonSeedsLotId}}</span>
+                                </td>
+                                <td class="headingalign">
+                                    <span class="font-weight-bold d-block font-size-md">{{item?.sellingWeight}}</span>
+                                </td>
+                                <td class="headingalign">
+                                    <span class="font-weight-bold d-block font-size-md">{{item?.actualSellingWeight}}</span>
+                                </td>   
+                            </tr>
+                        </ng-container>
+                        <ng-template #emptyTemplate>
+                            <p class="p-5">Yet to be sold.</p>
+                          </ng-template>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="col-lg-3 mt-4">
+        <div class="card card-custom ">
+            <div class="card-body pt-4">
+                <div class="d-flex justify-content-between align-items-baseline mt-4">
+                    <div class="font-size-h5 font-weight-bold text-success">Payments</div>
+                    <button class="btn btn-sm btn-icon float-right">
+                        <app-generic-payment [paymentInfo]="seedsorderDetails" (refresh)="refresh()"></app-generic-payment>
+                    </button>
+                </div>
+                <div class="mt-4">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Net Amount:</span>
+                        <span class="text-dark-75 font-weight-bold">{{seedsorderDetails?.netAmount}}</span>
+
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Due Amount:</span>
+                        <span class="text-danger">{{seedsorderDetails?.dueAmount}}</span>
+
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Payment Status:</span>
+                        <span [ngClass]="{'text-danger' : seedsorderDetails?.paymentStatus=='PENDING'}" >{{seedsorderDetails?.paymentStatus}}</span>
+
+                    </div>
+                </div>
+
+                <div class="example example-basic mt-6" *ngIf="seedsSaleOrderPaymentDetails?.length">
+                    <div class="">
+                        <div class="timeline timeline-2">
+                            <div class="timeline-bar"></div>
+    
+                            <div class="timeline-item" *ngFor="let item of seedsSaleOrderPaymentDetails">
+                                <span class="timeline-badge bg-success"></span>
+                                <div class="timeline-content d-flex align-items-center justify-content-between">
+                                    <span class="mr-3 font-weight-bold text-dark-50 font-size-sm d-flex flex-column">Rs. {{item?.amount}}
+                                        <span class="label label-inline label-outline-success">
+                                            {{item.referenceNumber}}</span>
+                                       </span>
+                                    <span class="text-muted font-italic text-right font-size-xs">{{item.paymentOn}}</span>
+                                </div>
+                            </div>
+    
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+        </div>
+    </div>
+
+    
+</div>
+

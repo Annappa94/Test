@@ -1,0 +1,61 @@
+<ng-container>
+    <span matTooltip="Add Payment" class="btn btn-icon btn-sm mr-1 mt-1" 
+          (click)="payNow(payment)">
+      <i class="fas fa-money-check-alt text-success"></i>
+    </span>
+</ng-container>
+
+<!-- *ngIf="rolesService.checkAccess(user.role, {type: 'actions', component: 'CocoonOrdersComponent', action: 'payment'})" -->
+<div class="payment-confirmation-preview">
+    <div>
+        <form [formGroup]="ginnerPaymentForm">
+            <ng-template #payment let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Payment Details</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Due Amount : <strong>Rs. {{paymentDetail?.dueAmount?.toLocaleString('en-IN')}}</strong></p>
+                    <p>Cost Per Kg : <strong>Rs. {{paymentDetail?.sellingPricePerKg}}</strong></p>
+                    <p>Total Weight : <strong>{{paymentDetail?.totalWeight}} kgs</strong></p>
+                    <div class="form form-label-right">
+                        <div class="form-group row">
+
+                            <div class="col-lg-6 mt-2">
+                                <label class="form-label">Amount</label>
+                                <input type="number" class="form-control form-control-lg form-control-solid" name="amount"
+                                  placeholder="amount" autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('amount')"
+                                  [class.is-valid]="isControlValidForReeler('amount')" formControlName="amount" />
+                                <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'amount')">
+                                    Amount is required
+                                </div>
+                                <div *ngIf="ginner.availableAdvance>0">
+                                    Available Advance : Rs. {{ginner?.availableAdvance}}
+                                </div>
+                                <div style="color: #F64E60;" *ngIf="ginnerPaymentForm.value.amount > paymentDetail.dueAmount">
+                                    Amount Exceeds
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 mt-2">
+                                <label class="form-label">Reference Number</label>
+                                <input type="text" class="form-control form-control-lg form-control-solid" name="referenceNumber"
+                                  placeholder="Reference Number" autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('referenceNumber')"
+                                  [class.is-valid]="isControlValidForReeler('referenceNumber')" formControlName="referenceNumber" />
+                                <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'referenceNumber')">
+                                    Reference Number is required
+                                </div>
+                                
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+                    <!-- <button type="button" class="btn btn-sm btn-success" (click)="reelerPayment()" [disabled]="ginnerPaymentForm.invalid || this.ginnerPaymentForm.value.amount > paymentDetail.dueAmount">Pay Now</button> -->
+                </div>
+            </ng-template>
+        </form>
+    </div>
+</div>

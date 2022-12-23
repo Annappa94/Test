@@ -1,0 +1,128 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">Subscription Plan</h3>
+        </div>
+        <div class="card-toolbar">
+
+        </div>
+    </div>
+    <div class="card-body">
+        <form [formGroup]="subscriptionPlanForm" (ngSubmit)="onSubmit()">
+            <div class="form form-label-right">
+                <div class="row" >
+                    <div class="col-lg-4 mt-3">
+                        <label class="form-label">Name<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-lg" name="name"
+                        placeholder="Name" autocomplete="off" formControlName="name" />
+                        <p class="text-danger" *ngIf="formErrors.name">{{formErrors.name}}</p>
+                    </div>
+
+                    
+       
+                    <div class="col-lg-4 mt-3">
+                        <label>Select Device Type <span class="text-danger">*</span></label>
+                        <ng-select class="select-custom" (change)="getDeviuceTypeDataById($event)" placeholder="Please Select Device Type">
+                          <ng-container *ngFor="let device of deviceTypeList">
+                            <ng-option  [value]="device">{{ device.deviceName }}</ng-option>
+                          </ng-container>
+                        </ng-select>
+                    </div>
+                    <div class="col-lg-4 mt-3" *ngIf="selectedDeviceType?.supportedServices">
+                        <label>Service Applicable <span class="text-danger">*</span></label>
+                        <ng-select formControlName="serviceApplicable" class=" select-custom" (change)="getSelectedService($event)" placeholder="Please Select Device Type">
+                          <ng-container *ngFor="let service of selectedDeviceType?.supportedServices">
+                            <ng-option  [value]="service">{{ service }}</ng-option>
+                          </ng-container>
+                        </ng-select>
+                        <p class="text-danger" *ngIf="formErrors.serviceType">{{formErrors.serviceType}}</p>
+
+                    </div>
+                    <div class="col-lg-4 mt-3">
+                        <label >Business Vertical<span class="text-danger">*</span> </label>
+                        <select class="form-control form-control-lg" name="businessVertical" formControlName="businessVertical" disabled >
+                            <!-- <option *ngFor="let item of agronomistList" [value]="item.name">{{ item.name }} - {{ item.phone }}</option> -->
+                            <option value="RESHA_FARMS">RM FARMS</option>
+                            <!-- <option value="RESHA_YARNS">RM YARNS</option>
+                            <option value="RESHA_WEAVES">RM WEAVES</option> -->
+                        </select>
+                        <p class="text-danger" *ngIf="formErrors.businessVertical">{{formErrors.businessVertical}}</p>
+                    </div>
+                    <div class="col-lg-4 mt-3">
+                        <label >Product Type<span class="text-danger">*</span> </label>
+                        <select class="form-control form-control-lg" name="productType" formControlName="productType" disabled >
+                            <!-- <option *ngFor="let item of agronomistList" [value]="item.name">{{ item.name }} - {{ item.phone }}</option> -->
+                            <option value="IOT">IOT</option>
+                            <option value="INPUT">INPUT</option>
+                            <option value="MACHINERY">MACHINERY</option>
+                            
+                        </select>
+                        <p class="text-danger" *ngIf="formErrors.productType">{{formErrors.productType}}</p>
+                    </div>
+
+                    <div class="col-lg-4 mt-3">
+                        <label >Applicable Centers<span class="text-danger">*</span> </label>
+                        <ng-multiselect-dropdown 
+                            [placeholder]="'Select Center'"
+                            [settings]="dropdownSettings"
+                            [data]="centerList"
+                            [(ngModel)]="selectedItems"
+                            (onSelect)="onItemSelect($event)"
+                            (onSelectAll)="onSelectAll($event)"
+                            [ngModelOptions]="{standalone: true}">
+                        </ng-multiselect-dropdown>
+                        <p class="text-danger" *ngIf="formErrors.applicableCenters">{{formErrors.applicableCenters}}</p>
+
+                    </div>
+                    <div class="col-lg-4 mt-3">
+                        <label >Recurring Frequency<span class="text-danger">*</span> </label>
+                        <select class="form-control form-control-lg" name="recurringFrequency" formControlName="recurringFrequency"  >
+                            <!-- <option *ngFor="let item of agronomistList" [value]="item.name">{{ item.name }} - {{ item.phone }}</option> -->
+                            <option value="MONTHLY">MONTHLY</option>
+                            <option value="QUATERLY">QUATERLY</option>
+                            <option value="HALF_YEARLY">HALF YEARLY</option>
+                            <option value="YEARLY">YEARLY</option>
+                        </select>
+                        
+                    </div>
+                    <div class="col-lg-4 mt-3">
+                        <label class="form-label">Fixed Tenure<small>(Months)</small><span class="text-danger">*</span></label>
+                        <input type="number" class="form-control form-control-lg" name="tenure"
+                        placeholder="tenure" autocomplete="off" formControlName="tenure" />
+                        <p class="text-danger" *ngIf="formErrors.tenure">{{formErrors.tenure}}</p>
+                    </div>
+                    <div class="col-lg-4 mt-3">
+                        <label class="form-label">Deposit Amount<small>(Rs)</small><span class="text-danger">*</span></label>
+                        <input type="number" class="form-control form-control-lg" name="depositAmount"
+                        placeholder="Deposit Amount" autocomplete="off" formControlName="depositAmount" />
+                        <p class="text-danger" *ngIf="formErrors.depositAmount">{{formErrors.depositAmount}}</p>
+                    </div>
+                    <div class="col-lg-4 mt-3">
+                        <label class="form-label">Recurring Amount<small>(Rs)</small><span class="text-danger">*</span></label>
+                        <input type="number" class="form-control form-control-lg" name="recurringAmount"
+                        placeholder="Recurring Amount" autocomplete="off" formControlName="recurringAmount" />
+                        <p class="text-danger" *ngIf="formErrors.recurringAmount">{{formErrors.recurringAmount}}</p>
+                    </div>
+                    <div class="col-lg-4 mt-3">
+                        <label class="form-label">Payment Date <small>(Every Month)</small></label>
+                        <input type="number" class="form-control form-control-lg" name="paymentdate"
+                        placeholder="Payment Date" autocomplete="off" formControlName="paymentdate" disabled/>
+                        <p class="text-danger" *ngIf="formErrors.paymentdate">{{formErrors.paymentdate}}</p>
+                    </div>
+                    <div class="col-lg-4 mt-3">
+                        <label class="form-label">Grace Period <small>(No.Of.Days)</small></label>
+                        <input type="number" class="form-control form-control-lg" name="gracePeriod"
+                        placeholder="Grace Period" autocomplete="off" formControlName="gracePeriod" />
+                        <p class="text-danger" *ngIf="formErrors.gracePeriod">{{formErrors.gracePeriod}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-toolbar pt-6 float-right">
+                <button type="button" class="btn btn-sm btn-secondary mr-2"
+                    [routerLink]="['/resha-farms/iot/subscription']">Back</button>
+                <button type="submit" class="btn btn-sm btn-success">Save</button>
+            </div>
+        </form>
+    </div>
+</div>

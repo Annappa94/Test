@@ -1,0 +1,204 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">Subscription</h3>
+        </div>
+        <div class="card-toolbar">
+
+        </div>
+    </div>
+    <div class="card-body">
+        <form [formGroup]="subscriptionPlanForm" (ngSubmit)="onSubmit()">
+            <div class="form form-label-right">
+                <div class="row" >
+                    <!-- <div class="col-lg-4 mt-3">
+                        <label class="form-label">Name<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-lg" name="name"
+                        placeholder="Name" autocomplete="off" formControlName="name" />
+                        <p class="text-danger" *ngIf="formErrors.name">{{formErrors.name}}</p>
+                    </div> -->
+                    <div class="col-lg-12 d-flex">
+                        <div class="col-lg-4 mt-3">
+                            <label >Select Silk Farmer <span class="text-danger">*</span><span><a class="text-primary cursor-pointer"
+                                (click)="open(content)">+ New Farmer</a></span></label>
+                            <!-- <select class="form-control form-control-lg" name="farmer" formControlName="farmer"  >
+                                <option value="RMFARMS">RM FARMS</option>
+                                <option value="RM WEAVES">RM WEAVES</option>
+                            </select> -->
+                            <ng-select class="" [(ngModel)]="selectedFarmer" (change)="onFarmerChange()"
+                                [ngModelOptions]="{standalone: true}" placeholder="Please enter the mobile number" (search)='getFarmersList($event)'>
+                                <ng-option *ngFor="let item of farmerList" [value]="item">{{ item.name}} - {{ item.phone }}</ng-option>
+                            </ng-select>
+                            <p class="text-danger" *ngIf="formErrors.farmer">{{formErrors.farmer}}</p>
+
+                        </div>
+                        <div class="col-lg-4 mt-3">
+                            <label >Select Agronomist </label>
+                            <select class="form-control form-control-lg" name="agronomist" formControlName="agronomist">
+                                <option *ngFor="let item of agronomistList" [value]="item.id">{{ item.name }} - {{ item.phone }}</option>
+                                <!-- <option value="RMFARMS">RM FARMS</option>
+                                <option value="RM WEAVES">RM WEAVES</option> -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 d-flex">
+                        <!-- <div class="col-lg-4 mt-3">
+                            <label class="form-label">Device Serial Id<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="deviceId"
+                            placeholder="Name" autocomplete="off" formControlName="deviceId" disabled/>
+                        </div> -->
+
+
+                        <div class="col-lg-4 mt-3">
+                            <label >Device Serail Id <span class="text-danger">*</span><span></span></label>
+                            <ng-select class="" [(ngModel)]="selectedDeviceSerialId"  
+                                [ngModelOptions]="{standalone: true}" placeholder="Please enter device serial id" (search)='getDeviceSerialId($event)' (change)="onchangeDeviceSerialId($event)">
+                                <ng-option *ngFor="let item of serialIdList" [value]="item">{{ item.deviceSerialId }}</ng-option>
+                            </ng-select>
+                        </div>
+
+
+                        <div class="col-lg-4 mt-3">
+                            <label class="form-label">Device Type<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="deviceType"
+                            placeholder="Name" autocomplete="off" formControlName="deviceType" disabled/>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 d-flex flex-wrap">
+                        <div class="col-lg-4 mt-3">
+                            <label class="form-label">Plan Name</label>
+                            <input type="text" class="form-control form-control-lg" name="plan"
+                            placeholder="Name" autocomplete="off" formControlName="plan" disabled/>
+                        </div>
+                        <div class="col-lg-4 mt-3">
+                            <label class="form-label">Deposit Amount<small>(Rs)</small></label>
+                            <input type="text" class="form-control form-control-lg" name="depositAmount"
+                            placeholder="Deposit Amount" autocomplete="off" formControlName="depositAmount"disabled />
+                            <p class="text-danger" *ngIf="formErrors.depositAmount">{{formErrors.depositAmount}}</p>
+                        </div>
+                        <div class="col-lg-4 mt-3">
+                            <label class="form-label">Tenure<small>(Months)</small></label>
+                            <input type="text" class="form-control form-control-lg" name="tenure"
+                            placeholder="tenure" autocomplete="off" formControlName="tenure" disabled/>
+                            <p class="text-danger" *ngIf="formErrors.tenure">{{formErrors.tenure}}</p>
+                        </div>
+                        <div class="col-lg-4 mt-3">
+                            <label >State Selection </label>
+                            <select class="form-control form-control-lg" name="stateSelection" formControlName="stateSelection" (change)="onStateSelectionChange()" >
+                                <!-- <option *ngFor="let item of agronomistList" [value]="item.name">{{ item.name }} - {{ item.phone }}</option> -->
+                                <option value="SAME">Same state</option>
+                                <option value="OTHER">Other State</option>
+                            </select>
+                        </div>
+    
+                        <div class="col-lg-4 mt-3">
+                            <label class="form-label">CGST<small>(9%)</small></label>
+                            <input type="text" class="form-control form-control-lg" name="cgst"
+                            placeholder="CGST" autocomplete="off" formControlName="cgst" disabled/>
+                        </div>
+                        <div class="col-lg-4 mt-3">
+                            <label class="form-label">SGST<small>(9%)</small></label>
+                            <input type="text" class="form-control form-control-lg" name="sgst"
+                            placeholder="SGST" autocomplete="off" formControlName="sgst" disabled/>
+                        </div>
+                        <div class="col-lg-4 mt-3">
+                            <label class="form-label">IGST <small>(18%)</small></label>
+                            <input type="text" class="form-control form-control-lg" name="igst"
+                            placeholder="Grace Period" autocomplete="off" formControlName="igst" disabled/>
+                        </div>
+                        <div class="col-lg-4 mt-3">
+                            <label class="form-label">Subscription Amount<small>({{subPlan?.recurringFrequency}})</small> </label>
+                            <input type="text" class="form-control form-control-lg" name="subsAmount"
+                            placeholder="Grace Period" autocomplete="off" formControlName="subsAmount" disabled/>
+                        </div>
+                        <div class="col-lg-4 mt-3">
+                            <label class="form-label">Total Payable Amount Now</label>
+                            <input type="text" class="form-control form-control-lg" name="totalpayble"
+                            placeholder="Grace Period" autocomplete="off" formControlName="totalpayble" disabled/>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+
+            <div class="card-toolbar pt-6 float-right">
+                <button type="button" class="btn btn-sm btn-secondary mr-2"
+                    [routerLink]="['/resha-farms/device-management/iot-devices']">Back</button>
+                <button type="submit" [disabled]="!selectedDeviceSerialId" class="btn btn-sm btn-success">Save</button>
+            </div>
+        </form>
+    </div>
+    <div class="create-new-farmer">
+    <div>
+        <ng-template #content let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Create New Farmer</h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-12" [formGroup]="farmerCreateForm">
+                    <div class="row" >
+                        <div class="col-lg-6 mt-2">
+                            <label>Select Customer Type <span class="text-danger">*</span> </label>
+                            <select class="form-control form-control-lg" formControlName="customerType" name="customerType"
+                                placeholder="Select Customer Type">
+                                <option *ngFor="let item of kycCustomerTypes" [value]="item.id">{{item.name}}</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-6 mt-2">
+                            <label class="form-label">Name<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="name" placeholder="Name"
+                                autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('name')"
+                                [class.is-valid]="isControlValidForReeler('name')" formControlName="name" />
+                            <div class="valid-feedback" *ngIf="isControlValidForReeler('name')">Name was entered correct</div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'name')">Name is required</div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('pattern', 'name')">Name should not contain digits</div>
+                        </div>
+                        
+                        <div class="col-lg-6 mt-2">
+                            <label>Select Center<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg" formControlName="center" name="Center"
+                                placeholder="Select Center">
+                                <option *ngFor="let item of centerList" [value]="item.id">{{item.centerName}}</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-6 mt-2">
+                            <label>Cocoon Type<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg" formControlName="cocoonType"
+                                placeholder="Select Type">
+                                <option *ngFor="let item of cocoonTypeList" [value]="item.code">{{item.displayName}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-lg-6 mt-2">
+                            <label class="form-label">Mobile Number<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="phone"
+                                placeholder="Mobile Number" autocomplete="off"
+                                [class.is-invalid]="isControlInvalidForReeler('phone')"
+                                [class.is-valid]="isControlValidForReeler('phone')" formControlName="phone" />
+                            <div class="valid-feedback" *ngIf="isControlValidForReeler('phone')">Mobile number was
+                                entered correct
+                            </div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'phone')">Mobile number is required</div>
+                        </div>
+                        <div class="col-lg-6 mt-2" *ngIf="isOTPSent">
+                            <label class="form-label">Enter OTP code sent to phone<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="mobileOTP"
+                                placeholder="Enter OTP" autocomplete="off" formControlName="mobileOTP" />
+                        </div>
+                        <div class="col-lg-12 mt-2 d-flex align-items-center justify-content-end" *ngIf="!createdFarmerId">
+                            <button class="mt-5 mr-3 btn btn-sm btn-success" *ngIf="!isOTPSent" [disabled]="farmerCreateForm.invalid"
+                            (click)="initiateOtp(farmerCreateForm.value)">Send OTP</button>
+                            <button class="mt-5 btn btn-sm btn-success" *ngIf="isOTPSent" (click)="validateOTP(farmerCreateForm.value)">Verify</button>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" *ngIf="createdFarmerId">
+                <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+                <!-- <button type="button" class="btn btn-sm btn-success" [disabled]="farmerCreateForm.invalid"
+                    (click)="createFarmer(farmerCreateForm.value)">Save</button> -->
+            </div>
+        </ng-template>
+    </div>
+</div>
+</div>

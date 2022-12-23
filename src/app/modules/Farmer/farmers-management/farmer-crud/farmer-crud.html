@@ -1,0 +1,460 @@
+<div class="card card-custom gutter-b">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">{{id ? "Update Farmer Details" : "New Farmer Details" }} </h3>
+    </div>
+    <div class="card-toolbar">
+      <!-- Nothing right now-->
+    </div>
+  </div>
+  <div class="card-body pt-0">
+
+    <!-- Farmer FORM -->
+    <div class="form form-label-right">
+      <div class="form-group row" style="padding-top: 0px;">
+        <div class="col-lg-12">
+          <div class="row" [formGroup]="farmerCreateForm">
+            <div class="col-lg-3 mt-2">
+              <label class="form-label">Name<span class="text-danger">*</span></label>
+              <input type="text" class="form-control form-control-lg" name="name" placeholder="Name"
+                autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('name')"
+                [class.is-valid]="isControlValidForReeler('name')" formControlName="name" />
+              <div class="valid-feedback" *ngIf="isControlValidForReeler('name')">Name was entered correct</div>
+              <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'name')">Name is required</div>
+              <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('pattern', 'name')">Name should not contain digits</div>
+            </div>
+
+            <div class="col-lg-3 mt-2">
+              <label class="form-label">Mobile Number<span class="text-danger">*</span></label>
+              <input type="text" class="form-control form-control-lg" name="phone"
+                placeholder="Mobile Number" autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('phone')"
+                [class.is-valid]="isControlValidForReeler('phone')" formControlName="phone" />
+              <div class="valid-feedback" *ngIf="isControlValidForReeler('phone')">Mobile number was entered correct
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'phone')">Mobile number is
+                required</div>
+            </div>
+
+            <div class="col-lg-3 mt-2">
+              <label>Select Center<span class="text-danger">*</span></label>
+              <select class="form-control form-control-lg" formControlName="center" name="Center"
+                placeholder="Select Center">
+                <option *ngFor="let item of centerList" [value]="item.id">{{item.centerName}}</option>
+              </select>
+            </div>
+
+            <div class="col-lg-3 mt-2">
+              <label class="form-label">Referred by</label>
+              <input type="text" class="form-control form-control-lg"
+                placeholder="Referred by" autocomplete="off" formControlName="refferedBy" name="refferedBy"/>
+              </div>
+
+
+            <div class="col-lg-3 mt-2">
+              <label>Select Customer Type </label>
+              <select class="form-control form-control-lg" formControlName="customerType" name="customerType"
+                placeholder="Select Customer Type">
+                <option *ngFor="let item of kycCustomerTypes" [value]="item.id">{{item.name}}</option>
+              </select>
+            </div>
+
+            <!-- <div class="col-lg-3 mt-2" *ngIf="!id">
+              <label>Product Type<span class="text-danger">*</span></label>
+              <select class="form-control form-control-lg" formControlName="productType" name="customerType"
+                placeholder="Select Product Type">
+                <option *ngFor="let item of productTypeList" [value]="item">{{item}}</option>
+              </select>
+            </div>
+
+            <div class="col-lg-3 mt-2"  *ngIf="id">
+              <label>Product Type<span class="text-danger">*</span></label>
+              <input type="text" class="form-control form-control-lg form-control-solid" name="name" readonly placeholder="Product Type" formControlName="productType"/>
+            </div> -->
+
+            <ng-container *ngIf="farmerCreateForm.get('productType').value == 'Silk'">
+              <div class="col-lg-12 mt-6">
+                <ngb-accordion #acc11="ngbAccordion">
+                  <ngb-panel id="toggle-11">
+                    <ng-template ngbPanelTitle>
+                      <span class="card-header--title text-success">Chawki Details</span>
+                    </ng-template>
+                    <ng-template ngbPanelContent>
+                      <div class="row">
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">Name</label>
+                          <input type="text" class="form-control form-control-lg"
+                            placeholder="Name" autocomplete="off" formControlName="chaakiCenterName"/>
+                            <!-- <div class="valid-feedback" *ngIf="isControlValidForReeler('chaakiCenterName')">Name was entered correct</div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'chaakiCenterName')">Name is required</div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('pattern', 'chaakiCenterName')">Name should not contain digits</div> -->
+                        </div>
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">Phone Number</label>
+                          <input type="text" class="form-control form-control-lg"
+                            placeholder="Number" autocomplete="off" formControlName="chaakiCenterPhone" [class.is-invalid]="isControlInvalidForReeler('chaakiCenterPhone')"
+                            [class.is-valid]="isControlValidForReeler('chaakiCenterPhone')" />
+                            
+                            <!-- <div class="valid-feedback" *ngIf="isControlValidForReeler('chaakiCenterPhone')">Mobile number was entered correct
+                            </div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'chaakiCenterPhone')">Mobile number is
+                              required</div> -->
+                        </div>
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">Region</label>
+                          <input type="text" class="form-control form-control-lg"
+                            placeholder="Chawki Region" autocomplete="off" formControlName="chaakiRegion"/>
+                            <!-- <div class="valid-feedback" *ngIf="isControlValidForReeler('chaakiRegion')">Region was entered correct</div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'chaakiRegion')">Region is required</div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('pattern', 'chaakiRegion')">Region name should not contain digits</div> -->
+                        </div>
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">City</label>
+                          <input type="text" class="form-control form-control-lg"
+                            placeholder="City" autocomplete="off" formControlName="chaakiCity" />
+                            <!-- <div class="valid-feedback" *ngIf="isControlValidForReeler('chaakiCity')">City was entered correct</div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'chaakiCity')">City is required</div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('pattern', 'chaakiCity')">City name should not contain digits</div> -->
+                        </div>
+                      </div>
+                    </ng-template>
+                  </ngb-panel>
+                </ngb-accordion>
+              </div>
+
+              <div class="col-lg-12 mt-6">
+                <ngb-accordion #acc11="ngbAccordion">
+                  <ngb-panel id="toggle-farm">
+                    <ng-template ngbPanelTitle>
+                      <span class="ard-header--title text-success">Farm Details</span>
+                    </ng-template>
+                    <ng-template ngbPanelContent>
+                      <div class="row">
+
+                          <div class="col-lg-4 mt-2">
+                          <label class="form-label">Alternate Phone Number</label>
+                          <input type="text" class="form-control form-control-lg"
+                            name="Alternate Mobile Number" placeholder="Alternate Mobile Number" autocomplete="off"
+                            formControlName="phone"/>
+                        </div>
+
+
+                        <div class="col-lg-4 mt-2">
+                          <label class="form-label">Farm Area <small>(acres)</small></label>
+                          <input type="text" class="form-control form-control-lg" name="Farm Area"
+                            placeholder="Acres" autocomplete="off" formControlName="farmArea"/>
+                        </div>
+
+
+                        <div class="col-lg-4 mt-2">
+                          <!-- <div class="col-md-4"> -->
+                            <label for="name">Chawki Start Date</label>
+                            <!-- <br> -->
+                            <mat-form-field class="w-100 cursor-pointer" appearance="fill" (click)="dp3.open()">
+                                <input formControlName="chaakiDate" class="cursor-pointer" matInput [matDatepicker]="dp3"
+                                (click)="dp3.open()" readonly>
+                                <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+                                <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+                            </mat-form-field>
+                        <!-- </div> -->
+                          <!-- <div class="input-group input-group-solid">
+                            <input type="text" name="chaakiDate" class="form-control form-control-lg"
+                              autocomplete="off" placeholder="dd/mm/yyyy" ngbDatepicker #d="ngbDatepicker"
+                              formControlName="chaakiDate" readonly="true" />
+                            <div class="input-group-append" (click)="d.toggle()">
+                              <span class="input-group-text">
+                                <i class="text-dark-50 flaticon-calendar"></i>
+                              </span>
+                            </div>
+                          </div> -->
+                        </div>
+
+
+
+                        <div class="col-lg-4 mt-2">
+                          <label class="form-label">Cocoon Production <small>(kgs/month)</small></label>
+                          <input type="text" class="form-control form-control-lg"
+                            name="Production per month" placeholder="Production per month" autocomplete="off"
+                            formControlName="capacity"/>
+                        </div>
+
+
+                        <div class="col-lg-4 mt-2">
+                          <div class="d-flex flex-column">
+                            <label>List of farm equipment</label>
+
+                            <mat-form-field appearance="fill">
+                              <mat-select  multiple formControlName="farmEquipments">
+                                <mat-option *ngFor="let item of equipmentsList" [value]="item.val">{{item.name}}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+
+                        </div>
+                        <div class="col-lg-4 mt-2">
+                          <label>Cocoon Type</label>
+                          <select class="form-control form-control-lg" formControlName="cocoonType"
+                            placeholder="Select Type">
+                            <option *ngFor="let item of cocoonTypeList" [value]="item.code">{{item.displayName}}
+                            </option>
+                          </select>
+                        </div>
+
+
+                      </div>
+                    </ng-template>
+                  </ngb-panel>
+                </ngb-accordion>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="farmerCreateForm.get('productType').value == 'Cotton'">
+
+              <div class="col-lg-12 mt-6" [formGroup]="farmerCreateForm.get('cottonDetails')">
+                <ngb-accordion #acc11="ngbAccordion">
+                  <ngb-panel id="toggle-11">
+                    <ng-template ngbPanelTitle>
+                      <span class="card-header--title text-success">Cotton Details</span>
+                    </ng-template>
+                    <ng-template ngbPanelContent>
+                      <div class="row">
+
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">Cotton type</label>
+                          <select class="form-control form-control-lg" formControlName="cottonType" name="Center"
+                          placeholder="Select Center">
+                            <option *ngFor="let item of cottonTypesList" [value]="item.value">{{item.name}}</option>
+                          </select>
+                        </div>
+
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">Seed used</label>
+                          <input type="text" class="form-control form-control-lg"
+                            placeholder="Seed used" autocomplete="off" formControlName="seedUsed">
+                        </div>
+
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">Land Size( in Acres)</label>
+                          <input type="text" class="form-control form-control-lg"
+                            placeholder="Land Size in Acres" autocomplete="off" formControlName="landSizeInAcres" />
+                        </div>
+
+
+                        <div class="col-lg-3 mt-2">
+                            <label for="name">Sowing Time</label>
+                            <mat-form-field class="w-100 cursor-pointer" appearance="fill" (click)="dp3.open()">
+                                <input  formControlName="sowingTime"  class="cursor-pointer"  matInput [min]="todayDate"  [matDatepicker]= "dp3"
+                                (click)="dp3.open()" readonly (dateChange)="changeSowingTimeEvent($event)">
+                                <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+                                <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+
+
+                        <div class="col-lg-3 mt-2">
+                            <label for="name">Harvesting time</label>
+                            <mat-form-field class="w-100 cursor-pointer" appearance="fill" (click)="dp4.open()">
+                                <input formControlName="harvestingTime" class="cursor-pointer" matInput [min]="harvestdate" [matDatepicker]="dp4"
+                                (click)="dp4.open()" readonly>
+                                <mat-datepicker-toggle matSuffix [for]="dp4"></mat-datepicker-toggle>
+                                <mat-datepicker #dp4 disabled="false"></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+
+                      </div>
+                    </ng-template>
+                  </ngb-panel>
+                </ngb-accordion>
+              </div>
+
+            </ng-container>
+            <!-- <div class="col-lg-12 mt-6">
+              <bank-form [layouttype]="'page'" [accname]="true" [accnumber]="true" [ifsccode]="true" [bankname]="true" [branchname]="true"></bank-form>
+          </div> -->
+
+
+          <div class="col-lg-12 mt-6">
+            <bank-form [layouttype]="'page'" [productType]="'cotton'" [customerId]="id" [customerType]="'farmer'"  #bank  ></bank-form>
+          </div>
+            <!-- <div class="col-lg-12 mt-6">
+              <ngb-accordion #acc11="ngbAccordion">
+                <ngb-panel id="toggle-bank">
+                  <ng-template ngbPanelTitle>
+                    <span class="ard-header--title text-success">Bank Details</span>
+                  </ng-template>
+                  <ng-template ngbPanelContent>
+                    <div formArrayName="bankDetails">
+
+                     
+                      <p class="text-warning font-weight-bolder">
+                        Please note that the IFSC code for ALLAHABAD BANK (ALLA), SYNDICATE BANK (SYNB),
+                        DENA BANK (BKDN) and VIJAYA BANK (VIJB) has been disabled by RBI. Transactions initiated to
+                        these IFSCs will be rejected.
+                      </p>
+                      <div class="row pb-10"
+                        *ngFor="let bank of farmerCreateForm.get('bankDetails')['controls']; let i=index;"
+                        [formGroupName]="i">
+
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">Account Holder’s Name</label>
+                          <input type="text" class="form-control form-control-lg"
+                            placeholder="Account Holder’s Name" autocomplete="off" formControlName="beneficiaryName" />
+
+                          
+                        </div>
+
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">Bank Name</label>
+                          <input type="text" class="form-control form-control-lg"
+                            placeholder="Bank Name" autocomplete="off" formControlName="bankName" />
+                        </div>
+
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">Bank Account Number</label>
+                          <input type="text" class="form-control form-control-lg"
+                            placeholder="Bank Account Number" autocomplete="off" formControlName="accountNumber">
+                        </div>
+                        <div class="col-lg-2 mt-2">
+                          <label class="form-label">IFSC Code</label>
+                          <input type="text" class="form-control form-control-lg"
+                            placeholder="IFSC Code" autocomplete="off" formControlName="ifscCode">
+                        </div>
+                       
+                      </div>
+                    </div>
+                  </ng-template>
+                </ngb-panel>
+              </ngb-accordion>
+            </div> -->
+
+
+            <!-- <div class="col-lg-12 mt-6">
+              <ngb-accordion #acc11="ngbAccordion">
+                <ngb-panel id="toggle-address">
+                  <ng-template ngbPanelTitle>
+                    <span class="ard-header--title text-success">Address Details</span>
+                  </ng-template>
+                  <ng-template ngbPanelContent>
+                    <div class="row">
+                      <div class="col-lg-3 mt-2">
+                        <label class="form-label">Address</label>
+                        <input type="text" class="form-control form-control-lg" name="Address"
+                          placeholder="Address" autocomplete="off" formControlName="address" />
+                      </div>
+                      <div class="col-lg-3 mt-2">
+                        <label class="form-label">Village</label>
+                        <input type="text" class="form-control form-control-lg" name="Village"
+                          placeholder="Village" autocomplete="off" formControlName="village" />
+                      </div>
+                      <div class="col-lg-3 mt-2">
+                        <label class="form-label">City</label>
+                        <input type="text" class="form-control form-control-lg" name="city"
+                          placeholder="City" autocomplete="off" formControlName="city" />
+                      </div>
+                      <div class="col-lg-3 mt-2">
+                        <label class="form-label">District</label>
+                        <input type="text" class="form-control form-control-lg" name="District"
+                          placeholder="District" autocomplete="off" formControlName="district" />
+                      </div>
+                      <div class="col-lg-3 mt-2">
+                        <label class="form-label">Taluk</label>
+                        <input type="text" class="form-control form-control-lg" name="Taluk"
+                          placeholder="Taluk" autocomplete="off" formControlName="taluk" />
+                      </div>
+                      <div class="col-lg-3 mt-2">
+                        <label class="form-label">Region</label>
+                        <input type="text" class="form-control form-control-lg" name="region"
+                          placeholder="Region" autocomplete="off" formControlName="region" />
+                      </div>
+                      <div class="col-lg-3 mt-2">
+                        <label class="form-label">State</label>
+                        <input type="text" class="form-control form-control-lg" name="State"
+                          placeholder="State" autocomplete="off" formControlName="state" />
+                      </div>
+                      <div class="col-lg-3 mt-2">
+                        <label class="form-label">PIN Code</label>
+                        <input type="text" class="form-control form-control-lg" name="PIN Code"
+                          placeholder="PIN Code" autocomplete="off" formControlName="pincode" />
+                      </div>
+                      <div class="col-lg-3 mt-2">
+                        <label class="form-label">Latitude</label>
+                        <input type="text" readonly class="form-control form-control-lg" name="PIN Code"
+                          placeholder="PIN Code" autocomplete="off" formControlName="latitude" />
+                      </div>
+                      <div class="col-lg-3 mt-2">
+                        <label class="form-label">Longitude</label>
+                        <input type="text" readonly class="form-control form-control-lg" name="PIN Code"
+                          placeholder="PIN Code" autocomplete="off" formControlName="longitude" />
+                      </div>
+
+
+                    </div>
+                  </ng-template>
+                </ngb-panel>
+              </ngb-accordion>
+            </div> -->
+
+            <div class="col-lg-12 mt-6">
+              <address-pincode-form [address] [village] [layouttype]="'page'"></address-pincode-form>
+          </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card-toolbar">
+        <button type="button" class="btn btn-sm btn-secondary mr-2" (click)="goBack();">Back</button>
+
+        <button type="submit" class="btn btn-sm btn-success" [disabled]="farmerCreateForm.invalid"
+          (click)="saveFarmerDetails(farmerCreateForm.value)">Save</button>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="delete-confirmation-preview">
+  <div>
+      <ng-template #content let-c="close" let-d="dismiss">
+          <div class="modal-header">
+              <h4 class="modal-title">Delete Account {{delBank.accountNumber}}</h4>
+          </div>
+          <div class="modal-body">
+              <p>Are you sure you want to delete <strong> Account Number {{delBank.value.accountNumber}}</strong>?</p>
+              <p>Account Holder’s Name  <strong>{{delBank.value.beneficiaryName}}</strong></p>
+              <p>Bank Name  <strong>{{delBank.value.bankName}}</strong></p>
+              <p>IFSC Code  <strong>{{delBank.value.ifscCode}}</strong></p>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+              <button type="button" class="btn btn-sm btn-success" (click)="deleteBankDetails()">Yes</button>
+          </div>
+      </ng-template>
+  </div>
+</div>
+
+
+
+<div class="delete-confirmation-preview">
+  <div>
+      <ng-template #kycFillcontent let-c="close" let-d="dismiss">
+          <div class="modal-header">
+              <h4 class="modal-title">KYC</h4>
+          </div>
+          <div class="modal-body">
+
+            <div class="mb-2">
+              <p>Please complete KYC.</p>
+              <!-- <p>Please complete KYC <u class="text-warning cursor-pointer" (click)="routeToKyCpage();">here</u>.</p> -->
+              <p class="text-warning">KYC is mandatory while doing any Transactions</p>
+            </div>
+            </div>
+
+          <div class="modal-footer">
+              <button type="button" class="btn btn-sm btn-success" (click)="skipKYC()">Skip For Now</button>
+
+
+          </div>
+      </ng-template>
+  </div>
+</div>

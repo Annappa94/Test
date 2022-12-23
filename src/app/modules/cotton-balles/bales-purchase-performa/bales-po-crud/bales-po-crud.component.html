@@ -1,0 +1,381 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">{{id ? "Update Purchase Performa" : "New Purchase Performa" }}</h3>
+        </div>
+        <div class="card-toolbar">
+
+        </div>
+    </div>
+    
+    <div class="create-new-farmer">
+        <div>
+            <ng-template #content let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Create New Spinning Mill</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="col-lg-12">
+                        <div class="row" [formGroup]="spinningMillCreateForm">
+                            <div class="col-lg-12 mt-2">
+                                <label class="form-label">Name<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-lg" name="name" placeholder="Name"
+                                  autocomplete="off" [class.is-invalid]="isControlInvalidForWeavers('name')"
+                                  [class.is-valid]="isControlValidForWeavers('name')" formControlName="name" />
+                                <div class="valid-feedback" *ngIf="isControlValidForWeavers('name')">Name was entered correct</div>
+                                <div class="invalid-feedback" *ngIf="controlHasErrorForWeavers('required', 'name')">Name is required</div>
+                              </div>
+                              <div class="col-lg-12 mt-2">
+                                <label class="form-label">Mobile Number<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-lg" name="phone"
+                                  placeholder="Mobile Number" autocomplete="off" [class.is-invalid]="isControlInvalidForWeavers('phone')"
+                                  [class.is-valid]="isControlValidForWeavers('phone')" formControlName="phone" />
+                                <div class="valid-feedback" *ngIf="isControlValidForWeavers('phone')">Mobile number was entered correct
+                                </div>
+                                <div class="invalid-feedback" *ngIf="controlHasErrorForWeavers('required', 'phone')">Mobile number is
+                                  required</div>
+                              </div>
+                              <div class="col-lg-12 mt-2">
+                                <label>Select Center<span class="text-danger">*</span></label>
+                                <select class="form-control form-control-lg" formControlName="center" name="Center"
+                                  placeholder="Select Center">
+                                  <option *ngFor="let item of centerList" [value]="item.id">{{item.centerName}}</option>
+                                </select>
+                              </div>
+                              <div class="col-lg-12 mt-2">
+                                <label>Select Customer Type </label>
+                                <select class="form-control form-control-lg" formControlName="customerType" name="customerType"
+                                  placeholder="Select Customer Type">
+                                  <option *ngFor="let item of kycCustomerTypes" [value]="item.id">{{item.name}}</option>
+                                </select>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+                    <button type="button" class="btn btn-sm btn-success" [disabled]="spinningMillCreateForm.invalid" (click)="createNewSpinningMill(spinningMillCreateForm.value)">Save</button>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+
+    <!-- baleFromDetails FORM -->
+    <div class="card-body" [formGroup]="baleFromDetails">
+        <div class="form form-label-right" >
+            <div class="form-group row">
+                <div class="col-lg-12">
+                    <div class="row">
+  
+                        <div *ngIf="!edit" class="col-lg-3 mt-4 selectWrapper">
+                            <label class="w-100 d-flex justify-content-between">
+                                <span>Select Spinning Mill<span class="text-danger">*</span></span>
+                                <span>
+                                    <a class="text-primary cursor-pointer" (click)="open(content)" >+Spinning Mill</a>
+                                </span>
+                            </label>
+                            <ng-select class=""
+                                [(ngModel)]="selectedSpinningMill" (change)="onspinningMillSelection()"
+                                [ngModelOptions]="{standalone: true}"
+                                placeholder="Please enter the name or mobile number"
+                                (search)='getSpinningMillsList($event)'>
+                                <ng-option *ngFor="let item of SpinningMillList" [value]="item.id">{{ item.name
+                                    }} - {{ item.phone }}</ng-option>
+                            </ng-select>
+                        </div>
+
+                        <div class="col-lg-3 mt-4"  *ngIf="edit">
+                            <label>Select Spinning Mill<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg form-control-solid" 
+                                [ngClass]="{'app-disable': edit}"
+                                name="Center" placeholder="Select Center">
+                                <option>{{ baleFromDetails.get('name').value}} - {{ baleFromDetails.get('phone').value}}</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-3 mt-4">
+                            <label>PO valid till<span class="text-danger">*</span></label>
+                            <mat-form-field class="w-100 cursor-pointer" appearance="fill" (click)="dp3.open()">
+                                <input formControlName="validTill" class="cursor-pointer" matInput [matDatepicker]="dp3" 
+                                (click)="dp3.open()" readonly>
+                                <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+                                <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- <div class="col-lg-3 mt-4">
+                            <label class="form-label">PO Status</label>
+                            <select class="form-control form-control-lg"
+                                name="poStatus" placeholder="PO Status" formControlName="poStatus">
+                                <option value="New">New</option>
+                                <option value="Processing">Processing</option>
+                                <option value="Fulfilled">Fulfilled</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                        </div> -->
+
+                        <div class="col-lg-3 mt-4">
+                              <label>Credit Days<span class="text-danger">*</span></label>
+                              <select class="form-control form-control-lg" formControlName="creditDays" placeholder="Select Type">
+                                  <option *ngFor="let item of COTTON_BALE_PURCHASE_PO" [value]="item">{{ item }}</option>
+                              </select>
+                        </div> 
+
+                        <div class="col-lg-12 mt-6">
+                            <ngb-accordion #acc11="ngbAccordion">
+                                <ngb-panel id="toggle-bank">
+                                    <ng-template ngbPanelTitle>
+                                        <span class="card-header--title text-success">Item<span class="text-danger">*</span></span>
+                                    </ng-template>
+                                    <ng-template ngbPanelContent>
+                                        <div>
+                                        <div class="row gapBwt">
+                                             <!-- <div class="slNo">
+                                                <br><br>
+                                                <b>{{i+1}}</b>
+                                            </div> -->
+
+                                            <div class="col-12">
+                                                <div class="row">
+                                                   
+                                                    <div class="col-lg-3 mt-2">
+                                                        <label>Cotton Type</label>
+                                                        <select class="form-control form-control-lg" formControlName="cottonType"
+                                                          placeholder="Select Type">
+                                                          <option *ngFor="let item of cottonTypesList" [value]="item.value">{{item.name}}
+                                                          </option>
+                                                        </select>
+                                                      </div>
+        
+        
+                                                    <div class="col-lg-3 mt-2">
+                                                        <label class="form-label">Staple Length (in mm)</label>
+                                                        <input type="number"
+                                                            class="form-control form-control-lg"
+                                                            placeholder="Quantity" autocomplete="off"
+                                                            formControlName="stapleLength"   />
+                                                    </div>
+                                                    
+                                                    <div class="col-lg-3 mt-2">
+                                                        <label class="form-label">RD</label>
+                                                        <input type="number"
+                                                            class="form-control form-control-lg"
+                                                            placeholder="Price/Quantity" autocomplete="off"
+                                                            formControlName="rd"  />
+                                                    </div>
+                                                    <div class="col-lg-3 mt-2">
+                                                        <label class="form-label">Trash Content (in %)</label>
+                                                        <input type="number"
+                                                            class="form-control form-control-lg"
+                                                            placeholder="Trash Content" autocomplete="off"
+                                                            formControlName="trashContent"  />
+                                                    </div>
+                                                    <div class="col-lg-3 mt-2">
+                                                        <label class="form-label">Elong (in %)</label>
+                                                        <input type="number"
+                                                            class="form-control form-control-lg"
+                                                            placeholder="Elong" autocomplete="off"
+                                                            formControlName="elong"  />
+                                                    </div>
+                                                    <div class="col-lg-3 mt-2">
+                                                        <label class="form-label">Microniare Value</label>
+                                                        <input type="number"
+                                                            class="form-control form-control-lg"
+                                                            placeholder="Microniare Value" autocomplete="off"
+                                                            formControlName="microniareValue"  />
+                                                    </div>
+                                                    <div class="col-lg-3 mt-2">
+                                                        <label class="form-label">Strength (in mm)</label>
+                                                        <input type="number"
+                                                            class="form-control form-control-lg"
+                                                            placeholder="Strength" autocomplete="off"
+                                                            formControlName="strength"  />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- <div class="col-1 mt-4 px-0">
+                                                <div class="row h-100">
+                                                    <div class="d-flex justify-content-center align-items-center px-5 h-100 mt-3"
+                                                    >
+                                                        <button matTooltip="Add" type="button" class="btn btn-icon btn-success btn-xs" (click)="addItem()">
+                                                           <i class="flaticon-add-circular-button"></i>
+                                                        </button>
+                                                        <button matTooltip="Remove" type="button" class="btn ml-2 btn-icon btn-danger btn-xs" (click)="deleteItem(i)" *ngIf="baleFromDetails.get('items')['controls'].length>1">
+                                                         <i class="flaticon-cancel"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                Number of Bales ( assume Bale = 170 kg)
+                                                Total Weight - <autocalculated>
+                                                Number of candies < autocalculated >
+                                                Price / candy < user enterable > 
+                                                Gross total <autocalculated>
+                                                Discount ( in % or amount ) 
+                                                PO Net Amount < auto-calculated> 
+
+                                            </div> -->
+
+                                         </div>
+                                          <div class="row">
+                                            <div class="col-lg-3 mt-6">
+                                                <label class="form-label">Number of Bales <span class="text-danger">*</span></label>
+                                                <input type="number" class="form-control form-control-lg " name="Number Of Bales" formControlName="noOfBales" placeholder="Number Of Bales"  (keyup)="updateWeightCalc()" />
+                                            </div>
+                                              <div class="col-lg-3 mt-6">
+                                                  <label class="form-label">Total Weight</label>
+                                                  <input type="number" class="form-control form-control-lg form-control-solid"
+                                                      name="Total Weight" placeholder="Total Weight" formControlName="totalWeight" autocomplete="off"  readonly/>
+                                              </div>
+                                              <!-- <div class="col-lg-3 mt-6">
+                                                <label class="form-label"> Number of Candies</label>
+                                                <input type="number" class="form-control form-control-lg form-control-solid"
+                                                    name="Number of Candies" placeholder="Number of Candies" autocomplete="off" formControlName="noOfCandies" readonly/>
+                                            </div> -->
+                                            <div class="col-lg-3 mt-6">
+                                                <label class="form-label">Price(per candy) <span class="text-danger">*</span></label>
+                                                <input type="number" class="form-control form-control-lg"
+                                                    name="Total Amount" placeholder="Total Amount" autocomplete="off" formControlName="pricePerCandy" (keyup)="updateWeightCalc()"/>
+                                            </div>
+                                            <div class="col-lg-3 mt-6">
+                                              <label class="form-label">Price per KG </label>
+                                              <input type="number" class="form-control form-control-lg form-control-solid"
+                                                  name="Gross Total" placeholder="Price per KG" autocomplete="off"  formControlName="pricePerKg" readonly/>
+                                          </div>
+                                            <div class="col-lg-3 mt-6">
+                                                <label class="form-label">Gross Total </label>
+                                                <input type="number" class="form-control form-control-lg form-control-solid"
+                                                    name="Gross Total" placeholder="Gross Total" autocomplete="off"  formControlName="grossTotal" readonly/>
+                                            </div>
+                  
+                                              <div class="col-lg-3 mt-6">
+                                                  <label class="form-label">Discount Amount (in Rs)</label>
+                                                  <input type="number" class="form-control form-control-lg"
+                                                      name="Discount Amount" placeholder="Discount Amount" formControlName="discountAmount" (keyup)="updateWeightCalc()"/>   
+                                                      <p style="color: red;" *ngIf=" baleFromDetails.get('discountAmount').value >  baleFromDetails.get('grossTotal').value">Discount Amount can not be more than {{baleFromDetails.get('grossTotal').value}} </p>
+
+                                              </div>
+                  
+                                              <div class="col-lg-3 mt-6">
+                                                <label class="form-label">Net Amount</label>
+                                                  <input type="number" class="form-control form-control-lg form-control-solid"
+                                                      name="Net Amount" formControlName="netPrice" placeholder="Net Amount" autocomplete="off"  readonly/>
+                                              </div>
+
+                                              <div class="col-lg-3 mt-6 selectWrapper" *ngIf="!edit">
+                                                  <label class="form-label">Representive <small>(Created by)</small></label>
+                                                  <ng-select class=" select-custom" [ngModelOptions]="{standalone: true}" [(ngModel)]="representive">
+                                                      <ng-option *ngFor="let item of usersList" [value]="item">{{ item.name }} - {{ item.phone }} <span
+                                                          *ngIf="item.role">- {{item.role}}</span>
+                                                      </ng-option>
+                                                  </ng-select>
+                                              </div>
+              
+                                              <div class="col-lg-3 mt-6 selectWrapper" *ngIf="edit">
+                                                  <label class="form-label">Representive</label>
+                                                  <div class="form-control form-control-solid">
+                                                      {{representive.name}} - {{representive.phone}}
+                                                  </div>
+                                              </div>
+                                          </div>
+                                        </div>
+                                    </ng-template>
+                                </ngb-panel>
+                            </ngb-accordion>
+                        </div>
+
+                        
+                          <div class="col-lg-12 mt-6" >
+                            <bank-form [layouttype]="'page'"  #bank></bank-form>
+                        </div>
+
+                        <div class="col-lg-12 mt-6">
+                            <address-pincode-form  [layouttype]="'page'" #address></address-pincode-form>
+                        </div>
+              
+                          <!-- <div class="col-lg-12 mt-6">
+                            <ngb-accordion #acc11="ngbAccordion">
+                              <ngb-panel id="toggle-11">
+                                <ng-template ngbPanelTitle>
+                                  <span class="card-header--title text-success">KYC Details</span>
+                                </ng-template>
+                                <ng-template ngbPanelContent>
+                                  <div class="row">
+                                    <div class="col-lg-3 mt-2">
+                                      <label class="form-label">PAN Number</label>
+                                      <input type="text" class="form-control form-control-lg"
+                                        placeholder="PAN Number" autocomplete="off" formControlName="kycPANNumber" />
+                                    </div>
+                                    <div class="col-lg-3 mt-2">
+                                      <label class="form-label">Aadhaar Number</label>
+                                      <input type="text" class="form-control form-control-lg"
+                                        placeholder="Aadhaar Number" autocomplete="off" formControlName="kycAdhaarNumber" />
+                                    </div>
+                                    <div class="col-lg-3 mt-4 mb-4">
+                                      <label class="form-label">GST Number</label>
+                                      <input type="text" class="form-control form-control-lg" name="gstNumber"
+                                        placeholder="GST********" autocomplete="off" formControlName="gstNumber" />
+                                    </div>
+                                  </div>
+                                </ng-template>
+                              </ngb-panel>
+                            </ngb-accordion>
+                          </div> -->
+              
+              
+                          
+
+                        <div class="col-lg-3 mt-4">
+                            <label>Upload PO</label><br>
+                            <div class="image-input image-input-outline m-2 mt-6  mb-5" id="kt_profile_avatar">
+                                <img class="image-input-wrapper" [src]="previewImage || './assets/media/users/certificatePlaceholder.png'"/>
+                                <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                  data-action="change"
+                                  data-toggle="tooltip"
+                                  title=""
+                                  data-original-title="Change avatar"
+                                >
+                                  <i class="fa fa-pen icon-sm text-muted"></i>
+                                  <input
+                                    type="file"
+                                    name="profile_avatar"
+                                    accept=".png, .jpg, .jpeg, .pdf"
+                                    (change)="onImageUpload($event);"
+                                  />
+                                  <input type="hidden" name="profile_avatar_remove" />
+                                </label>
+                                <span
+                                  class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                  data-action="cancel"
+                                  data-toggle="tooltip"
+                                  title=""
+                                  data-original-title="Cancel avatar"
+                                >
+                                  <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                </span>
+                                <span
+                                  *ngIf="previewImage"
+                                  class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                  (click)="remove()"
+                                  data-action="remove"
+                                  data-toggle="tooltip"
+                                  title=""
+                                  data-original-title="Remove avatar"
+                                >
+                                  <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                </span>
+                              </div>
+                              
+                        </div>
+                        
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-toolbar">
+        <button type="button" class="btn btn-sm btn-secondary mr-2"
+            [routerLink]="['/resha-farms/cotton-bale-po']">Back</button>
+        <button type="submit" class="btn btn-sm btn-success" [disabled]="baleFromDetails.invalid || invalidTwistedType || !representive || !selectedSpinningMill"
+            (click)="onSubmit(baleFromDetails.value)">Save</button>
+    </div>
+</div>

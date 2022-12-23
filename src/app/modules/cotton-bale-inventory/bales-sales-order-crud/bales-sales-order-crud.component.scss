@@ -1,0 +1,33 @@
+.selectWrapper .form-control-solid{
+    padding: 0 !important;
+    
+}
+
+.item-width{
+    min-width: 7vw;
+    margin-right: 10px;
+    input {
+        min-width: 7vw;
+        max-width: 7vw;
+    }
+}
+
+.lot-code-width {
+    min-width: 164px;
+    margin-right: 10px;
+    input {
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    /* For mobile phones: */
+    .item-width{
+        min-width: 25vw;
+    }
+  }
+  .app-disable{
+    pointer-events: none;
+    cursor: no-drop;
+    background-color: #d4d4d4;
+}

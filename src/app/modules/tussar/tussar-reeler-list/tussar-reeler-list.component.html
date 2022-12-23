@@ -1,0 +1,171 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+      <div class="card-title">
+        <h3 class="card-label">Tussar Reelers</h3>
+      </div>
+      <div class="card-toolbar">
+        <div>
+        <button *ngIf="userType.role !== 'READADMIN'" type="button" class="btn btn-sm btn-success mr-2" (click)="createNewReeler();">+ New Reeler</button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body pt-0">
+      <div class="form form-label-right">
+          <div class="form-group row">
+            <div class="col-lg-11">
+              <input [(ngModel)]="searchText" (keyup.enter)="onSearch();" (keyup)="onSearchKey($event)" type="text" class="form-control" placeholder="Search"/>
+              <small class="form-text text-muted"><b>Search</b> By Name and Phone.</small>
+            </div>
+            <div class="col-lg-1">
+              <button type="button" class="btn btn-sm btn-success mr-2 mt-1" [disabled]="!enableSearch" (click)="onSearch();">Search</button>
+            </div>
+          </div>
+        </div>
+      <div class="table-responsive angular-bootstrap-table">
+        <table id="excel-table" class="table table-head-custom table-vertical-center overflow-hidden">
+          <thead>
+            <th name="code" ngDefaultControl [(ngModel)]="tableHeader.id" (click)="onSort('id')">
+              <i *ngIf="tableHeader.id === 1 && activeSort === 'id'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.id === 0 && activeSort === 'id'" class="fas fa-long-arrow-alt-down"></i>
+              RM Code 
+            </th>
+            <th name="name" ngDefaultControl [(ngModel)]="tableHeader.name" (click)="onSort('name')">
+              <i *ngIf="tableHeader.name === 1 && activeSort === 'name'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.name === 0 && activeSort === 'name'" class="fas fa-long-arrow-alt-down"></i>
+              Name
+            </th>
+            <th name="phone" ngDefaultControl [(ngModel)]="tableHeader.phone" (click)="onSort('phone')">
+              <i *ngIf="tableHeader.phone === 1 && activeSort === 'phone'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.phone === 0 && activeSort === 'phone'" class="fas fa-long-arrow-alt-down"></i>
+              Phone
+            </th>
+            <!-- <th name="city" ngDefaultControl [(ngModel)]="tableHeader.address.city" (click)="onSort('address.city')">
+              <i *ngIf="tableHeader.address.city === 1 && activeSort === 'address.city'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.address.city === 0 && activeSort === 'address.city'" class="fas fa-long-arrow-alt-down"></i>
+              City
+            </th> -->
+            <th name="center" ngDefaultControl [(ngModel)]="tableHeader.center.centerName" (click)="onSort('center.centerName')">
+              <i *ngIf="tableHeader.center.centerName === 1 && activeSort === 'center.centerName'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.center.centerName === 0 && activeSort === 'center.centerName'" class="fas fa-long-arrow-alt-down"></i>
+              Center
+            </th>
+            <!-- <th name="availableAdvance" ngDefaultControl [(ngModel)]="tableHeader.availableAdvance" (click)="onSort('availableAdvance')">
+              <i *ngIf="tableHeader.availableAdvance === 1 && activeSort === 'availableAdvance'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.availableAdvance === 0 && activeSort === 'availableAdvance'" class="fas fa-long-arrow-alt-down"></i>
+              Available Advance
+            </th> -->
+            <!-- <th *ngIf="userType.role === 'ADMINISTRATOR'">Black List</th> -->
+            <th>Referred By</th>
+            <!-- <th>App Version</th> -->
+            <th name="createdDate" ngDefaultControl [(ngModel)]="tableHeader.createdDate" (click)="onSort('createdDate')">
+              <i *ngIf="tableHeader.createdDate === 1 && activeSort === 'createdDate'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.createdDate === 0 && activeSort === 'createdDate'" class="fas fa-long-arrow-alt-down"></i>
+              Date
+            </th>
+            <th>Actions</th>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of filteredReelersList" [ngClass]="{blacklist:item.reeler.isBlackListed}">
+              <td><a matTooltip="Reeler Details" class="btn btn-link-success font-weight-bold" (click)="reelerDetails(item)"> {{ item.code }}</a></td>
+              <td>{{ item.name | titlecase }}</td>
+              <td>{{ item.phone }}</td>
+              <!-- <td>{{ item.city | titlecase}}</td> -->
+              <td>{{ item.center }}</td>
+              <!-- <td>{{ item.availableAdvance }}</td> -->
+              <!-- <td class="selection-cell" *ngIf="userType.role === 'ADMINISTRATOR'">
+                <div class="switch switch-icon switch-sm">
+                  <label class="checkbox checkbox-single">
+                    <input type="checkbox" [checked]="item.reeler.isBlackListed" (click)="blackListFarmer(blackListConfirm,item)"/>
+                    <span></span>
+                  </label>
+                </div>
+              </td> -->
+              <td>{{ item.refferedBy | titlecase}}</td>
+              <!-- <td>{{ item.appVersion }}</td> -->
+              <td>{{ item.createdDate }}</td>
+              <td>
+                <a *ngIf="userType.role !== 'READADMIN'" matTooltip="Edit" class="btn btn-icon btn-sm mr-1 mt-1" (click)="editReeler(item)">
+                  <i class="flaticon-edit-1 text-success"></i>
+                </a>
+                <app-retailer-deposits  [customerId]="item.id" [isListingPage]="true" [orderDetails]="item" (listenAndRefresh)="listenAndRefreshPaymentFunction()" ></app-retailer-deposits>
+
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row">
+        <div class="mr-2">
+          <nav aria-label="Page navigation example">
+            <ul class="pagination">
+              <li class="page-item">
+                <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(0)" href="javascript:void(0);">
+                  <span aria-hidden="true">&laquo;&laquo;</span>
+                  <span class="sr-only">First</span>
+                </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(paginationData.currentPage - 1)" href="javascript:void(0);">
+                  <span aria-hidden="true">&laquo;</span>
+                  <span class="sr-only">Previous</span>
+                </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" *ngIf="paginationData?.currentPage !== 0 && paginationData?.currentPage !== 1" (click)="onPageChange(paginationData?.currentPage - 2)" href="javascript:void(0);">{{ paginationData?.currentPage -1 }}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" *ngIf="paginationData?.currentPage !== 0" (click)="onPageChange(paginationData?.currentPage - 1)" href="javascript:void(0);">{{ paginationData?.currentPage}}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link active" href="javascript:void(0);">{{ paginationData?.currentPage + 1 }}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1" (click)="onPageChange(paginationData?.currentPage + 1)" href="javascript:void(0);">{{ paginationData?.currentPage + 2 }}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1 && paginationData?.currentPage !== paginationData.pages.length - 2" (click)="onPageChange(paginationData?.currentPage + 2)" href="javascript:void(0);">{{ paginationData?.currentPage + 3 }}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}" (click)="onPageChange(paginationData.currentPage + 1)" href="javascript:void(0);">
+                  <span aria-hidden="true">&raquo;</span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}" (click)="onPageChange(paginationData.pages.length - 1)" href="javascript:void(0);">
+                  <span aria-hidden="true">&raquo;&raquo;</span>
+                  <span class="sr-only">Last</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <div class="mr-2">
+          <select class="custom-select" style="height: calc(1.2em + 1rem + 2px); padding: 0.35rem 2rem 0.35rem 1rem;" [(ngModel)]="paginationData.pageSize" (change)="onPageSizeChange()">
+            <option [ngValue]="10">10 per page</option>
+            <option [ngValue]="50">50 per page</option>
+            <option [ngValue]="100">100 per page</option>
+          </select>
+        </div>
+        <div class="pt-2">
+          <small class="text-muted">(Total: {{totalElements}})</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="delete-confirmation-preview">
+    <div>
+        <ng-template #blackListConfirm let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Blacklist Reeler</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to <span *ngIf="!blacklist.reeler.isBlackListed">add <strong>{{blacklist.name}}</strong> to blacklist</span><span *ngIf="blacklist.reeler.isBlackListed">remove <strong>{{blacklist.name}}</strong> from blacklist</span>?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+                <button type="button" class="btn btn-sm btn-success" (click)="blacklistFarmerAPI()">Yes</button>
+            </div>
+        </ng-template>
+    </div>

@@ -1,0 +1,190 @@
+<div class="bg-white rounded mb-4 d-flex align-items-center py-2 sticky-header justify-content-between">
+    <ul id="breadcrumbs">
+        <!-- <li><span style="cursor: pointer;" class="hover-item">All Farmers</span></li> -->
+        <!-- <li><span>jjj</span></li> -->
+    </ul>
+    <div>
+        <button class="btn btn-secondary btn-sm font-weight-bolder font-size-sm py-3 px-6 mr-5" (click)="back()">Back</button>
+    </div>
+</div>
+<div class="row" *ngIf="flag">
+
+    <div class="col-lg-4 col-md-4 col-sm-4">
+        <!--begin::Card-->
+        <div class="card card-custom gutter-b">
+            <!--begin::Body-->
+            <div class="card-body pt-4">
+                <!--begin::User-->
+                <div class="d-flex align-items-center mb-7">
+                    <!--begin::Title-->
+                    <div class="d-flex flex-column">
+                        <span class="text-success font-weight-bold font-size-h4 mb-0">Billing name</span>
+                        <span class="text-muted font-weight-bold">{{details.billing_user}}</span>
+                     </div>
+                    <!--end::Title-->
+                </div>
+                <!--end::User-->
+                <!--begin::Info-->
+                <!-- <div class="mb-7"> -->
+                    <!-- <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bolder mr-2">Chain ID:</span>
+                        <span class="text-dark-75 font-weight-bold">{{details.chainID}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bolder mr-2">Store Id:</span>
+                        <span class="text-dark-75 font-weight-bold">{{details.store_id}}</span>
+                    </div> -->
+                <!-- </div> -->
+                <!--end::Info-->
+                <!--begin::Info-->
+                <div class="mb-7">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bolder mr-2">Name:</span>
+                        <span class="text-dark-75 font-weight-bold">{{details.customer.name}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bolder mr-2">email:</span>
+                        <span class="text-dark-75 font-weight-bold">{{details.customer.email}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bolder mr-2">Phone:</span>
+                        <span class="text-dark-75 font-weight-bold">{{details.customer.phone}}</span>
+                    </div>
+                </div>
+                <!--end::Info-->
+
+                <p class="mt-7 mb-2">
+                    <span class="text-success-75 font-weight-bolder pr-1">Address</span>
+                </p>
+                <p>
+                    <span class="text-muted font-weight-bolder mr-2">
+                        {{details.customer.address.city}}
+                        {{details.customer.address.landmark}}
+                        {{details.customer.address.line_1}}
+                        {{details.customer.address.line_2}}
+                        {{details.customer.address.pin}}
+                        {{details.customer.address.sub_locality}}
+                        {{details.customer.address.city}}
+                        {{details.customer.address.tag}}
+                    </span><br /><br />
+                </p>
+                <p class="mt-7 mb-2">
+                    <span class="text-success-75 font-weight-bolder pr-1">Details</span>
+                </p>
+                <div class="mb-7">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Invoice Number:</span>
+                        <span
+                            class="text-dark-75 font-weight-bold">{{details.details.invoice_number}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Item Level Total Charges:</span>
+                        <span
+                            class="text-dark-75 font-weight-bold">{{details.details.item_level_total_charges}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Item Level Total Taxes:</span>
+                        <span
+                            class="text-dark-75 font-weight-bold">{{details.details.item_level_total_taxes}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Order Date:</span>
+                        <span
+                            class="text-dark-75 font-weight-bold">{{details.details.order_date}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Order Id:</span>
+                        <span
+                            class="text-dark-75 font-weight-bold">{{details.details.order_id}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Order Level Total Charges:</span>
+                        <span
+                            class="text-dark-75 font-weight-bold">{{details.details.order_level_total_charges}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Order Level Total Taxes:</span>
+                        <span
+                            class="text-dark-75 font-weight-bold">{{details.details.order_level_total_taxes}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Order Level Total Charges:</span>
+                        <span
+                            class="text-dark-75 font-weight-bold">{{details.details.order_level_total_charges}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Order Subtotal:</span>
+                        <span
+                            class="text-dark-75 font-weight-bold">{{details.details.order_subtotal}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Order Ttime:</span>
+                        <span
+                            class="text-dark-75 font-weight-bold">{{details.details.order_time}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Order Total:</span>
+                        <span
+                            class="text-dark-75 font-weight-bold">{{details.details.order_total}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Payable Amount:</span>
+                        <span
+                            class="text-dark-75 font-weight-bold">{{details.details.payable_amount}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Taxes:</span>
+                        <span
+                            class="text-dark-75 font-weight-bold">{{details.details.taxes}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Total Charges:</span>
+                        <span
+                            class="text-dark-75 font-weight-bold">{{details.details.total_charges}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Total Taxes:</span>
+                        <span
+                            class="text-dark-75 font-weight-bold">{{details.details.total_taxes}}</span>
+                    </div>
+                </div>
+            </div>
+            <!--end::Body-->
+        </div>
+        <!--end::Card-->
+    </div>
+
+    <div class="col-lg-8 col-md-8 col-sm-8">
+        
+        <div class="card card-custom gutter-b">
+            <!--begin::Header-->
+
+            <div class="card-header">
+                <div class="card-title">
+                  <h3 class="card-label">Items</h3>
+                </div>
+              </div>
+
+            <div class="card-body">
+                <div class="form form-label-right">
+                    <div class="form-group pb-0 row">
+                        <div class="col-lg-12 mt-3">
+                            <input type="text" class="form-control" [(ngModel)]="searchText1" placeholder="Search"
+                                />
+                            <small class="form-text text-muted"><b>Search</b> in all fields</small>
+                        </div>
+                    </div>
+                    <RMtable 
+                    [tableHeaders]="tableHeaders" 
+                    [rowDataList]="itemList"  
+                    [searchText]="searchText1"
+                    ></RMtable>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>

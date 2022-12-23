@@ -1,0 +1,350 @@
+<div class="bg-white rounded mb-4 d-flex align-items-center py-2 sticky-header justify-content-between" >
+    <ul id="breadcrumbs">
+        <li><span style="cursor: pointer;" class="hover-item" (click)="goBack()">All Bale Purchases</span></li>
+        <li><span>{{data?.code}}</span></li>
+    </ul>
+    <div>
+        <app-back-button></app-back-button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-4">
+        <div class="card card-custom gutter-b">
+            <div class="card-body pt-4">
+                <div class="d-flex justify-content-between align-items-baseline mt-5">
+                    <div class="font-size-h5 mb-3 ">Bale Purchases Details</div>
+                </div>
+                <div class="mb-7">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Ginner ID:</span>
+                        <span class="text-dark-75 font-weight-bold"><a href="javascript:;" routerLink="/resha-farms/ginners/details/{{data?.ginnerId}}">{{data?.ginnerId}}</a></span>
+
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Cotton Type:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.baleType}}</span>
+
+                    </div>
+                    <!-- <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">PO Expiry:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.expiry | date:"dd/MM/yyyy"}}</span>
+
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Credit Days:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.creditDays}}</span>
+
+                    </div> -->
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Representative:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.rmRepresentativeName}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Representative Phone:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.rmRepresentativePhone}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Staple Length:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.stapleLengthInMm }}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">RD:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.rd}}</span>
+                    </div>
+
+                     <!-- <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Trash Content:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.trashContent}}</span>
+                    </div> -->
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Elong:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.elongation}}</span>
+                    </div>
+
+                   <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Microniare Value:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.micronaire}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Strength</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.strength}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Moisture In Percentage</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.moistureInPercentage}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">No.Of.Bales</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.noOfBales}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Received Weight(Kg)</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.receivedWeight}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Weight Deduction(Kg)</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.weightDeduction}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Net Weight(Kg)</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.netWeight}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Sold Weight(Kg)</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.soldWeight || 0}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Available Quantity(Kg)</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.availableQuantity}}</span>
+                    </div>
+                   
+                   
+                    <!-- <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">No.Of.Candies</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.totalCandies}}</span>
+                    </div> -->
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Price/Candy(Rs)</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.ratePerCandy}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Price/Kg(Rs)</span>
+                        <span class="text-dark-75 font-weight-bold">{{(data?.ratePerCandy / 355.6).toFixed(2)}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Gross Total(Rs)</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.grossAmount}}</span>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">cgst</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.cgst}}</span>
+                    </div>
+                   
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">sgst</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.sgst}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">igst</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.igst}}</span>
+                    </div>
+                   
+                   
+                    
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Net Payable Amount(Rs)</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.netPayableAmount}}</span>
+                    </div>
+                   
+                </div>
+              
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5 mt-4" *ngIf="data?.poDocUrl">
+        <div class="card p-6">
+            <div class="justify-content-between align-items-center" >
+                <span class="text-muted font-weight-bold mr-2">Bale Purchase Order:</span>
+                <img [src]="data?.poDocUrl" width="400" height="300"/>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-lg-5 mt-4" *ngIf="cottonBaleImages.length">
+
+        <div class="card p-6">
+            <div class="justify-content-between align-items-center" *ngIf="moistureImage">
+                <span class="text-muted font-weight-bold mr-2">Moisture Image:</span>
+                <img [src]="moistureImage" width="100%" height="300"/>
+            </div>
+            <div class="justify-content-between align-items-center" *ngIf="baleImage">
+                <span class="text-muted font-weight-bold mr-2">Weigh Bridge Image:</span>
+                <img [src]="baleImage" width="100%" height="300"/>
+            </div>
+            <div class="justify-content-between align-items-center" *ngIf="weighBridgeSlipImage">
+                <span class="text-muted font-weight-bold mr-2">Weigh Bridge Slip Image:</span>
+                <img [src]="weighBridgeSlipImage" width="100%" height="300"/>
+            </div>
+
+            <div class="justify-content-between align-items-center" *ngIf="testReportImage">
+                <span class="text-muted font-weight-bold mr-2">Test Report Image:</span>
+                <img [src]="testReportImage" width="100%" height="300"/>
+            </div>
+            
+        </div>
+
+    </div>
+ 
+
+    <div class="col-lg-3 mt-4">
+
+        <div class="card card-custom " >
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <div class="font-size-h5 font-weight-bold text-success">Payments</div>
+
+                    <!-- <button matTooltip="Pay Now" class="btn btn-sm btn-icon float-right"
+                    *ngIf="cottonLotDetails?.orderPaymentStatus == 'Pending' && (cottonLotDetails?.orderStatus != 'Cancel') && rolesService.checkAccess(user.role, {type: 'actions', component: 'YarnOrderDetailsComponent', action: 'payment'})"
+                            (click)="payNow(payment, cottonLotDetails)">
+                        <i class="fas fa-money-check-alt text-success"></i>
+                    </button> -->
+                    <button matTooltip="Pay Now" class="btn btn-sm btn-icon float-right">
+                    <app-generic-payment [paymentInfo]="data" (refresh)="refresh()"></app-generic-payment>
+                    </button>
+
+
+                </div>
+                <div class="mt-4">
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="data?.netAmount">
+                        <span class="text-dark-50 mr-2">Net Payable Amount:</span>
+                        <span class="text-muted">{{data?.netPayableAmount?.toLocaleString('en-IN')}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="data?.discountAmount && data?.discountAmount > 0">
+                        <span class="text-dark-50 mr-2">Discount:</span>
+                        <span class="text-muted"> (-) Rs. {{data?.discountAmount?.toLocaleString('en-IN')}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="data?.cst > 0">
+                        <span class="text-dark-50 mr-2">CGST:</span>
+                        <span class="text-muted">{{data?.cgst?.toLocaleString('en-IN')}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="data?.gst > 0">
+                        <span class="text-dark-50 mr-2">SGST:</span>
+                        <span class="text-muted">{{data?.cgst?.toLocaleString('en-IN')}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="data?.igst > 0">
+                        <span class="text-dark-50 mr-2">IGST:</span>
+                        <span class="text-muted">{{data?.igst?.toLocaleString('en-IN')}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="data?.totalAmount">
+                        <span class="text-dark-50 mr-2">Total Amount:</span>
+                        <span class="text-muted">{{data?.totalAmount?.toLocaleString('en-IN')}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="data?.dueAmount">
+                        <span class="text-dark-50 mr-2">Due Amount:</span>
+                        <span class="text-danger">{{data?.dueAmount?.toLocaleString('en-IN')}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="data?.paymentStatus">
+                        <span class="text-dark-50 mr-2">Payment Status:</span>
+                        <span [ngClass]="{'text-danger': data?.paymentStatus == 'Pending', 'text-success': data?.paymentStatus != 'Pending'}">{{data?.paymentStatus}}</span>
+                    </div>
+                </div>
+
+
+                <div class="example example-basic mt-6" *ngIf="BalseSaleDetails?.length">
+                    <div class="">
+                        <div class="timeline timeline-2">
+                            <div class="timeline-bar"></div>
+
+                            <!-- REPEAT for NO OF PAYMENTS-->
+                            <div class="timeline-item" *ngFor="let item of BalseSaleDetails">
+                                <span class="timeline-badge bg-success"></span>
+                                <div class="timeline-content d-flex align-items-center justify-content-between">
+                                    <span class="mr-3 font-weight-bold text-dark-50 font-size-sm d-flex flex-column">Rs. {{item?.amount.toLocaleString('en-IN')}}
+                                        <span class="label label-inline label-outline-success">
+                                            {{item.referenceNumber}}</span>
+                                       </span>
+                                    <span class="text-muted font-italic text-right font-size-xs">{{utils.getDisplayTime(item.paymentDate)}}</span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!--end::Timeline-->
+                    </div>
+                </div>
+
+
+                
+
+            </div>
+            <!--end: Card Body-->
+        </div>
+        <!--end: List Widget 9-->
+
+
+    <div class="card card-custom mt-4">
+        <div class="card-body pt-4">
+            <div class="d-flex justify-content-between align-items-baseline">
+                <div class="font-size-h5 mb-3 font-weight-bold text-success">
+                    Bale Sale Lots
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-borderless table-vertical-center">
+                    <thead>
+                        <tr>
+                            <th class="p-0 min-w-70px text">Lot</th>
+                            <th class="p-0 min-w-70px">Total Amount</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngIf="BalsePurchaseSaleDetails?.length !== 0; else emptyTemplate">
+                            <tr *ngFor="let item of BalsePurchaseSaleDetails">
+
+
+                                <td class="pl-0">
+                                    <span class="text-success font-weight-bold d-block font-size-md cursor" (click)="routeToDetailsPage(item.id)">{{item.code}}</span>
+                                </td>
+
+
+                                <td class="pl-0">
+                                    <span class="text-dark-75 font-weight-bold d-block font-size-md" >{{item.netAmount}}</span>
+                                </td>
+                               
+                                
+                            <!--                                 
+                                <td class="pl-0">
+                                    <span class="text-dark-75 font-weight-bold d-block font-size-md"></span>
+                                    <span class="text-muted font-weight-bold"><br>
+                                        <span *ngIf="item.discountAmount"></span></span>
+                                </td> -->
+                            </tr>
+                        </ng-container>
+                        <ng-template #emptyTemplate>
+                            <p class="p-5">Yet to be sold.</p>
+                          </ng-template>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+   
+    <!-- <div class="col-lg-8 col-md-8 col-sm-8">
+        <div class="card card-custom gutter-b">
+            <div class="card-body pt-4">
+                <div class="d-flex justify-content-between align-items-baseline mt-5">
+                    <div class="font-size-h5 mb-3 ">Device Specification</div>
+                </div>
+                <div class="mb-7" [innerHtml]="data?.deviceSpecifications">
+                    
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <!-- <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="card card-custom gutter-b">
+            <div class="card-body pt-4">
+                <div class="d-flex justify-content-between align-items-baseline mt-5">
+                    <div class="font-size-h5 mb-3 ">Device Images</div>
+                </div>
+                <div class="mb-7" *ngFor="let DeviceImages of data?.images">
+                    <div class="flex-column justify-content-between align-items-center" *ngIf="DeviceImages?.url != '' ">
+                        <p class="text-muted font-weight-bold mr-2">{{DeviceImages?.tag}}:</p>
+                        <img [src]="DeviceImages?.url" width="100%" height="300"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+</div>

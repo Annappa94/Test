@@ -1,0 +1,26 @@
+<app-paginated-table [rowDataList]="rowDataList" [tableHeaders]="tableHeaders" [totalRecords]="totalRecords"
+   (onPageChange)="onPageChange($event)" [searchClass]="'col-lg-11'" [searchHint]="'By Warehouse Name'"
+  [titleOfTable]="'Warehouse Layout'" (infoFromTable)="infoFromTable($event)">
+  <div class="card-toolbar New">
+    <div>
+    <button type="button" class="btn btn-sm btn-success mr-2" routerLink="/bid/warehouse-layout-crud">+ New Warehouse Layout</button>
+    </div>
+  </div>
+</app-paginated-table>
+<div class="details-confirmation-preview">
+  <div>
+      <ng-template #deleteHTML let-c="close" let-d="dismiss">
+          <div class="modal-header">
+              <h4 class="modal-title">Delete</h4>
+          </div>
+          <div class="modal-body">
+              <p><strong>Are you sure you want to delete this warehouse layout?</strong></p>
+          </div>
+
+          <div class="modal-footer">
+              <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+              <button type="button" class="btn btn-sm btn-success" (click)="deleteWareHouseLayout()">Yes</button>
+          </div>
+      </ng-template>
+  </div>
+</div>

@@ -1,0 +1,122 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">Record advisory</h3>
+        </div>
+        <div class="card-toolbar">
+
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="form form-label-right">
+                
+            <div class="row" [formGroup]="advisoryForm">
+                <div class="col-lg-3 mt-3">
+                    <label>Chawki Start Date<span class="text-danger">*</span></label>
+                    <input class="form-control form-control-lg form-control-solid" formControlName="chawkiDate" readonly>
+                </div>
+
+                <div class="col-lg-3 mt-3">
+                    <label>Instar Stage<span class="text-danger">*</span></label>
+                    <select class="form-control form-control-lg" name="instartStage" formControlName="instarStage"
+                    placeholder="Instart Stage">
+                    <option *ngFor="let instar of instartStageList" [value]="instar">{{instar}}</option>
+                  </select>
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <label>Instar Day<span class="text-danger">*</span></label>
+                    <input class="form-control form-control-lg form-control" formControlName="dayOfChawki">
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <label class="w-100 d-flex justify-content-between"><span>Current Temperature</span><span class="text-warning">Ideal: {{associatedDevicesInfo?.threshold?.temperature?.min}} - {{associatedDevicesInfo?.threshold?.temperature?.max}} &deg;C</span></label>
+                    <input class="form-control form-control-lg form-control form-control-solid" formControlName="temperatureCurrent" readonly>
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <label class="w-100 d-flex justify-content-between"><span>Current Humidity</span><span class="text-warning">Ideal: {{associatedDevicesInfo?.threshold?.humidity?.min}} - {{associatedDevicesInfo?.threshold?.humidity?.max}} %</span></label>
+                    <input class="form-control form-control-lg form-control form-control-solid" formControlName="humidityCurrent" readonly>
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <label class="w-100 d-flex justify-content-between"><span>Current Air Quality</span><span class="text-warning">Ideal: {{associatedDevicesInfo?.threshold?.airQuality?.max}}</span></label>
+                    <input class="form-control form-control-lg form-control form-control-solid" formControlName="airQuality" readonly>
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <label class="w-100 d-flex justify-content-between"><span>Current Light</span><span class="text-warning">Ideal: {{associatedDevicesInfo?.threshold?.light?.min}} - {{associatedDevicesInfo?.threshold?.light?.max}}</span></label>
+                    <input class="form-control form-control-lg form-control form-control-solid" formControlName="lightCurrent" readonly>
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <div class="d-flex flex-column">
+                        <label>Bed Disinfectant used<span class="text-danger">*</span></label>
+                        <mat-form-field appearance="fill">
+                          <mat-select  multiple formControlName="bedDisinfectantUsed">
+                            <mat-option *ngFor="let item of disinfectantsList" [value]="item">{{item}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <label>Feeding time<span class="text-danger">*</span></label>
+                    <input type="time"  class="form-control form-control-lg form-control" formControlName="feedingTime" atp-time-picker value="8:55"/>
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <label>Mulberry quantity<span class="text-danger">*</span></label>
+                    <input type="number" class="form-control form-control-lg form-control" formControlName="mulberryQuantity">
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <label>Auto Advisory</label>
+                    <textarea type="number" class="form-control form-control-lg form-control-solid" formControlName="autoAdvisory" readonly ></textarea>
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <label>Advisory Provided To farmer<span class="text-danger">*</span></label>
+                    <textarea type="number" class="form-control form-control-lg form-control" formControlName="advisoryToFarmer" ></textarea>
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <label>Remarks</label>
+                    <textarea type="number" class="form-control form-control-lg form-control" formControlName="remarks" ></textarea>
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <label>Rearing Shed Visit<span class="text-danger" *ngIf="advisoryForm.get('rearingShedImageUrl').validator">*</span> </label>
+                    <select  class="form-control form-control-lg form-control" formControlName="rearingShedVisit" >
+                        <option selected hidden value="">select</option>
+                        <option [value]="true">Yes</option>
+                        <option [value]="false">No</option>
+                    </select>
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <div class="mt-5 text-danger" *ngIf="advisoryForm.get('rearingShedImageUrl').validator" >*</div>
+                    <div class="image-input image-input-outline" id="kt_profile_avatar" [ngClass]="advisoryForm.get('rearingShedImageUrl').validator?'':'mt-6'">
+                      <img class="image-input-wrapper" style="width:50px;height:50px;"
+                      [src]="imageUploadURL ||'./assets/media/svg/files/jpg.svg'" />
+                     <label
+                      class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                      data-action="change" data-toggle="tooltip" title=""
+                      data-original-title="Change avatar">
+                      <i class="fa fa-pen icon-sm text-muted"></i>
+                      <input type="file" name="profile_avatar"
+                          accept=".png, .jpg, .jpeg, .MP4, .FLV"
+                          (change)="onImageUpload($event);" 
+                          />
+                      <input type="hidden" name="profile_avatar_remove" />
+                     </label>
+                     <span
+                      class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                      data-action="cancel" data-toggle="tooltip" title=""
+                      data-original-title="Cancel avatar">
+                      <i class="ki ki-bold-close icon-xs text-muted"></i>
+                      </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+   <div *ngIf="countAPIRequest != countAPIResponse" class="mt-3">
+      <p> Image Uploading...</p>
+   </div>
+
+     <div class="card-toolbar pt-6 float-right">
+        <button type="button" class="btn btn-sm btn-secondary mr-2"
+            (click)="goBack();">Back</button>
+        <button type="submit" class="btn btn-sm btn-success" (click)="addAdvisory()" [disabled]="advisoryForm.invalid || countAPIRequest != countAPIResponse">Save</button>
+    </div>
+    </div>
+</div>

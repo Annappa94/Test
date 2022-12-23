@@ -1,0 +1,431 @@
+<div class="bg-white rounded mb-4 d-flex align-items-center py-2 sticky-header justify-content-between">
+    <ul id="breadcrumbs">
+        <li><span style="cursor: pointer;" class="hover-item"
+            (click)="goBack()">All cotton Lots</span></li>
+        <li><span>{{cottonLotDetails?.code}}</span></li>
+    </ul>
+    <div>
+        <button class="btn btn-secondary btn-sm font-weight-bolder font-size-sm py-3 px-6 mr-5"
+        (click)="goBack()">Back</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-4 mt-4">
+
+        <!--begin::Card-->
+        <div class="card card-custom gutter-b" *ngIf="cottonLotDetails">
+            <!--begin::Body-->
+            <div class="card-body pt-4">
+                <!--begin::Toolbar-->
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <div class="font-size-h5 mb-3 font-weight-bolder text-success">
+                        {{cottonLotDetails?.code}}
+                    </div>
+
+                    <div class="float-right">
+                        <!-- <a *ngIf="cottonLotDetails?.invoiceURL !== '' && cottonLotDetails?.invoiceURL !== null && user.role !== 'READADMIN'" href="{{ cottonLotDetails?.invoiceURL }}" target="_blank">
+                            <span matTooltip="Download Invoice" class="btn btn-icon btn-outline-success btn-sm mr-2">
+                                <i class="flaticon-download"></i>
+                            </span>
+                        </a> -->
+
+                        <!-- SAURABH: Show only if following is true:
+                         1. reelerPayments array is empty i.e reeler has not paid anything for this order
+                         2. paymentStatus == PENDING
+                     -->
+                        <!-- <span matTooltip="Delete" class="btn btn-icon btn-outline-danger btn-sm" *ngIf="!reelerKhata?.length && rolesService.checkAccess(user.role, {type: 'actions', component: 'CocoonOrderDetailsComponent', action: 'delete'})"
+                            (click)="deleteConfirmatin(deleteLot)">
+                            <i class="flaticon-delete"></i>
+                        </span> -->
+                    </div>
+
+                </div>
+                <!--end::Toolbar-->
+
+                <p class="mb-4">
+                    <span class="text-success font-weight-bold pr-1">Details</span>
+                </p>
+                <div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Cotton Lot status:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.cottonLotStatus}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="cottonLotDetails?.grossAmount">
+                        <span class="text-muted font-weight-bold mr-2">Cotton Type:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.cottonType}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="cottonLotDetails?.discount > 0">
+                        <span class="text-muted font-weight-bold mr-2">Created By:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.createdBy}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Credit Days:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.creditDays}}</span>
+                    </div>
+
+
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">farmerId:</span>
+
+                        <a class="btn btn-link-success font-weight-bold" matTooltip="Farmer details" (click)="getFarmerdetails()">
+                            {{cottonLotDetails?.farmerId}}
+                        </a>
+
+
+                        <!-- <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.farmerId}}</span> -->
+
+                        <!-- <a class="btn btn-link-success font-weight-bold" matTooltip="Farmer details" (click)="goToFarmerDetails()">
+                            {{cottonLotDetails?.farmerId}}
+                        </a> -->
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="cottonLotDetails?.ginnerId">
+                        <span class="text-muted font-weight-bold mr-2">ginnerId:</span>
+
+                        <a class="btn btn-link-success font-weight-bold" matTooltip="Ginner details" (click)="ginnerDetailes()">
+                            {{cottonLotDetails?.ginnerId}}
+                        </a>
+                    </div>
+
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Grade:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.grade}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Micronaire:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.micronaire}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Staple Length In mm:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.stapleLengthInMm}}</span>
+                    </div>
+
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Moisture Percentage:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.moistureInPercentage}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Received Lot Weight:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.recivedWeight}} Kg</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Weight Lot Deduction:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.weightDeduction?cottonLotDetails?.weightDeduction:0}} Kg</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Actual Lot Weight:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.lotWeight}} Kg</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Status:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.status}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">RM Representative:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.rmRepresentativeName+' - '+cottonLotDetails?.rmRepresentativePhone}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Logistics Cost:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.logisticsCost?.toLocaleString('en-IN')}} Rs</span>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Labour Cost:</span>
+                        <span class="text-dark-75 font-weight-bold"  *ngIf="(cottonLotDetails?.labourCost?.toLocaleString('en-IN')) != null">{{cottonLotDetails?.labourCost?.toLocaleString('en-IN')}} Rs</span>
+                        <span class="text-dark-75 font-weight-bold"  *ngIf="(cottonLotDetails?.labourCost?.toLocaleString('en-IN')) == null">0 Rs</span>
+
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Total Logistics Cost:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.totalLogisticsCost?.toLocaleString('en-IN')}} Rs</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Vehicle Number:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.vehicleNumber?.toLocaleString('en-IN')}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Rate Per Kg:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.ratePerKg?.toLocaleString('en-IN')}} Rs</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Gross Total:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.grossTotal?.toLocaleString('en-IN')}} Rs</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Net Payable Amount:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.netPayableAmount?.toLocaleString('en-IN')}} Rs</span>
+                    </div>
+
+                    <!-- <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Igst:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.igst?cottonLotDetails?.igst?.toLocaleString('en-IN'):0}} Rs</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Cgst:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.cgst?cottonLotDetails?.cgst?.toLocaleString('en-IN'):0}} Rs</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Sgst:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.sgst?cottonLotDetails?.sgst?.toLocaleString('en-IN'):0}} Rs</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Net Amount:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.netAmount?.toLocaleString('en-IN')}} Rs</span>
+                    </div> -->
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Updated Date:</span>
+                        <span class="text-dark-75 font-weight-bold">{{this.util.getDisplayTime(cottonLotDetails?.lastModifiedDate)}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Created Date:</span>
+                        <span class="text-dark-75 font-weight-bold">{{this.util.getDisplayTime(cottonLotDetails?.createdDate)}}</span>
+                    </div>
+
+                    <p class="mb-4">
+                        <span class="text-success font-weight-bold pr-1">Address</span>
+                    </p>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bold mr-2">Address:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.address?.address}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bold mr-2">City:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.address?.city}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bold mr-2">District:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.address?.district}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bold mr-2">Pin code:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.address?.pincode}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center" >
+                        <span class="text-muted font-weight-bold mr-2">Region:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.address?.region}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bold mr-2">State:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.address?.state}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center" >
+                        <span class="text-muted font-weight-bold mr-2">Taluk:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.address?.taluk}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center" >
+                        <span class="text-muted font-weight-bold mr-2">Village:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.address?.village}}</span>
+                    </div>
+
+                    <p class="mb-4">
+                        <span class="text-success font-weight-bold pr-1">Bank Details</span>
+                    </p>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                      <span class="text-muted font-weight-bold mr-2">Account Number:</span>
+                      <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.bankDetails?.accountNumber}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                      <span class="text-muted font-weight-bold mr-2">Bank Name:</span>
+                      <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.bankDetails?.bankName}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                      <span class="text-muted font-weight-bold mr-2">Beneficiary Name:</span>
+                      <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.bankDetails?.beneficiaryName}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                      <span class="text-muted font-weight-bold mr-2">IFSC Code:</span>
+                      <span class="text-dark-75 font-weight-bold">{{cottonLotDetails?.bankDetails?.ifscCode}}</span>
+                    </div>
+                </div>
+
+
+                <!-- <p class="mt-4">
+                    <span class="text-success font-weight-bold pr-1">Reeler</span>
+                </p>
+                <div class="mb-7" *ngIf="reelerDetails">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Name:</span>
+                        <span class="text-dark-75 font-weight-bold">{{reelerDetails?.reeler?.name}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Phone:</span>
+                        <span class="text-dark-75 font-weight-bold">{{reelerDetails?.reeler?.phone}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Code:</span>
+                        <span class="btn btn-link-success font-weight-bold" (click)="goToReelerDetails()">{{reelerDetails?.reeler?.code}}</span>
+                    </div>
+                </div>
+                <p class="">
+                    <span class="text-dark-75 font-weight-bold font-weight-bold pr-1">Address</span>
+                </p>
+                <p *ngIf="reelerDetails">
+                    <span class="text-muted">
+                        {{reelerDetails.reeler?.address?.address}}, {{reelerDetails?.reeler?.address?.village}},
+                        {{reelerDetails?.reeler?.address?.taluk}}, {{reelerDetails?.reeler?.address?.city}} {{reelerDetails?.reeler?.address?.district ?
+                            reelerDetails?.reeler?.address?.district + ' District, ' : ''}} {{reelerDetails?.reeler?.address?.state}}
+                            {{reelerDetails.reeler?.address?.pincode}}
+                    </span>
+                </p> -->
+
+            </div>
+            <!--end::Body-->
+    </div>
+        <!--end::Card-->
+
+        <div class="col-lg-5 mt-4">
+
+            <div class="card p-6">
+                <div class="justify-content-between align-items-center" *ngIf="cottonLotDetails?.moistureImage">
+                    <span class="text-muted font-weight-bold mr-2">Moisture Image:</span>
+                    <img [src]="cottonLotDetails?.moistureImage" width="400" height="300"/>
+                </div>
+                <div class="justify-content-between align-items-center" *ngIf="cottonLotDetails?.weighBridgeImage">
+                    <span class="text-muted font-weight-bold mr-2">Weigh Bridge Image:</span>
+                    <img [src]="cottonLotDetails?.weighBridgeImage" width="400" height="300"/>
+                </div>
+                <div class="justify-content-between align-items-center">
+                    <span class="text-muted font-weight-bold mr-2">Cotton Images:</span>
+                    <img [src]="image?.url" *ngFor="let image  of cottonLotDetails?.cottonImages" width="400" height="300"/>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 mt-4">
+
+            <div class="card card-custom " >
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-baseline">
+                        <div class="font-size-h5 font-weight-bold text-success">Payments</div>
+
+                        <!-- <button matTooltip="Pay Now" class="btn btn-sm btn-icon float-right"
+                        *ngIf="cottonLotDetails?.orderPaymentStatus == 'Pending' && (cottonLotDetails?.orderStatus != 'Cancel') && rolesService.checkAccess(user.role, {type: 'actions', component: 'YarnOrderDetailsComponent', action: 'payment'})"
+                                (click)="payNow(payment, cottonLotDetails)">
+                            <i class="fas fa-money-check-alt text-success"></i>
+                        </button> -->
+                        <button matTooltip="Pay Now" class="btn btn-sm btn-icon float-right">
+                        <app-generic-payment [paymentInfo]="cottonLotDetails" (refresh)="refresh()"></app-generic-payment>
+                        </button>
+
+
+                    </div>
+                    <div class="mt-4">
+                        <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="cottonLotDetails?.netAmount">
+                            <span class="text-dark-50 mr-2">Net Payable Amount:</span>
+                            <span class="text-muted">{{cottonLotDetails?.netPayableAmount?.toLocaleString('en-IN')}}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="cottonLotDetails?.discountAmount && cottonLotDetails?.discountAmount > 0">
+                            <span class="text-dark-50 mr-2">Discount:</span>
+                            <span class="text-muted"> (-) Rs. {{cottonLotDetails?.discountAmount?.toLocaleString('en-IN')}}</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="cottonLotDetails?.cst > 0">
+                            <span class="text-dark-50 mr-2">CGST:</span>
+                            <span class="text-muted">{{cottonLotDetails?.cgst?.toLocaleString('en-IN')}}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="cottonLotDetails?.gst > 0">
+                            <span class="text-dark-50 mr-2">SGST:</span>
+                            <span class="text-muted">{{cottonLotDetails?.cgst?.toLocaleString('en-IN')}}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="cottonLotDetails?.igst > 0">
+                            <span class="text-dark-50 mr-2">IGST:</span>
+                            <span class="text-muted">{{cottonLotDetails?.igst?.toLocaleString('en-IN')}}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="cottonLotDetails?.totalAmount">
+                            <span class="text-dark-50 mr-2">Total Amount:</span>
+                            <span class="text-muted">{{cottonLotDetails?.totalAmount?.toLocaleString('en-IN')}}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="cottonLotDetails?.dueAmount">
+                            <span class="text-dark-50 mr-2">Due Amount:</span>
+                            <span class="text-danger">{{cottonLotDetails?.dueAmount?.toLocaleString('en-IN')}}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="cottonLotDetails?.paymentStatus">
+                            <span class="text-dark-50 mr-2">Payment Status:</span>
+                            <span [ngClass]="{'text-danger': cottonLotDetails?.paymentStatus == 'Pending', 'text-success': cottonLotDetails?.paymentStatus != 'Pending'}">{{cottonLotDetails?.paymentStatus}}</span>
+                        </div>
+                    </div>
+
+
+                    <div class="example example-basic mt-6" *ngIf="khataList?.length">
+                        <div class="">
+                            <div class="timeline timeline-2">
+                                <div class="timeline-bar"></div>
+
+                                <!-- REPEAT for NO OF PAYMENTS-->
+                                <div class="timeline-item" *ngFor="let item of khataList">
+                                    <span class="timeline-badge bg-success"></span>
+                                    <div class="timeline-content d-flex align-items-center justify-content-between">
+                                        <span class="mr-3 font-weight-bold text-dark-50 font-size-sm d-flex flex-column">Rs. {{item?.amount.toLocaleString('en-IN')}}
+                                            <span class="label label-inline label-outline-success">
+                                                {{item.referenceNumber}}</span>
+                                           </span>
+                                        <span class="text-muted font-italic text-right font-size-xs">{{util.getDisplayTime(item.paymentDate)}}</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!--end::Timeline-->
+                        </div>
+                    </div>
+
+                </div>
+                <!--end: Card Body-->
+            </div>
+            <!--end: List Widget 9-->
+            <div class="card card-custom mt-4">
+                <div class="card-body p-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-baseline">
+                            <div class="font-size-h5 font-weight-bold text-success">Out Ton-Summary</div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="d-flex justify-content-between align-items-cente my-2">
+                                <span class="text-dark-50 mr-2">No.Of Kg Used(Kg)</span>
+                                <span class="text-muted"><b>{{cottonLotDetails?.cottonOutTon?.noOfKgsUsed}}</b></span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-cente my-2">
+                                <span class="text-dark-50 mr-2">Lint(Kg):</span>
+                                <span class="text-muted"><b>{{cottonLotDetails?.cottonOutTon?.lint}}</b></span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-cente my-2">
+                                <span class="text-dark-50 mr-2">Seeds(Kg):</span>
+                                <span class="text-muted"><b>{{cottonLotDetails?.cottonOutTon?.seeds}}</b></span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-cente my-2" >
+                                <span class="text-dark-50 mr-2">Kawdi(Kg):</span>
+                                <span class="text-muted"><b>{{cottonLotDetails?.cottonOutTon?.kawdi}}</b></span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-cente my-2" >
+                                <span class="text-dark-50 mr-2">Lint Dust(Kg):</span>
+                                <span class="text-muted"><b>{{cottonLotDetails?.cottonOutTon?.lintDust}}</b></span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-cente my-2" >
+                                <span class="text-dark-50 mr-2">Roll Dust(Kg):</span>
+                                <span class="text-muted"><b>{{cottonLotDetails?.cottonOutTon?.rollDust}}</b></span>
+                            </div>
+                        </div>
+                
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+    </div>

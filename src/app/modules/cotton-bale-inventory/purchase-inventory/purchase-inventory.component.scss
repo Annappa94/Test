@@ -1,0 +1,79 @@
+.has-search .form-control {
+    padding-left: 2.375rem;
+}
+.dropdown-menu.show {
+    top: -78px !important;
+}
+
+.flex-container {
+    display: flex;
+}
+
+.flex-container {
+    display: flex;
+}
+
+.flex-container {
+    display: flex;
+}
+
+
+.flex-child:first-child {
+    background-color: #F0F0F0;
+
+    height: 40px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    font-size: 15px;
+    color:black;
+
+} 
+.flex-child {
+    flex: 1;
+    background-color: #F0F0F0;
+    background-color: #00aae4;
+
+    height: 40px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    font-size: 15px;
+    color:white;
+    
+
+}  
+
+.vl {
+    border-left: 3px solid rgb(36, 0, 128);
+    height: 70px;
+    position: absolute;
+    left: 50%;
+    margin-left: -3px;
+    top: 0;
+  }
+.whiteSmoke
+{
+    background-color: #ADD8E6;
+}
+.purchase
+{
+    background-color: #00aae4;
+    color: white;
+}
+.positioned {
+    position: absolute; 
+    background:white;
+    bottom: 30px;
+    left: 23px; 
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  .manufacture
+  {
+      background-color: white;
+  }

@@ -1,0 +1,67 @@
+.pending_status {
+    background-color: #FFBFBF;
+    border-radius: 5px;
+    padding: 3px 5px;
+    min-width: 60px;
+    text-align: center;
+
+}
+.done_status{
+    background-color: #E7FFCC;
+    border-radius: 5px;
+    padding: 3px 5px; 
+    min-width: 60px;
+    text-align: center;
+}
+
+.filter_category{
+    margin: 0 4px;
+    border-radius: 10px;
+    border: 1px solid #e7e8f1;
+    height: 38px;
+    cursor: pointer;
+  }
+  
+  .filter_category label {
+    // float: left; line-height: 3.0em;
+    // width: 8.0em; height: 3.0em;
+    margin: 0;
+    height: 100%;
+    // padding: 4px;
+    min-width: 73px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  
+  .filter_category label span {
+    text-align: center;
+    padding: 3px 0;
+    display: block;
+  }
+  
+  .filter_category label input {
+    position: absolute;
+    display: none;
+    // color: #fff !important;
+  }
+  /* selects all of the text within the input element and changes the color of the text */
+  .filter_category label input + span{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #3F4254;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  
+  
+  /* This will declare how a selected input will look giving generic properties */
+  .filter_category input:checked + span {
+      //color: #ffffff;
+    //   text-shadow: 0 0  6px rgba(0, 0, 0, 0.8);
+  }
+  .status_done input:checked + span{
+      background-color: #E7FFCC;
+    }
+.status_pending input:checked + span{background-color: #FFBFBF;}

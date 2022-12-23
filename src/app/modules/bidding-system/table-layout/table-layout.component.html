@@ -1,0 +1,73 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+      <div class="card-title">
+        <h3 class="card-label">{{id ? "Update Table Layout Details" : "New Table Layout Details" }}</h3>
+      </div>
+      <div class="card-toolbar">
+        <!-- Nothing right now-->
+      </div>
+    </div>
+    <div class="card-body pt-0">
+  
+      <div class="form form-label-right">
+        <div class="form-group row" style="padding-top: 0px;">
+          <div class="col-lg-12">
+            <div class="row" [formGroup]="tableCreateForm">
+
+              <div class="col-lg-3 mt-2">
+                <label class="form-label">Name<span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-lg" placeholder="Name" autocomplete="off" formControlName="name"
+                [class.is-invalid]="isTableCreateFormValid(tableCreateForm,'name','invalid')"
+                [class.is-valid] ="isTableCreateFormValid(tableCreateForm,'name','valid')"
+                 />
+              </div>
+
+              <div class="col-lg-3 mt-2">
+                <label class="form-label">Table racks<span class="text-danger">*</span></label>
+                <input type="number" class="form-control form-control-lg" placeholder="4" autocomplete="off" formControlName="rows"
+                [class.is-invalid]="isTableCreateFormValid(tableCreateForm,'rows','invalid')"
+                [class.is-valid] ="isTableCreateFormValid(tableCreateForm,'rows','valid')"
+                [ngClass]="{'form-control-solid':id}"
+                readonly="{{id}}"
+                 />
+                 <div class="invalid-feedback" *ngIf="isTableCreateFormValid(tableCreateForm,'rows','invalid')">Maximum racks are 10</div>
+              </div>
+  
+              <div class="col-lg-3 mt-2">
+                <label class="form-label">Table partitions<span class="text-danger">*</span></label>
+                <input type="number" class="form-control form-control-lg"
+                [class.is-invalid]="isTableCreateFormValid(tableCreateForm,'columns','invalid')"
+                [class.is-valid] ="isTableCreateFormValid(tableCreateForm,'columns','valid')"
+                [ngClass]="{'form-control-solid':id}"
+                readonly="{{id}}"
+                  placeholder="4" autocomplete="off" formControlName="columns" />
+                <div class="invalid-feedback" *ngIf="isTableCreateFormValid(tableCreateForm,'columns','invalid')">Maximum partitions are 2</div>
+              </div>
+  
+              <div class="col-lg-3 mt-2">
+                <label>UOM<span class="text-danger">*</span><small>( Unit Of Measurement )</small></label>
+                <select class="form-control form-control-lg" formControlName="uom" name="uom"placeholder="Select UOM">
+                 <option *ngFor="let item of UNIT_OF_MESURES |keyvalue" [value]="item.key">{{item.value.displayName}}</option>
+                </select>
+              </div>
+
+            </div>
+            <app-table-tx-layout 
+            [numberOfRows]="tableCreateForm.get('rows').value" 
+            [isValid]="tableCreateForm.valid" 
+            [numberOfColumns]="tableCreateForm.get('columns').value"
+            (onChange)="tableCapacityChange($event)"
+            [tableLayoutDetailsEdit]="tableLayoutDetailsEdit"
+            [uom]="tableCreateForm.get('uom').value"
+            ></app-table-tx-layout>
+          </div>
+        </div>
+        <div class="card-toolbar float-right">
+          <app-back-button></app-back-button>
+          <button type="submit" class="btn btn-sm btn-success p-3" [disabled]="tableCreateForm.invalid||(matrixForm && matrixForm.invalid)" (click)="save(matrixForm.value,tableCreateForm.value)"
+            >Save</button>
+        </div>
+      </div>
+  
+    </div>
+  </div>

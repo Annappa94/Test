@@ -1,0 +1,365 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">Rearing IoT Device Details</h3>
+        </div>
+        <div class="card-toolbar">
+
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="form form-label-right">
+                <div class="row" [formGroup]="deviceCreateForm">
+
+                        <!-- <div class="col-lg-4 mt-3 ">
+                            <label class="form-label">Serial Number<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg"
+                              placeholder="Serial Number" autocomplete="off" formControlName="serialNumber" />
+                          </div> -->
+
+                          <div class="col-lg-4 mt-3">
+                            <label>Select Device<span class="text-danger">*</span></label>
+                            <!-- <select class="form-control form-control-lg" *ngIf="!id"
+                                formControlName="type"
+                                name="type" placeholder="Select Center" (change)="populateDescription()">
+                                <option *ngFor="let item of availableDevice" [value]="item.id">{{item.description}}</option>
+                            </select> -->
+
+                            <ng-select class=""  *ngIf="!id"
+                            [(ngModel)]="selectedDevice" (change)="onDeviceSelection()"
+                            [ngModelOptions]="{standalone: true}"
+                            placeholder="Please enter the device name"
+                            (clear)="clearDeviceForm()">
+                            <ng-option *ngFor="let item of availableDevice" [value]="item.id">{{ item.description
+                                }}</ng-option>
+                             </ng-select>
+
+                            <input class="form-control form-control-lg form-control-solid" 
+                            formControlName="des" *ngIf="id" readonly>
+                        </div>
+
+                        <div class="col-lg-4 mt-3">
+                            <label >Select Agronomist<span class="text-danger">*</span> </label>
+                            <select class="form-control form-control-lg" name="agronomist" formControlName="agroPhone" (change)="agronomistChange()">
+                                <option *ngFor="let item of agronomistList" [value]="item.phone">{{ item.name }} - {{ item.phone }}</option>
+                            </select>
+                            <!-- <input class="form-control form-control-lg form-control-solid" 
+                            formControlName="agroPhone" *ngIf="id" readonly> -->
+                        </div>
+
+                        
+                </div>
+                <div class="row mt-3" [formGroup]="farmerCreate">
+                    <div class="col-lg-4 mt-3 selectWrapper">
+                        <label class="w-100 d-flex justify-content-between"><span>Select Customer<span class="text-danger">*</span></span><span><a class="text-primary cursor-pointer" *ngIf="!id" (click)="open(content)">+ New Customer</a></span></label>
+                        <ng-select class=""  *ngIf="!id"
+                            [(ngModel)]="selectedFarmer" (change)="onFarmerSelection()"
+                            [ngModelOptions]="{standalone: true}"
+                            placeholder="Please enter the mobile number"
+                            (clear)="clearFarmerForm()"
+                            (search)='getFarmersList($event)'>
+                            <ng-option *ngFor="let item of farmerList" [value]="item.code">{{ item.name
+                                }} - {{ item.phone }} <span class="text-success">[{{item.type}}]</span></ng-option>
+                        </ng-select>
+                        <input class="form-control form-control-lg form-control-solid" 
+                            formControlName="displayFarmer" *ngIf="id" readonly>
+                    </div>
+
+                    <div class="col-lg-4 mt-3">
+                      <!-- <label>Alternate Number</label> -->
+                      <!-- <input class="form-control form-control-lg" placeholder="Additional Phone Number" formControlName="additionalPhoneNumber"/> -->
+                      <label class="form-label">Alternate Mobile Number</label>
+                      <input type="text" class="form-control form-control-lg" name="phone"
+                        placeholder="Alternate Mobile Number" autocomplete="off" [class.is-invalid]="isControlInvalidFor('additionalPhoneNumber')"
+                        [class.is-valid]="isControlValidFor('additionalPhoneNumber')" formControlName="additionalPhoneNumber" />
+                      <div class="valid-feedback" *ngIf="isControlValidFor('additionalPhoneNumber')">Mobile number was entered correct
+                      </div>
+                      <div class="invalid-feedback" *ngIf="controlHasErrorFor('required', 'additionalPhoneNumber')">Mobile number is
+                        required</div>
+                    </div>
+
+                    <div class="col-lg-4 mt-3">
+                        <label>Chawki Start Date</label>
+                        <mat-form-field class="w-100 cursor-pointer" appearance="fill" (click)="dp1.open()" >
+                          <input matInput [matDatepicker]="dp1" class="cursor-pointer" formControlName="chaakiDate"
+                          (click)="dp1.open()" readonly >
+                          <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
+                          <mat-datepicker #dp1 disabled="true"></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-lg-4 mt-3">
+                        <label>Chawki End Date</label>
+                        <mat-form-field class="w-100 cursor-pointer" appearance="fill" (click)="dp2.open()" >
+                          <input matInput [matDatepicker]="dp2" class="cursor-pointer" formControlName="chawkiEndDate"
+                          (click)="dp2.open()" [readonly]='isFarmer' [min]="minDate">
+                          <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
+                          <mat-datepicker #dp2 [disabled]='isFarmer'></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+        </div>
+
+     <div class="col-lg-12 mt-6  p-0">
+        <ngb-accordion #acc11="ngbAccordion">
+        <ngb-panel id="toggle-11">
+            <ng-template ngbPanelTitle>
+            <span class="card-header--title text-success">Customer Address Details<span class="text-danger">*</span></span>
+            </ng-template>
+            
+            <ng-template ngbPanelContent>
+                <div class="row" [formGroup]="address">
+                  <div class="col-lg-3 mt-2">
+                    <label class="form-label">Address<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control form-control-lg" name="Address"  [ngClass]="{'form-control-solid':id}"
+                      placeholder="Address" autocomplete="off" formControlName="address" [readonly]="id" />
+                  </div>
+                  <div class="col-lg-3 mt-2">
+                    <label class="form-label">Village</label>
+                    <input type="text" class="form-control form-control-lg" name="Village"  [ngClass]="{'form-control-solid':id}"
+                      placeholder="Village" autocomplete="off" formControlName="village" [readonly]="id"  />
+                  </div>
+                  <div class="col-lg-3 mt-2">
+                    <label class="form-label">City</label>
+                    <input type="text" class="form-control form-control-lg" name="city"  [ngClass]="{'form-control-solid':id}"
+                      placeholder="City" autocomplete="off" formControlName="city"  [readonly]="id"  />
+                  </div>
+                  <div class="col-lg-3 mt-2">
+                    <label class="form-label">District</label>
+                    <input type="text" class="form-control form-control-lg" name="District"  [ngClass]="{'form-control-solid':id}"
+                      placeholder="District" autocomplete="off" formControlName="district"  [readonly]="id"  />
+                  </div>
+                  <div class="col-lg-3 mt-2">
+                    <label class="form-label">Taluk</label>
+                    <input type="text" class="form-control form-control-lg" name="Taluk"  [ngClass]="{'form-control-solid':id}"
+                      placeholder="Taluk" autocomplete="off" formControlName="taluk"  [readonly]="id"  />
+                  </div>
+                  <div class="col-lg-3 mt-2">
+                    <label class="form-label">Region</label>
+                    <input type="text" class="form-control form-control-lg" name="region"  [ngClass]="{'form-control-solid':id}"
+                      placeholder="Region" autocomplete="off" formControlName="region" [readonly]="id"  />
+                  </div>
+                  <div class="col-lg-3 mt-2">
+                    <label class="form-label">State</label>
+                    <input type="text" class="form-control form-control-lg" name="State"  [ngClass]="{'form-control-solid':id}"
+                      placeholder="State" autocomplete="off" formControlName="state" [readonly]="id"  />
+                  </div>
+                  <div class="col-lg-3 mt-2">
+                    <label class="form-label">PIN Code</label>
+                    <input type="text" class="form-control form-control-lg" name="PIN Code"  [ngClass]="{'form-control-solid':id}"
+                      placeholder="PIN Code" autocomplete="off" formControlName="pincode" [readonly]="id"  />
+                  </div>
+                  <div class="col-lg-3 mt-2" >
+                    <label class="form-label">Latitude</label>
+                    <input type="text" readonly class="form-control form-control-lg"  [ngClass]="{'form-control-solid':id}" name="PIN Code"
+                      placeholder="Latitude" autocomplete="off" formControlName="latitude" />
+                  </div>
+                  <div class="col-lg-3 mt-2">
+                    <label class="form-label">Longitude</label>
+                    <input type="text" readonly class="form-control form-control-lg"  [ngClass]="{'form-control-solid':id}"name="PIN Code"
+                      placeholder="Longitude" autocomplete="off" formControlName="longitude" />
+                  </div>
+                  
+
+                </div>
+              </ng-template>
+        </ngb-panel>
+        </ngb-accordion>
+     </div>
+
+    <div class="col-lg-12 mt-6  p-0">
+      <ngb-accordion #acc11="ngbAccordion">
+        <ngb-panel id="toggle-11">
+          <ng-template ngbPanelTitle>
+            <span class="card-header--title text-success">Payment Details<span class="text-danger">*</span></span>
+          </ng-template>
+    
+          <ng-template ngbPanelContent>
+            <div class="row" [formGroup]="devicePaymentForm">
+              <div class="col-lg-3 mt-2">
+                <label class="form-label">Price<span class="text-danger">*</span></label>
+                <input type="number" class="form-control form-control-lg" name="price" placeholder="Price"
+                  autocomplete="off" formControlName="price" (input)="captureChangeForBill()" 
+                  [readonly]="id" [ngClass]="{'form-control-solid': id}" />
+              </div>
+              <div class="col-lg-3 mt-2">
+                <label>Within State ?<span class="text-danger">*</span></label>
+                <select class="form-control form-control-lg" formControlName="inState" name="inState"
+                  [ngClass]="{'form-control-solid': id}"
+                  placeholder="Within State ?" (change)="captureChangeForBill()">
+                  <option value="inState">Same State</option>
+                  <option value="outOfState">Out Of state</option>
+                </select>
+              </div>
+              <div class="col-lg-3 mt-2">
+                <label class="form-label">CGST<small>(9%)</small></label>
+                <input type="number" class="form-control form-control-lg form-control-solid" name="cgst" placeholder="cgst" autocomplete="off"
+                  formControlName="cgst" readonly />
+              </div>
+              <div class="col-lg-3 mt-2">
+                <label class="form-label">SGST<small>(9%)</small></label>
+                <input type="number" class="form-control form-control-lg form-control-solid" name="SGST" placeholder="SGST" autocomplete="off"
+                  formControlName="sgst" readonly />
+              </div>
+              <div class="col-lg-3 mt-2">
+                <label class="form-label">IGST<small>(18%)</small></label>
+                <input type="number" class="form-control form-control-lg form-control-solid" name="IGST" placeholder="0"
+                  autocomplete="off" formControlName="igst" readonly/>
+              </div>
+              <div class="col-lg-3 mt-2">
+                <label class="form-label">Net Amount</label>
+                <input type="number" class="form-control form-control-lg form-control-solid" name="totalAmount" placeholder="0"
+                  autocomplete="off" formControlName="totalAmount" readonly/>
+              </div>
+              <div class="col-lg-3 mt-2">
+                <label class="form-label">Deposit Amount</label>
+                <input type="number" class="form-control form-control-lg" name="depositAmount" placeholder="0"
+                (input)="captureChangeForBill()"
+                  autocomplete="off" formControlName="depositAmount"
+                  [readonly]="id" [ngClass]="{'form-control-solid': id}"/>
+              </div>
+              <div class="col-lg-3 mt-2">
+                <label class="form-label">Tenure</label>
+                <input type="number" class="form-control form-control-lg" name="tenure" placeholder="tenure"
+                [ngClass]="{'form-control-solid': devicePaymentForm.get('totalAmount').value == devicePaymentForm.get('depositAmount').value || id}"
+                  autocomplete="off" formControlName="tenure"
+                  [readonly]="devicePaymentForm.get('totalAmount').value == devicePaymentForm.get('depositAmount').value || id" />
+              </div>
+              <div class="col-12 mt-3 mb-3" *ngIf="!id">
+                <label class="form-label">Terms And Conditions</label>
+                <app-text-editor (innerHtmldata)="dataFromTextEditor($event)" [data]="termsAndConditions" [dataEdit]="dataEdit"></app-text-editor>
+              </div>
+              <div class="col-12 mt-3 mb-3" *ngIf="id && termsAndConditions">
+                <label class="form-label">Terms And Conditions</label>
+                <div [innerHtml]="termsAndConditions" class="form-control form-control-lg form-control-solid" ></div>               
+              </div>
+
+            </div>
+          </ng-template>
+        </ngb-panel>
+      </ngb-accordion>
+    </div>
+
+     <div class="card-toolbar pt-6 float-right">
+        <button type="button" class="btn btn-sm btn-secondary mr-2"
+            [routerLink]="['/resha-farms/rearing-iot']">Back</button>
+        <button type="submit" class="btn btn-sm btn-success"
+        [disabled]="deviceCreateForm.invalid || devicePaymentForm.invalid || farmerCreate.invalid || address.invalid"
+         (click)="saveAllTheData(deviceCreateForm.value,address.value, farmerCreate.value, devicePaymentForm.value)" *ngIf="!id">Save</button>
+        <button type="submit" class="btn btn-sm btn-success"
+        [disabled]="farmerCreate.get('chaakiDate').invalid || devicePaymentForm.invalid"
+         (click)="saveAllTheData(deviceCreateForm.value,address.value, farmerCreate.value, devicePaymentForm.value)" *ngIf="id">Save</button>
+    </div>
+    </div>
+</div>
+
+
+<div class="create-new-farmer">
+    <div>
+        <ng-template #content let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Create New Farmer</h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-12">
+                    <div class="row" [formGroup]="farmerCreateForm">
+                        <div class="col-lg-12 mt-2">
+                            <label class="form-label">Name<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="name" placeholder="Name"
+                              autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('name')"
+                              [class.is-valid]="isControlValidForReeler('name')" formControlName="name" />
+                            <div class="valid-feedback" *ngIf="isControlValidForReeler('name')">Name was entered correct</div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'name')">Name is required</div>
+                          </div>
+                          <div class="col-lg-12 mt-2">
+                            <label class="form-label">Mobile Number<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="phone"
+                              placeholder="Mobile Number" autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('phone')"
+                              [class.is-valid]="isControlValidForReeler('phone')" formControlName="phone" />
+                            <div class="valid-feedback" *ngIf="isControlValidForReeler('phone')">Mobile number was entered correct
+                            </div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'phone')">Mobile number is
+                              required</div>
+                          </div>
+                          <div class="col-lg-12 mt-2">
+                            <label>Select Center<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg" formControlName="center" name="Center"
+                              placeholder="Select Center">
+                              <option *ngFor="let item of centerList" [value]="item.id">{{item.centerName}}</option>
+                            </select>
+                          </div>
+                          <div class="col-lg-12 mt-2">
+                            <label>Cocoon Type<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg" formControlName="cocoonType"
+                              placeholder="Select Type">
+                              <option *ngFor="let item of cocoonTypeList" [value]="item.code">{{item.displayName}}
+                              </option>
+                            </select>
+                          </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+                <button type="button" class="btn btn-sm btn-success" [disabled]="farmerCreateForm.invalid" (click)="createFarmer(farmerCreateForm.value)">Save</button>
+            </div>
+        </ng-template>
+    </div>
+</div>
+<div class="update-farmer-name">
+    <div>
+        <ng-template #updateFarmerName let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Farmer Name</h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-12">
+                    <div class="row" [formGroup]="addFarmerNameForm">
+                        <div class="col-lg-12 mt-2">
+                            <label class="form-label">Name<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="name" placeholder="Name"
+                              autocomplete="off" [class.is-invalid]="isControlInvalid('name')"
+                              [class.is-valid]="isControlValid('name')" formControlName="name" />
+                            <div class="valid-feedback" *ngIf="isControlValid('name')">Name was entered correct</div>
+                            <div class="invalid-feedback" *ngIf="controlHasError('required', 'name')">Name is required</div>
+                          </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+                <button type="button" class="btn btn-sm btn-success" [disabled]="addFarmerNameForm.invalid" (click)="addFarmerName(addFarmerNameForm.value)">Save</button>
+            </div>
+        </ng-template>
+    </div>
+</div>
+
+
+
+
+<div class="update-farmer-name">
+  <div>
+      <ng-template #updateChawkiNameContent let-c="close" let-d="dismiss">
+          <div class="modal-header">
+              <h4 class="modal-title">Add Chawki Name</h4>
+          </div>
+          <div class="modal-body">
+              <div class="col-lg-12">
+                  <div class="row" [formGroup]="updateChawkiNameForm">
+                      <div class="col-lg-12 mt-2">
+                          <label class="form-label">Name<span class="text-danger">*</span></label>
+                          <input type="text" class="form-control form-control-lg" name="name" placeholder="Name"
+                            autocomplete="off" [class.is-invalid]="isControlInvalidChawki('name')"
+                            [class.is-valid]="isControlValidChawki('name')" formControlName="name" />
+                          <div class="valid-feedback" *ngIf="isControlValidChawki('name')">Name was entered correct</div>
+                          <div class="invalid-feedback" *ngIf="controlHasErrorChawki('required', 'name')">Name is required</div>
+                        </div>
+                  </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+              <button type="button" class="btn btn-sm btn-success" [disabled]="updateChawkiNameForm.invalid" (click)="updateChawkiName(updateChawkiNameForm.value)">Save</button>
+          </div>
+      </ng-template>
+  </div>
+</div>

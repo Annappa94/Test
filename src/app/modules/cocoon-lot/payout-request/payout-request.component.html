@@ -1,0 +1,262 @@
+<div class="flex-container">
+</div>
+<div class="card card-custom gutter-b">
+  <div class=" ml-6 mt-6">
+    <h3 class="card-label">Requests</h3>
+  </div>
+  <div class="card-header">
+    <div class="flex-child black cursor" [routerLink]="[ '/resha-farms/cocoon-lot/approval-tickets' ]">
+      Cocoon Price Request
+    </div>
+    <div class="flex-child white cursor" *ngIf="user.role !== 'FinanceManager' && user.role !== 'FinanceHead'">  
+      Payout Request
+    </div>
+    <div class="card-toolbar">
+      <div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body pt-0">
+    <div class="form form-label-right">
+      <div class="form-group row">
+        <div class="col-lg-3">
+          <input type="text" class="form-control" (keyup.enter)="onSearch();"
+            (keyup)="!searchText&&getticketList();paginationData.currentPage=0" [(ngModel)]="searchText"
+            placeholder="Search" value="" />
+          <small class="form-text text-muted"><b>Search</b> By Lot Id.</small>
+        </div>
+        <div class="col-lg-1">
+          <button type="button" class="btn btn-sm btn-success mr-2 mt-1" (click)="onSearch();">Search</button>
+        </div>
+        <div class="col-lg-2">
+          <div class="row">
+            <div class="">
+              <select class="form-control" name="status" (change)="onChangeStatus($event)">
+                <option value="" [selected]>All</option>
+                <option *ngFor="let item of paymentstatus" [value]="item.value" >{{item.name}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="row"  *ngIf="listOfApproval.length">
+            <div class="">
+              <h4>Total Payable Amount</h4>
+              <p   class="text-center font-weight-bold"><span class="rupee_symbol">&#8377;</span> {{selectedLotItemPrice | number : '1.0-0'}}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-1">
+          <div class="row">
+            <div class="col-lg-6" *ngIf="listOfApproval.length">
+              <button    *ngIf="user.role == 'CVerticalAdmin'" type="button" class="btn btn-sm btn-success mr-2" (click)="opene(content,' ')">Approve </button>
+            </div>
+            <div class="col-lg-6" *ngIf="!listOfApproval.length">
+              <button  *ngIf="user.role == 'CVerticalAdmin'" type="button" class="btn btn-sm btn-success mr-2 disabled">Approve </button>
+            </div>
+          </div>
+        </div>
+
+        
+      </div>
+    <div class="table-responsive angular-bootstrap-table">
+      <table id="excel-table" class="table table-head-custom table-vertical-center">
+        <thead>
+          <!-- <th *ngIf="user.role == 'CVerticalAdmin'"></th> -->
+          <th class="selection-cell-header" data-row-selection="true" *ngIf="user.role == 'CVerticalAdmin'">
+            <label class="checkbox checkbox-single">
+              <input type="checkbox" [(ngModel)]="selectAll"
+                [ngModelOptions]="{standalone: true}" (change)="selectAllRecord($event)"/>
+              <span></span>
+            </label>
+          </th>
+          <!-- <th name="ticketId" ngDefaultControl [(ngModel)]="tableHeader.ticketId">
+            <i *ngIf="tableHeader.ticketId === 1 && activeSort === 'ticketId'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.ticketId === 0 && activeSort === 'ticketId'" class="fas fa-long-arrow-alt-down"></i>
+            PURRCHASE ID
+          </th> -->
+          <th>
+            Cocoon Lot
+          </th>
+          <th name="farmer" ngDefaultControl [(ngModel)]="tableHeader.farmer">
+            <i *ngIf="tableHeader.farmer === 1 && activeSort === 'farmer'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.farmer === 0 && activeSort === 'farmer'" class="fas fa-long-arrow-alt-down"></i>
+            FARMER<br><small>Phone No</small>
+          </th>
+          <th name="center" ngDefaultControl [(ngModel)]="tableHeader.center">
+            <i *ngIf="tableHeader.center === 1 && activeSort === 'center'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.center === 0 && activeSort === 'center'" class="fas fa-long-arrow-alt-down"></i>
+            CENTER
+          </th>
+          <th name="payoutType" ngDefaultControl [(ngModel)]="tableHeader.payoutType">
+            <i *ngIf="tableHeader.payoutType === 1 && activeSort === 'payoutType'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.payoutType === 0 && activeSort === 'payoutType'"
+              class="fas fa-long-arrow-alt-down"></i>
+            PAYOUT TYPE
+          </th>
+          <th name="requestedAmount" ngDefaultControl [(ngModel)]="tableHeader.requestedAmount">
+            <i *ngIf="tableHeader.requestedAmount === 1 && activeSort === 'requestedAmount'"
+              class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.requestedAmount === 0 && activeSort === 'requestedAmount'"
+              class="fas fa-long-arrow-alt-down"></i>
+            REQUESTED AMOUNT
+          </th>
+          <th name="payableAmountAmount" ngDefaultControl [(ngModel)]="tableHeader.payableAmountAmount">
+            <i *ngIf="tableHeader.payableAmountAmount === 1 && activeSort === 'payableAmountAmount'"
+              class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.payableAmountAmount === 0 && activeSort === 'payableAmountAmount'"
+              class="fas fa-long-arrow-alt-down"></i>
+            PAYABLE AMOUNT
+          </th>
+          <th name="status" ngDefaultControl [(ngModel)]="tableHeader.status">
+            <i *ngIf="tableHeader.status === 1 && activeSort === 'status'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.status === 0 && activeSort === 'status'" class="fas fa-long-arrow-alt-down"></i>
+            STATUS
+          </th>
+          <th name="date" >
+            CREATED DATE
+          </th>
+          <th *ngIf="user.role == 'CVerticalAdmin'">Actions</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of filteredpayoutTicketList">
+            <td class="selection-cell" *ngIf="user.role == 'CVerticalAdmin'">
+              <label class="checkbox checkbox-single" *ngIf="item.status == 'PENDING'">
+                <input type="checkbox" name="test" [(ngModel)]="item.selected" [ngModelOptions]="{standalone: true}" (change)="onSelectPayoutLot($event, item)"/>
+                <span></span>
+              </label>
+            </td>
+            <!-- <td class="">{{item.ticketId}}</td> -->
+            <td>RMLOT{{item?.payoutItem?.itemId}}</td>
+            <td>{{item.farmer}}<br><small>{{item.farmerphone}}</small></td>
+            <td>{{item.center}}</td>
+            <td>{{item.payoutType}} PURCHASE</td>
+            <td>{{item.requestedAmount | number : '1.0-0'}}</td>
+            <td>{{item.payableAmountAmount | number : '1.0-0'}}</td>
+            <td>
+              <span *ngIf="item.ticketStatus == 'STARTED' && !(item?.assignedToUsers?.indexOf(selectedUserId) > -1)" class="text-danger font-weight-bolder">Pending</span>
+              <span *ngIf="item.ticketStatus == 'APPROVED'" class="text-success font-weight-bolder">Approved</span>
+              <span *ngIf="(item.ticketStatus == 'STARTED' && item?.assignedToUsers?.indexOf(selectedUserId) > -1) " class="text-warning font-weight-bolder">Inprocess</span>
+            </td>
+            <td>{{item.payoutItem?.itemCreatedDate | date:'d/M/yy, h:mm a'}}</td>
+            <td>
+              <ng-container *ngIf="item.ticketStatus == 'STARTED'">
+                <div ngbDropdown class="d-inline-block"  *ngIf="!(item.ticketStatus == 'STARTED' && item?.assignedToUsers?.indexOf(selectedUserId) > -1 )">
+                  <button class="btn btn-hover-text-primary p-0 ml-4 dropdown menu-item menu-item-submenu menu-item-rel"
+                    id="approvebutton" ngbDropdownToggle style="height:30px" [disabled]="listOfApproval.length">
+                    <i  class="fas fa-ellipsis-v icon-lg text-muted"></i>
+                  </button>
+                  <div  *ngIf="!(item.ticketStatus == 'STARTED' && item?.assignedToUsers?.indexOf(selectedUserId) > -1 )" class="palns_activation_actions" style="max-width: 150px;top:-33px !important" ngbDropdownMenu
+                    aria-labelledby="approvebutton">
+                    <a matTooltip="Payout" (click)="opene(content,item)">
+                      <p class="pl-4 cursor dropdow_list m-0">Approve</p>
+                    </a>
+                  </div>
+                </div>
+              </ng-container>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="row">
+      <div class="ml-5 mr-2">
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <!-- <li class="page-item">
+                <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(0)" href="javascript:void(0);">
+                  <span aria-hidden="true">&laquo;&laquo;</span>
+                  <span class="sr-only">First</span>
+                </a>
+              </li> -->
+            <li class="page-item">
+              <!-- <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(paginationData.currentPage - 1)" href="javascript:void(0);">
+                  <span aria-hidden="true">&laquo;</span>
+                  <span class="sr-only">Previous</span>
+                </a> -->
+              <a class="page-link" (click)="onPageChange(paginationData.currentPage - 1)" href="javascript:void(0);">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" *ngIf="paginationData?.currentPage !== 0 && paginationData?.currentPage !== 1"
+                (click)="onPageChange(paginationData?.currentPage - 2)" href="javascript:void(0);">{{
+                paginationData?.currentPage -1 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" *ngIf="paginationData?.currentPage !== 0"
+                (click)="onPageChange(paginationData?.currentPage - 1)" href="javascript:void(0);">{{
+                paginationData?.currentPage}}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link active" href="javascript:void(0);">{{ paginationData?.currentPage + 1 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link"
+                *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1"
+                (click)="onPageChange(paginationData?.currentPage + 1)" href="javascript:void(0);">{{
+                paginationData?.currentPage + 2 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link"
+                *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1 && paginationData?.currentPage !== paginationData.pages.length - 2"
+                (click)="onPageChange(paginationData?.currentPage + 2)" href="javascript:void(0);">{{
+                paginationData?.currentPage + 3 }}</a>
+            </li>
+            <li class="page-item">
+              <!-- <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}" (click)="onPageChange(paginationData.currentPage + 1)" href="javascript:void(0);">
+                  <span aria-hidden="true">&raquo;</span>
+                  <span class="sr-only">Next</span>
+                </a> -->
+              <a class="page-link" (click)="onPageChange(paginationData.currentPage + 1)" href="javascript:void(0);">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+            <!-- <li class="page-item">
+                <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}" (click)="onPageChange(paginationData.pages.length - 1)" href="javascript:void(0);">
+                  <span aria-hidden="true">&raquo;&raquo;</span>
+                  <span class="sr-only">Last</span>
+                </a>
+              </li> -->
+          </ul>
+        </nav>
+      </div>
+      <div class="mr-2">
+        <select class="custom-select" style="height: calc(1.2em + 1rem + 2px); padding: 0.35rem 2rem 0.35rem 1rem;"
+          [(ngModel)]="paginationData.pageSize" (change)="onPageSizeChange()">
+          <option [ngValue]="10">10 per page</option>
+          <option [ngValue]="50">50 per page</option>
+          <option [ngValue]="100">100 per page</option>
+        </select>
+      </div>
+      <!-- <div class="pt-2">
+          <small class="text-muted">(Total: {{totalElements}})</small>
+        </div> -->
+    </div>
+  </div>
+</div>
+<div class="Enter-selling-price">
+  <div>
+    <ng-template #content let-c="close" let-d="dismiss">
+     
+      <div class="modal-header">
+        <!-- <h5 class="modal-title">Estimated Paybale Amount</h5> -->
+      </div>
+      <div class="container">
+        <div class="text-center">
+          <h5 class="modal-title">Total Paybale Amount</h5> <br>
+          <strong class="h3 font-weight-bolder"><span class="rupee_symbol">&#8377;</span> {{selectedLotItemPrice | number : '1.0-0'}}</strong>
+        </div>
+      </div>
+      <div class="modal-body form-height pt-0">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-secondary" (click)="cancel()">Cancel</button>
+        <button type="button" class="btn btn-sm btn-primary" (click)="approve()">Approve</button>
+      </div>
+    </ng-template>
+  </div>
+</div>

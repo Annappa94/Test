@@ -1,0 +1,276 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+          <h3 class="card-label">{{id ? "Update Device Type" : "New Device Type" }} </h3>
+        </div>
+    </div>
+    <div class="card-body pt-0">
+        <div class="form form-label-right">
+            <div class="form-group row" style="padding-top: 0px;">
+              <div class="col-lg-12">
+                  <div [formGroup]="devicetype">
+                    <div class="row" >
+                        <div class="col-lg-4 mt-5">
+                            <label >Business Vertical<span class="text-danger">*</span> </label>
+                            <select class="form-control form-control-lg" name="businessVertical" formControlName="businessVertical"  >
+                                <!-- <option *ngFor="let item of agronomistList" [value]="item.name">{{ item.name }} - {{ item.phone }}</option> -->
+                                <option value="RESHA_FARMS">RM FARMS</option>
+                                <!-- <option value="RESHA_YARNS">RM YARNS</option>
+                                <option value="RESHA_WEAVES">RM WEAVES</option> -->
+                            </select>
+                        </div>
+                        <div class="col-lg-4 mt-5">
+                            <label >Product Type<span class="text-danger">*</span> </label>
+                            <select class="form-control form-control-lg" name="productType" formControlName="productType"  >
+                                <!-- <option *ngFor="let item of agronomistList" [value]="item.name">{{ item.name }} - {{ item.phone }}</option> -->
+                                <option value="IOT">IOT</option>
+                                <!-- <option value="INPUT">INPUT</option>
+                                <option value="MACHINERY">MACHINERY</option> -->
+                            </select>
+                        </div>
+                        <div class="col-lg-4 mt-5">
+                            <label >Supported Services<span class="text-danger">*</span> </label>
+                            <ng-multiselect-dropdown 
+                                [placeholder]="'Supported Services'"
+                                [settings]="dropdownSettings"
+                                formControlName="services"
+                                [data]="supportedServices"
+                                    (onSelect)="onServiceSelect($event)"
+                                    (onDeSelect)="onServiceSelect($event)"
+                                (onSelectAll)="onSelectAll($event)">
+                            </ng-multiselect-dropdown>
+                        </div>
+                        <div class="col-lg-4 mt-5">
+                            <label class="form-label">Device Name<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="deviceName" placeholder="device name"
+                            autocomplete="off" [class.is-invalid]="isControlInvalidForDevicetype('deviceName')"
+                            [class.is-valid]="isControlValidForDevicetype('deviceName')" formControlName="deviceName" />
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForDevicetype('required', 'deviceName')">Name is required</div>
+                        </div>
+    
+                        <div class="col-lg-4 mt-5">
+                            <label class="form-label">Brand<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="brand" placeholder="brand"
+                            autocomplete="off" [class.is-invalid]="isControlInvalidForDevicetype('brand')"
+                            [class.is-valid]="isControlValidForDevicetype('brand')" formControlName="brand"/>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForDevicetype('required', 'brand')">Brand name is required</div>
+                        </div>
+    
+                        <div class="col-lg-4 mt-5">
+                            <label class="form-label">Manufacturer<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="manufacturer" placeholder="manufacture"
+                            autocomplete="off" [class.is-invalid]="isControlInvalidForDevicetype('manufacturer')"
+                            [class.is-valid]="isControlValidForDevicetype('manufacturer')" formControlName="manufacturer" />
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForDevicetype('required', 'manufacturer')">Manufacture is required</div>
+                        </div>
+
+                        <div class="col-lg-4 mt-5">
+                            <label class="form-label">Model Version</label>
+                            <input type="text" class="form-control form-control-lg" name="model_version" placeholder="model version"
+                            autocomplete="off" [class.is-invalid]="isControlInvalidForDevicetype('model_version')"
+                            [class.is-valid]="isControlValidForDevicetype('model_version')" formControlName="model_version" />
+                        </div>
+                        
+    
+                        <div class="col-lg-4 mt-5">
+                            <label class="form-label">Vendor Name<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="vendor" placeholder="vendor name"
+                            autocomplete="off" [class.is-invalid]="isControlInvalidForDevicetype('vendor')"
+                            [class.is-valid]="isControlValidForDevicetype('vendor')" formControlName="vendor" />
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForDevicetype('required', 'vendor')">Name is required</div>
+                        </div>
+
+                        <div class="col-lg-12 mt-5 mb-5">
+                            <label class="form-label">Device Specifications</label>
+                            <app-text-editor (innerHtmldata)="dataFromTextEditor($event)" [data]="deviceSpecifications" [dataEdit]="initialdeviceSpecifications"></app-text-editor>
+
+                        </div>
+
+
+    
+                        <!-- <div class="col-lg-3 mt-10">
+                            <label class="form-label">Rate<span class="text-danger">*</span></label>
+                            <input type="number" class="form-control form-control-lg" name="sellingRate" placeholder="sellingRate"
+                            autocomplete="off" [class.is-invalid]="isControlInvalidForDevicetype('sellingRate')"
+                            [class.is-valid]="isControlValidForDevicetype('sellingRate')" formControlName="sellingRate" />
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForDevicetype('required', 'sellingRate')">Rate is required</div>
+                        </div>
+    
+                        <div class="col-lg-3 mt-10">
+                            <label class="form-label">Currency<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="currency" placeholder="Name"
+                            autocomplete="off" [class.is-invalid]="isControlInvalidForDevicetype('currency')"
+                            [class.is-valid]="isControlValidForDevicetype('currency')" formControlName="currency" />
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForDevicetype('required', 'currency')">Currency is required</div>
+                        </div>
+                        <div class="col-lg-3 mt-10">
+                            <label class="form-label">Purchase Rate<span class="text-danger">*</span></label>
+                            <input type="number" class="form-control form-control-lg" name="purchaseRate" placeholder="purchase rate"
+                            autocomplete="off" [class.is-invalid]="isControlInvalidForDevicetype('purchaseRate')"
+                            [class.is-valid]="isControlValidForDevicetype('purchaseRate')" formControlName="purchaseRate" />
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForDevicetype('required', 'purchaseRate')">Purchase rate is required</div>
+                        </div>
+    
+                        <div class="col-lg-3 mt-10">
+                            <label class="form-label">Total Units<span class="text-danger">*</span></label>
+                            <input type="number" class="form-control form-control-lg" name="totalUnits" placeholder="total units"
+                            autocomplete="off" [class.is-invalid]="isControlInvalidForDevicetype('totalUnits')"
+                            [class.is-valid]="isControlValidForDevicetype('totalUnits')" formControlName="totalUnits" />
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForDevicetype('required', 'totalUnits')">Total units is required</div>
+                        </div> -->
+
+                        <!-- <div class="col-lg-3 mt-10">
+                            <label>Upload Device Image</label><br>
+                            <div class="image-input image-input-outline m-1" id="kt_profile_avatar">
+                                <img class="image-input-wrapper cursor-pointer"
+                                [src]="devicetype.get('deviceImage').value ? devicetype.get('deviceImage')?.value?.includes('.pdf')?'./assets/media/svg/files/pdf.svg': './assets/media/svg/files/jpg.svg' : './assets/media/users/blank.png'"
+                                (click)="showImage(devicetype.get('deviceImage').value)" style="width: 50px; height: 50px;" />
+                                <label
+                                  class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                  data-action="change" data-toggle="tooltip" title=""
+                                  data-original-title="Change avatar">
+                                  <i class="fa fa-pen icon-sm text-muted"></i>
+                                  <input type="file" name="profile_avatar" (change)="onImageUpload($event);"/>
+                                  <input type="hidden" name="profile_avatar_remove" />
+                                </label>
+                                <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                  data-action="cancel" data-toggle="tooltip" title=""
+                                  data-original-title="Cancel avatar">
+                                  <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                </span>
+                            </div>
+                        </div> -->
+                        
+  
+                        <!-- <div class="col-lg-3 mt-10">
+                            <label>Upload Device Document</label><br>
+                            <div class="image-input image-input-outline m-1" id="kt_profile_avatar">
+                                <img class="image-input-wrapper cursor-pointer"
+                                [src]="devicetype.get('deviceDocument').value? devicetype.get('deviceDocument')?.value?.includes('.pdf')?'./assets/media/svg/files/pdf.svg': './assets/media/svg/files/jpg.svg' : './assets/media/users/blank.png'"
+                                (click)="showImage(devicetype.get('deviceDocument').value)" style="width: 50px; height: 50px;" />
+                                <label
+                                  class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                  data-action="change" data-toggle="tooltip" title=""
+                                  data-original-title="Change avatar">
+                                  <i class="fa fa-pen icon-sm text-muted"></i>
+                                  <input type="file" name="profile_avatar" (change)="onImageUpload($event);"/>
+                                  <input type="hidden" name="profile_avatar_remove" />
+                                </label>
+                                <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                  data-action="cancel" data-toggle="tooltip" title=""
+                                  data-original-title="Cancel avatar">
+                                  <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                </span>
+                            </div>
+                        </div> -->
+    
+                    </div>
+
+                    <!-- <div class="row">
+                        <div class="col-lg-3 mt-14">Device Specification</div>
+                        <div class="col-lg-3 mt-10">
+                          <input type="text" class="form-control form-control-lg" name="deviceSpecification" placeholder="specification term"
+                          autocomplete="off" [class.is-invalid]="isControlInvalidForDevicetype('deviceSpecification')"
+                          [class.is-valid]="isControlValidForDevicetype('deviceSpecification')" formControlName="deviceSpecification" />
+                          <div class="invalid-feedback" *ngIf="controlHasErrorForDevicetype('required', 'deviceSpecification')">Device specification required</div>
+                      </div>
+                        <div class="col-lg-3 mt-10">
+                          <input type="text" class="form-control form-control-lg" name="deviceSpecificationDetails" placeholder="details of specification term"
+                          autocomplete="off" [class.is-invalid]="isControlInvalidForDevicetype('deviceSpecificationDetails')"
+                          [class.is-valid]="isControlValidForDevicetype('deviceSpecificationDetails')" formControlName="deviceSpecificationDetails" />
+                          <div class="invalid-feedback" *ngIf="controlHasErrorForDevicetype('required', 'deviceSpecificationDetails')">Give proper details</div>
+                      </div>
+                      <div class="col-lg-1 mt-12">
+                          <button matTooltip="Add More"  type="button" class="btn btn-icon btn-success btn-xs mb-6">
+                              <i class="flaticon-add-circular-button"></i>
+                            </button>
+                            <button matTooltip="Remove"  type="button" class="btn ml-2 btn-icon btn-danger btn-xs mb-6">
+                                <i class="flaticon-cancel"></i>
+                            </button>
+                        </div>
+                    </div> -->
+                    
+                    
+                      <div class="col-lg-12 mt-6">
+                        <ngb-accordion #acc12="ngbAccordion">
+                          <ngb-panel id="toggle-bank">
+                            <ng-template ngbPanelTitle>
+                              <span class="ard-header--title text-success">Images Upload</span>
+                            </ng-template>
+                            <ng-template ngbPanelContent>
+                                <div >
+                                    <div class="card card-custom"  >
+                                        <label class="mt-5">Images</label>
+                                    
+                                        <div class="row"  *ngFor="let cat of  deviceTypeImages; let index=index">
+                                            <div class="col-lg-6 col-6 mt-3">
+                                                <input type="text" placeholder="Label" class="form-control form-control-lg" [ngModelOptions]="{standalone: true}" [(ngModel)]= "cat.tag"/>
+                                            </div>
+                
+                                            <div class="col-lg-3 col-3 col-md-3">
+                                                <app-image-upload [index]="index" [flag]="'cat'" [img]="cat" (prevImage)="listenForImageComponent($event)"></app-image-upload>
+                                            </div>
+                                            <div>
+                                                    <div class="d-flex justify-content-center align-items-center mt-lg-8 mt-3 px-5">
+                                                        <button matTooltip="Add" type="button" class="btn btn-icon btn-success btn-xs mb-6" (click)="addImages(index+1)" *ngIf="index<3">
+                                                            <i class="flaticon-add-circular-button"></i>
+                                                        </button>
+                                                            <button matTooltip="Remove" type="button" class="btn ml-2 btn-icon btn-danger btn-xs mb-6" (click)="removeImages(index)" *ngIf="deviceTypeImages.length>1">
+                                                            <i class="flaticon-cancel"></i>
+                                                        </button>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                          </ngb-panel>
+                        </ngb-accordion>
+                      </div>
+
+                      <div class="col-lg-12 mt-6">
+                        <ngb-accordion #acc12="ngbAccordion">
+                          <ngb-panel id="toggle-bank">
+                            <ng-template ngbPanelTitle>
+                              <span class="ard-header--title text-success">Documents Upload</span>
+                            </ng-template>
+                            <ng-template ngbPanelContent>
+                                <div >
+                                    <div class="card card-custom">
+                                        <label class="mt-5">Documents</label>
+                                        <div class="row"  *ngFor="let cat of  deviceTypeDocuments; let index=index">
+                                            <div class="col-lg-6 col-6 mt-3">
+                                                <input type="text" placeholder="Label" class="form-control form-control-lg" [ngModelOptions]="{standalone: true}" [(ngModel)]= "cat.tag"/>
+                                            </div>
+                
+                                            <div class="col-lg-3 col-3 col-md-3">
+                                                <app-image-upload [index]="index" [flag]="'cat'" [img]="cat" (prevImage)="listenForDocsImageComponent($event)"></app-image-upload>
+                                            </div>
+                                            <div>
+                                                    <div class="d-flex justify-content-center align-items-center mt-lg-8 mt-3 px-5">
+                                                        <button matTooltip="Add" type="button" class="btn btn-icon btn-success btn-xs mb-6" (click)="addDocuments(index+1)" *ngIf="index<3">
+                                                            <i class="flaticon-add-circular-button"></i>
+                                                        </button>
+                                                            <button matTooltip="Remove" type="button" class="btn ml-2 btn-icon btn-danger btn-xs mb-6" (click)="removeDocuments(index)" *ngIf="deviceTypeDocuments.length>1">
+                                                            <i class="flaticon-cancel"></i>
+                                                        </button>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                          </ngb-panel>
+                        </ngb-accordion>
+                      </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-toolbar d-flex justify-content-end">
+            <button type="button" class="btn btn-sm btn-secondary mr-2" (click)="goBack()">Back</button>
+            <button type="submit" class="btn btn-sm btn-success float-right" [disabled]="devicetype.invalid" (click)="saveDeviceType(devicetype.value)">Save</button>
+        </div>
+    </div>
+    </div>
+
+</div>

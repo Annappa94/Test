@@ -1,0 +1,4 @@
+<button class="btn btn-sm btn-success" [disabled]="disabledButton" *ngIf="!loading" (click)="buttonClick()">{{text}}</button>
+<button class="btn btn-sm btn-success" [disabled]=true *ngIf="!disabledButton&&loading">{{text}}
+ <div class="loader"></div>
+</button>  

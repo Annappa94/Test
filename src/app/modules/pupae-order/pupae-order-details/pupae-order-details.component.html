@@ -1,0 +1,312 @@
+<div class="bg-white rounded mb-4 d-flex align-items-center py-2 sticky-header justify-content-between">
+    <ul id="breadcrumbs">
+        <li><span style="cursor: pointer;" class="hover-item"
+            (click)="goBack()">All pupae Orders</span></li>
+        <li><span>{{cottonOrderDetails?.code}}</span></li>
+    </ul>
+    <div>
+        <button class="btn btn-secondary btn-sm font-weight-bolder font-size-sm py-3 px-6 mr-5"
+        (click)="goBack()">Back</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-4 mt-4">
+
+        <!--begin::Card-->
+        <div class="card card-custom gutter-b" *ngIf="cottonOrderDetails">
+            <!--begin::Body-->
+            <div class="card-body pt-4">
+                <!--begin::Toolbar-->
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <div class="font-size-h5 mb-3 font-weight-bolder text-success">
+                        {{cottonOrderDetails?.code}}
+                    </div>
+    
+                </div>
+                <!--end::Toolbar-->
+    
+                <p class="mb-4">
+                    <span class="text-success font-weight-bold pr-1">Details</span>
+                </p>
+                <div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Cotton Order Status:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonOrderDetails?.cottonOrderStatus}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="cottonOrderDetails?.grossAmount">
+                        <span class="text-muted font-weight-bold mr-2">createdBy:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonOrderDetails?.createdBy}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="cottonOrderDetails?.discount > 0">
+                        <span class="text-muted font-weight-bold mr-2">Credit Days:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonOrderDetails?.creditDays}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Selling Weight:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonOrderDetails?.sellingWeight}} Kg</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Gross Total:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonOrderDetails?.grossTotal?.toLocaleString('en-IN')}} Rs</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Discount Amount:</span>
+                        <span class="text-dark-75 font-weight-bold"> {{cottonOrderDetails?.discountAmount?.toLocaleString('en-IN')}} Rs</span>
+                    </div>
+                    <!-- <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Due Amount:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonOrderDetails?.dueAmount?.toLocaleString('en-IN')}} Rs</span>
+                    </div> -->
+
+                    </div>
+                    <!-- <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">IGST:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonOrderDetails?.igst?cottonOrderDetails?.igst:0}} Rs</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">CGST:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonOrderDetails?.cgst?cottonOrderDetails?.cgst:0}} Rs</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">SGST:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonOrderDetails?.sgst?cottonOrderDetails?.sgst:0}} Rs</span>
+                    </div> -->
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Net Amount:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonOrderDetails?.netAmount?.toLocaleString('en-IN')}} Rs</span>
+                    </div>
+
+                    <!-- <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Net Receivable Amount:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonOrderDetails?.netReceivableAmount?.toLocaleString('en-IN')}} Rs</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Pre Tax Amount:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonOrderDetails?.preTaxAmount?.toLocaleString('en-IN')}} Rs</span>
+                    </div> -->
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Payment Status:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonOrderDetails?.paymentStatus}}</span>
+                    </div>
+    
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">RM Representative:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonOrderDetails?.rmRepresentativeName+' - '+cottonOrderDetails?.rmRepresentativePhone}}</span>
+                    </div>
+    
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Updated Date:</span>
+                        <span class="text-dark-75 font-weight-bold">{{util.getDisplayTime(cottonOrderDetails?.lastModifiedDate)}}</span>
+                    </div>
+                </div>
+    
+                <p class="mt-4 mb-4 ml-3">
+                    <span class="text-success font-weight-bold pr-1">Logistics</span>
+                </p>
+                <div class="p-3">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Driver Name:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonOrderDetails?.logistics?.driverName}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Vehicle Number:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonOrderDetails?.logistics?.vehicleNumber}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Driver Phone:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonOrderDetails?.logistics?.driverNumber}}</span>
+                    </div>
+    
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Cost:</span>
+                        <span class="text-dark-75 font-weight-bold">{{cottonOrderDetails?.logistics?.totalCost?cottonOrderDetails?.logistics?.totalCost:0}} Rs</span>
+                    </div>
+    
+                </div>
+    
+                <p class="mt-4 ml-2" *ngIf="pupaeBuyer">
+                    <span class="text-success font-weight-bold pr-1">Pupae Buyer</span>
+                </p>
+                <div class="mb-7 pl-3" *ngIf="pupaeBuyer">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Name:</span>
+                        <span class="text-dark-75 font-weight-bold">{{pupaeBuyer?.name}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Phone:</span>
+                        <span class="text-dark-75 font-weight-bold mr-2">{{pupaeBuyer?.phone}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Code:</span>
+                        <span class="btn btn-link-success font-weight-bold mr-2"  (click)="routeToBuyer()">{{pupaeBuyer?.code}}</span>
+                    </div>
+                </div>
+                <!-- <p class="">
+                    <span class="text-dark-75 font-weight-bold font-weight-bold pr-1">Address</span>
+                </p>
+                <p *ngIf="cottonOrderDetails">
+                    <span class="text-muted">
+                        {{cottonOrderDetails.ginner?.address?.address}}, {{cottonOrderDetails?.ginner?.address?.village}},
+                        {{cottonOrderDetails?.ginner?.address?.taluk}}, {{cottonOrderDetails?.ginner?.address?.city}} {{cottonOrderDetails?.ginner?.address?.district ?
+                            cottonOrderDetails?.ginner?.address?.district + ' District, ' : ''}} {{cottonOrderDetails?.ginner?.address?.state}}
+                            {{cottonOrderDetails.ginner?.address?.pincode}}
+                    </span>
+                </p> -->
+    
+            </div>
+            <!--end::Body-->
+        <!-- </div> -->
+        <!--end::Card-->
+    
+    </div>
+    <div class="col-lg-5 mt-4">
+    
+        <!--begin::Card-->
+        <div class="card card-custom">
+            <!--begin::Body-->
+            <div class="card-body pt-4">
+                <!--begin::Toolbar-->
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <div class="font-size-h5 mb-3 font-weight-bold text-success">
+                        Pupae Lots
+                    </div>
+    
+                </div>
+                <!--end::Toolbar-->
+    
+                <div class="table-responsive">
+                    <table class="table table-borderless table-vertical-center">
+                        <thead>
+                            <tr>
+                                <th class="p-0 min-w-100px">Lot</th>
+                                <th class="p-0 min-w-80px"> Pupae Type</th>
+                                <th class="p-0 min-w-100px">Amount</th>
+                                <th class="p-0 min-w-100px">Price/Kg</th>
+                                
+    
+                            </tr>
+                        </thead>
+                        <tbody>
+    
+                            <ng-container *ngIf="cottonOrderDetails?.pupaeOrderItems?.length !== 0; else emptyTemplate">
+                                <tr *ngFor="let item of cottonOrderDetails?.pupaeOrderItems">
+                                    <td class="pl-0">
+                                        <a (click)="lotDetails(item)"
+                                            class="btn btn-link-success font-weight-bold">{{item?.pupaeLotCode}}</a>
+                                    </td>
+    <!-- 
+                                    <td class="pl-0">
+                                        <div class="text-dark-75 font-weight-bold">{{globalService.getDisplayCocoonType(item?.cocoonType)}}</div>
+                                    </td> -->
+    
+                                    <td class="pl-0">
+                                        <span class="text-dark-75 font-weight-bold d-block font-size-md" *ngIf="item?.totalAmount">
+                                            {{item?.pupaeType}}</span>
+                                    </td>
+                                    <td class="pl-0">
+                                        <span class="text-dark-75 font-weight-bold d-block font-size-md" *ngIf="item?.totalAmount">Rs.
+                                            {{item?.totalAmount?.toLocaleString('en-IN')}}</span>
+                                    </td>
+                                    <td class="pl-0">
+                                        <span class="text-dark-75 font-weight-bold d-block font-size-md" *ngIf="item?.totalAmount">
+                                            {{item?.sellingPricePerKg}}</span>
+                                    </td>
+    
+                                </tr>
+                              </ng-container>
+                              <ng-template #emptyTemplate>
+                                <p class="p-5">Yet to be sold.</p>
+                              </ng-template>
+                        </tbody>
+                    </table>
+                </div>
+    
+    
+            </div>
+            <!--end::Body-->
+        </div>
+        <!--end::Card-->
+    
+        <div class="card mt-5" *ngIf="cottonOrderDetails?.weighbridgeImage">
+            <div class="d-flex justify-content-between align-items-center my-2 pl-6">
+                <span class="text-muted font-weight-bold mr-2">Weigh bridge Image:</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center my-2 pl-6">
+                <img [src]="cottonOrderDetails?.weighbridgeImage" width="400" height="300"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 mt-4">
+        
+        <div class="card card-custom " >    
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <div class="font-size-h5 font-weight-bold text-success">Payments</div>
+                    
+                    <!-- <button matTooltip="Pay Now" class="btn btn-sm btn-icon float-right" 
+                    *ngIf="cottonOrderDetails?.orderPaymentStatus == 'Pending' && (cottonOrderDetails?.orderStatus != 'Cancel') && rolesService.checkAccess(user.role, {type: 'actions', component: 'YarnOrderDetailsComponent', action: 'payment'})" 
+                            (click)="payNow(payment, cottonOrderDetails)">
+                        <i class="fas fa-money-check-alt text-success"></i>
+                    </button> -->
+                    <button matTooltip="Pay Now" class="btn btn-sm btn-icon float-right">
+                        <app-generic-payment [paymentInfo]="cottonOrderDetails" (refresh)="refresh()"></app-generic-payment>
+                    </button>
+
+                </div>
+                <div class="mt-4">
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="cottonOrderDetails?.netAmount">
+                        <span class="text-dark-50 mr-2">Net Payable Amount:</span>
+                        <span class="text-muted">{{cottonOrderDetails?.netAmount?.toLocaleString('en-IN')}}</span>
+                    </div>
+                    <!-- <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="cottonOrderDetails?.discountAmount && cottonOrderDetails?.discountAmount > 0"> -->
+                        <!-- <span class="text-dark-50 mr-2">Discount:</span>
+                        <span class="text-muted"> (-) Rs. {{cottonOrderDetails?.discountAmount?.toLocaleString('en-IN')}}</span>
+                    </div> -->
+                    
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="cottonOrderDetails?.dueAmount">
+                        <span class="text-dark-50 mr-2">Due Amount:</span>
+                        <span class="text-danger">{{cottonOrderDetails?.dueAmount?.toLocaleString('en-IN')}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="cottonOrderDetails?.paymentStatus">
+                        <span class="text-dark-50 mr-2">Payment Status:</span>
+                        <span [ngClass]="{'text-danger': cottonOrderDetails?.paymentStatus == 'Pending', 'text-success': cottonOrderDetails?.paymentStatus != 'Pending'}">{{cottonOrderDetails?.paymentStatus}}</span>
+                    </div>
+                </div>
+
+
+                <div class="example example-basic mt-6" *ngIf="khataList?.length">
+                    <div class="">
+                        <div class="timeline timeline-2">
+                            <div class="timeline-bar"></div>
+
+                            <!-- REPEAT for NO OF PAYMENTS-->
+                            <div class="timeline-item" *ngFor="let item of khataList">
+                                <span class="timeline-badge bg-success"></span>
+                                <div class="timeline-content d-flex align-items-center justify-content-between">
+                                    <span class="mr-3 font-weight-bold text-dark-50 font-size-sm d-flex flex-column">Rs. {{item?.amount.toLocaleString('en-IN')}}
+                                        <span class="label label-inline label-outline-success">
+                                            {{item.referenceNumber}}</span>
+                                       </span>
+                                    <span class="text-muted font-italic text-right font-size-xs">{{util.getDisplayTime(item.paymentDate)}}</span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!--end::Timeline-->
+                    </div>
+                </div>
+
+            </div>
+            <!--end: Card Body-->
+        </div>
+        <!--end: List Widget 9-->
+    </div>
+</div>

@@ -1,0 +1,69 @@
+<div class="card  row card-custom my-3 ">
+    <div class="card-header px-4">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="flaticon-statistics text-primary"></i>
+            </span>
+            <h3 class="card-label">Create Warehouse Layout</h3>
+        </div>
+    </div>
+    <div class="card-body pt-4">
+        <div class="form form-label-right">
+            <div class="form-group" [formGroup]="createWarehouseForm">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <label class="form-label">Name of warehouse layout<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-lg" name="name" placeholder="name"
+                            autocomplete="off" formControlName="name" />
+                    </div>
+                    <div class="col-lg-2">
+                        <label class="form-label">Select Warehouse<span class="text-danger">*</span></label>
+                        <select class="form-control form-control-lg" name="name" formControlName="warehouse">
+                            <option selected disabled hidden>select</option>
+                            <option [value]="item.id" *ngFor="let item of mandiList">{{item.name}}</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-2">
+                        <label class="form-label w-100 d-flex justify-content-between">
+                            <span>Select Table<span class="text-danger">*</span></span>
+                            <span><a class="text-primary cursor-pointer" routerLink="/bid/table-crud">+ New Table</a></span>
+                        </label>
+
+                            <!--<span class="text-danger">*</span><a class="text-primary cursor-pointer"  ></a></label> -->
+
+                        <select class="form-control form-control-lg" name="name" formControlName="tableLayout">
+                            <option selected disabled hidden>select</option>
+                            <option [value]="item.id" *ngFor="let item of tablesList">{{item.name}}</option>
+                        </select>
+                    </div>
+    
+                    <div class="col-lg-2">
+                        <label class="form-label">No. of Lanes/Aisles<span class="text-danger">*</span></label>
+                        <input type="number" class="form-control form-control-lg" name="lanes" placeholder="lanes"
+                            autocomplete="off" formControlName="lanes" />
+                    </div>
+    
+                </div>
+                <div class="row" formArrayName="laneDefintion"
+                    *ngIf="createWarehouseForm.get('laneDefintion')['controls'].length">
+                    <div class="col-lg-2 mt-3"
+                        *ngFor="let bank of createWarehouseForm.get('laneDefintion')['controls']; let i=index;"
+                        [formGroupName]="i">
+                        <label class="form-label">No. of tables per lane<span class="text-danger">*</span></label>
+                        <input type="number" class="form-control form-control-lg" placeholder="No. of tables per lane"
+                            autocomplete="off" formControlName="noOfTables" />
+                    </div>
+    
+                    <div class="col-lg-2 mt-12" *ngIf="createWarehouseForm.get('laneDefintion')['controls'].length">
+                        <button type="submit" class="btn btn-success" (click)="onSubmit()"
+                            [disabled]="createWarehouseForm.invalid">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-toolbar float-right">
+            <button type="button" class="btn btn-sm btn-secondary mr-2" (click)="goBack();">Back</button>
+        </div>
+    </div>
+    
+</div>

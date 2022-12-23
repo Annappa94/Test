@@ -1,0 +1,55 @@
+.iot-device_card {
+  margin-bottom: 24px;
+  .card__details {
+    background: #FFFFFF;
+    border: 1px solid #F4F4F4;
+    box-shadow: 4px 4px 4px rgba(133, 133, 133, 0.08), -4px -4px 4px rgba(196, 196, 196, 0.08);
+    border-radius: 10px;
+    height: auto;
+    display: flex;
+    //align-items: center;
+    padding: 15px;
+  }
+    
+}
+.iot-device_card--image {
+  height: 100%;
+  padding: 0px;
+  width: 100%;
+  border: 2px solid #7ED321;
+  border-radius: 12px;
+  img {
+    height: 100%;
+    width: 100%;
+    border-radius: 10px;
+  }
+}
+.iot-device_card--content {
+  h4 {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 22px;
+    color: #000;
+    text-transform: uppercase;
+  }
+}
+.card_specification_contnet {
+  display: flex;
+  justify-content: space-between;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 20px;
+  color: #666666;
+  
+}
+.card_rates_specifications {
+  margin-top: 14px;
+  border-top: 1px solid #eeeded;
+  padding-top: 16px;
+}
+
+.rupee_symbol {
+  font-family: monospace;
+}

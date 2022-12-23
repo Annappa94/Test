@@ -1,0 +1,55 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">Mulberry IoT Device Details</h3>
+        </div>
+        <div class="card-toolbar">
+
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="form form-label-right">
+                <div class="row" [formGroup]="updateMulberryForm">
+                    <div class="col-lg-4 mt-3">
+                        <label class="form-label">Device Code</label>
+                        <input type="text" class="form-control form-control-lg" name="deviceCode"
+                        placeholder="Device Code" autocomplete="off" formControlName="deviceCode" disabled/>
+                    </div>
+                    <div class="col-lg-4 mt-3">
+                        <label class="form-label">Plot Code</label>
+                        <input type="text" class="form-control form-control-lg" name="plotCode"
+                        placeholder="Plot Code" autocomplete="off" formControlName="plotCode" disabled/>
+                    </div>
+                    <div class="col-lg-4 mt-3">
+                        <label class="form-label">Plot Name</label>
+                        <input type="text" class="form-control form-control-lg" name="plotName"
+                        placeholder="Plot Name" autocomplete="off" formControlName="plotName" disabled/>
+                    </div>
+                    <div class="col-lg-4 mt-3">
+                        <label class="form-label">Farmer Name</label>
+                        <input type="text" class="form-control form-control-lg" name="farmerName"
+                        placeholder="Farmer Name" autocomplete="off" formControlName="farmerName" disabled/>
+                    </div>
+                    <div class="col-lg-4 mt-3">
+                        <label class="form-label">Farmer Phone</label>
+                        <input type="text" class="form-control form-control-lg" name="farmerPhone"
+                        placeholder="Farmer Phone" autocomplete="off" formControlName="farmerPhone" disabled/>
+                    </div>
+                    <div class="col-lg-4 mt-3">
+                        <label >Select Agronomist<span class="text-danger">*</span> </label>
+                        <select class="form-control form-control-lg" name="agronomist" formControlName="agroName"  (change)="agronomistChange()">
+                            <option *ngFor="let item of agronomistList" [value]="item.name">{{ item.name }} - {{ item.phone }}</option>
+                        </select>
+                        
+                    </div>
+                </div>
+        </div>
+
+     <div class="card-toolbar pt-6 float-right">
+        <button type="button" class="btn btn-sm btn-secondary mr-2"
+            [routerLink]="['/resha-farms/mulberry-iot/devices']">Back</button>
+         <button type="submit" class="btn btn-sm btn-success" (click)="updtaeAgronmist()"
+         *ngIf="id">Save</button>
+    </div>
+    </div>
+</div>

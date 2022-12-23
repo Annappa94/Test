@@ -1,0 +1,410 @@
+<div class="row mt-2" *ngIf="totals">
+    <div class="col-lg col-md-4 col-sm-4 col-4">
+        <div class="card card-stretch gutter-b">
+            <div class="card-body cursor-pointer" [routerLink]="[ '/resha-farms/chawki' ]">
+                <span
+                    class="card-title font-weight-bolder text-success font-size-h2 mb-0 d-block">{{totals?.totalCRCs}}</span>
+
+                <span class="font-weight-bold text-muted font-size-sm">Total Chawki's</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg col-md-4 col-sm-4 col-4">
+        <div class="card card-stretch gutter-b">
+            <div class="card-body cursor-pointer" [routerLink]="[ '/resha-farms/chawki' ]">
+                <span
+                    class="card-title font-weight-bolder text-success font-size-h2 mb-0 d-block">{{totals?.totalApprovedCRCs}}</span>
+
+                <span class="font-weight-bold text-muted font-size-sm">Total Approved Chawki's</span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-lg col-md-4 col-sm-4 col-4">
+        <div class="card card-stretch gutter-b">
+            <div class="card-body cursor-pointer" [routerLink]="[ '/resha-farms/chawki-orders' ]">
+                <span
+                    class="card-title font-weight-bolder text-success font-size-h2 mb-0 d-block">{{totals?.totalChawkiOrders}}</span>
+
+                <span class="font-weight-bold font-size-sm text-muted">Total Chawki Order's</span>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="col-lg col-md-4 col-sm-4 col-4">
+        <div class="card card-stretch gutter-b">
+            <div class="card-body cursor-pointer" [routerLink]="[ '/farm-marketplace' ]">
+                <span
+                    class="card-title font-weight-bolder text-success font-size-h2 mb-0 d-block">{{totals?.totalNoInputMarketPlace}}</span>
+
+                <span class="font-weight-bold text-muted font-size-sm">Total Input Market Place</span>
+            </div>
+        </div>
+    </div> -->
+    <!-- <div class="col-lg col-md-4 col-sm-4 col-4">
+        <div class="card card-stretch gutter-b">
+            <div class="card-body cursor-pointer" [routerLink]="[ '/farmer-marketplace' ]">
+                <span
+                    class="card-title font-weight-bolder text-success font-size-h2 mb-0 d-block">{{totals?.totalNoMarketPlace}}</span>
+
+                <span class="font-weight-bold text-muted font-size-sm">Total Input Market Place Orders</span>
+            </div>
+        </div>
+    </div> -->
+    
+</div>
+<div class="row mt-2">
+    <div class="col-xl-6"  *ngIf="paymentAnalytics">
+        <div class="card card-custom bgi-no-repeat card-stretch gutter-b">
+            <div class="card-header border-0 py-5" style="justify-content: left;">
+                <h3 class="card-title align-items-start mt-4">
+                    <span class="card-label font-weight-bolder text-success">Chawki Payments</span>
+                </h3>
+            </div>
+            <div class="card-body pt-0 pb-5">
+                <div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-dark font-weight-bold mr-2">Chawki Pending Amount:</span>
+                        <span
+                            class="label-outline-danger label label-lg label-inline text-dark font-size-lg font-weight-bold cursor-pointer"
+                            [routerLink]="[ '/resha-farms/chawki-orders' ]">Rs.
+                            {{paymentAnalytics?.farmerPendingAmount.toLocaleString('en-IN')}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-dark font-weight-bold mr-2">Chawki Payouts Completed:</span>
+                        <span
+                            class="label-outline-success label label-lg label-inline text-dark font-size-lg font-weight-bold">Rs.
+                            {{paymentAnalytics.chawkiPaidAmount.toLocaleString('en-IN')}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6" *ngIf="orderAnalytics">
+        <div class="card card-custom bgi-no-repeat card-stretch gutter-b">
+            <div class="card-header border-0">
+                <h3 class="card-title">
+                    <span class="card-label font-weight-bolder text-success">Market Place</span>
+                </h3>
+                <div class="card-toolbar">
+                    <section class="example-section">
+                        <mat-radio-group class="row" [(ngModel)]="orders">
+                        <mat-radio-button (change)="getOrderAnalytics($event.value);" class="example-margin col-4" value="lastWeek">
+                            Week
+                        </mat-radio-button>
+                        <mat-radio-button (change)="getOrderAnalytics($event.value);" class="example-margin col-4" value="lastMonth">
+                            Month
+                        </mat-radio-button>
+                        <mat-radio-button (change)="getOrderAnalytics($event.value);" class="example-margin col-4" value="all">
+                            All
+                        </mat-radio-button>
+                        
+                        </mat-radio-group>
+                </section>
+                </div>
+            </div>
+            <div class="card-body pt-0 pb-5">
+                <div *ngIf="!orderAnalytics" class="d-flex justify-content-center align-items-center h-100 font-size-h3 text-dark font-weight-bold">
+                    No data found
+                </div>
+                <div *ngIf="orderAnalytics">
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-dark font-weight-bold mr-2">Chawki Orders:</span>
+                        <span
+                            class="label-outline-danger label label-lg label-inline text-dark font-size-lg font-weight-bold cursor-pointer"
+                            [routerLink]="[ '/resha-farms/chawki-orders' ]">
+                            {{orderAnalytics?.totalChawkiOrder.toLocaleString('en-IN')}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-dark font-weight-bold mr-2">Total Input Market Place</span>
+                        <span
+                            class="label-outline-warning label label-lg label-inline text-dark font-size-lg font-weight-bold cursor-pointer"
+                            [routerLink]="[ '/resha-farms/farm-marketplace' ]">
+                            {{orderAnalytics?.totalInputMarketPlace.toLocaleString('en-IN')}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-dark font-weight-bold mr-2">Total Market Place Orders</span>
+                        <span
+                            class="label-outline-warning label label-lg label-inline text-dark font-size-lg font-weight-bold cursor-pointer"
+                            [routerLink]="[ '/resha-farms/farmer-marketplace' ]">
+                            {{orderAnalytics?.totalMarketPlaceOrder.toLocaleString('en-IN')}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card card-custom bgi-no-repeat card-stretch gutter-b">
+            <div class="card-header border-0 py-5">
+                <h3 class="card-title">
+                    <span class="card-label font-weight-bolder text-success">Chawki with most number of order's</span>
+                </h3>
+                <div class="card-toolbar">
+                    <section class="example-section">
+                        <mat-radio-group class="row" [(ngModel)]="topChawkiOrders">
+                        <mat-radio-button (change)="getChawkiAnalyticsTopOrders($event.value);" class="example-margin col-4" value="lastWeek">
+                            Week
+                        </mat-radio-button>
+                        <mat-radio-button (change)="getChawkiAnalyticsTopOrders($event.value);" class="example-margin col-4" value="lastMonth">
+                            Month
+                        </mat-radio-button>
+                        <mat-radio-button (change)="getChawkiAnalyticsTopOrders($event.value);" class="example-margin col-4" value="all">
+                            All
+                        </mat-radio-button>
+                        
+                        </mat-radio-group>
+                </section>
+                </div>
+            </div>
+            <div class="card-body pt-0 pb-5">
+                <div *ngIf="!barChartTopChawkiOrderData?.length" class="d-flex justify-content-center align-items-center h-100 font-size-h3 text-dark font-weight-bold">
+                    No data found
+                </div>
+                <div id="chart">
+                    <apx-chart
+                      [series]="chartOptions.series"
+                      [chart]="chartOptions.chart"
+                      [dataLabels]="chartOptions.dataLabels"
+                      [plotOptions]="chartOptions.plotOptions"
+                      [xaxis]="chartOptions.xaxis"
+                    ></apx-chart>
+                  </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card card-custom bgi-no-repeat card-stretch gutter-b">
+            <div class="card-header border-0 py-5">
+                <h3 class="card-title">
+                    <span class="card-label font-weight-bolder text-success">Top sold item's</span>
+                </h3>
+                <div class="card-toolbar">
+                    <section class="example-section">
+                        <mat-radio-group class="row" [(ngModel)]="topSoldItems">
+                        <mat-radio-button (change)="getTopSoldItems($event.value);" class="example-margin col-4" value="lastWeek">
+                            Week
+                        </mat-radio-button>
+                        <mat-radio-button (change)="getTopSoldItems($event.value);" class="example-margin col-4" value="lastMonth">
+                            Month
+                        </mat-radio-button>
+                        <mat-radio-button (change)="getTopSoldItems($event.value);" class="example-margin col-4" value="all">
+                            All
+                        </mat-radio-button>
+                        
+                        </mat-radio-group>
+                </section>
+                </div>
+            </div>
+            <div class="card-body pt-0 pb-5">
+                <div *ngIf="!barChartTopSoldItemsData?.length" class="d-flex justify-content-center align-items-center h-100 font-size-h3 text-dark font-weight-bold">
+                    No data found
+                </div>
+                <div id="chart">
+                    <apx-chart
+                      [series]="chartOptionsForTopSoldItems.series"
+                      [chart]="chartOptionsForTopSoldItems.chart"
+                      [dataLabels]="chartOptionsForTopSoldItems.dataLabels"
+                      [plotOptions]="chartOptionsForTopSoldItems.plotOptions"
+                      [xaxis]="chartOptionsForTopSoldItems.xaxis"
+                    ></apx-chart>
+                  </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card card-custom bgi-no-repeat card-stretch gutter-b">
+            <div class="card-header border-0 py-5">
+                <h3 class="card-title">
+                    <span class="card-label font-weight-bolder text-success">Payment status</span>
+                </h3>
+                <div class="card-toolbar">
+                    <section class="example-section">
+                        <mat-radio-group class="row" [(ngModel)]="paymentStatus">
+                        <mat-radio-button (change)="getPmtStatusAnalytics($event.value);" class="example-margin col-4" value="lastWeek">
+                            Week
+                        </mat-radio-button>
+                        <mat-radio-button (change)="getPmtStatusAnalytics($event.value);" class="example-margin col-4" value="lastMonth">
+                            Month
+                        </mat-radio-button>
+                        <mat-radio-button (change)="getPmtStatusAnalytics($event.value);" class="example-margin col-4" value="all">
+                            All
+                        </mat-radio-button>
+                        
+                        </mat-radio-group>
+                </section>
+                </div>
+            </div>
+            <div class="card-body pt-0 pb-5">
+                <div *ngIf="!pieChartforPmtStatusData?.length" class="d-flex justify-content-center align-items-center h-100 font-size-h3 text-dark font-weight-bold">
+                    No data found
+                </div>
+                <div *ngIf="pieChartforPmtStatusData?.length">
+                    <div class="chart">
+                        <canvas baseChart [data]="pieChartforPmtStatusData" [labels]="pieChartforPmtStatusLabel" [chartType]="pieChartType"
+                            [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+      <div class="col-lg-6">
+        <div class="card card-custom bgi-no-repeat card-stretch gutter-b">
+            <div class="card-header border-0 py-5">
+                <h3 class="card-title">
+                    <span class="card-label font-weight-bolder text-success">Payment Methods</span>
+                </h3>
+                <div class="card-toolbar">
+                    <section class="example-section">
+                        <mat-radio-group class="row" [(ngModel)]="paymentMethod">
+                        <mat-radio-button (change)="getPmtMethodAnalytics($event.value);" class="example-margin col-4" value="lastWeek">
+                            Week
+                        </mat-radio-button>
+                        <mat-radio-button (change)="getPmtMethodAnalytics($event.value);" class="example-margin col-4" value="lastMonth">
+                            Month
+                        </mat-radio-button>
+                        <mat-radio-button (change)="getPmtMethodAnalytics($event.value);" class="example-margin col-4" value="all">
+                            All
+                        </mat-radio-button>
+                        
+                        </mat-radio-group>
+                </section>
+                </div>
+            </div>
+            <div class="card-body pt-0 pb-5">
+                <div *ngIf="!pieChartforPmtMethodData?.length" class="d-flex justify-content-center align-items-center h-100 font-size-h3 text-dark font-weight-bold">
+                    No data found
+                </div>
+                <div *ngIf="pieChartforPmtMethodData?.length">
+                    <div class="chart">
+                        <canvas baseChart [data]="pieChartforPmtMethodData" [labels]="pieChartforPmtMethodLabels" [chartType]="pieChartType"
+                            [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card card-custom bgi-no-repeat card-stretch gutter-b">
+            <div class="card-header border-0 py-5">
+                <h3 class="card-title">
+                    <span class="card-label font-weight-bolder text-success">By order status</span>
+                </h3>
+                <div class="card-toolbar">
+                    <section class="example-section">
+                        <mat-radio-group class="row" [(ngModel)]="orderStatus">
+                        <mat-radio-button (change)="getChawkiAnalyticsByOrdrStatus($event.value);" class="example-margin col-4" value="lastWeek">
+                            Week
+                        </mat-radio-button>
+                        <mat-radio-button (change)="getChawkiAnalyticsByOrdrStatus($event.value);" class="example-margin col-4" value="lastMonth">
+                            Month
+                        </mat-radio-button>
+                        <mat-radio-button (change)="getChawkiAnalyticsByOrdrStatus($event.value);" class="example-margin col-4" value="all">
+                            All
+                        </mat-radio-button>
+                        
+                        </mat-radio-group>
+                </section>
+                </div>
+            </div>
+            <div class="card-body pt-0 pb-5">
+                <div *ngIf="!pieChartForOrderStatusData?.length" class="d-flex justify-content-center align-items-center h-100 font-size-h3 text-dark font-weight-bold">
+                    No data found
+                </div>
+                <div *ngIf="pieChartForOrderStatusData?.length">
+                    <div class="chart">
+                        <canvas baseChart [data]="pieChartForOrderStatusData" [labels]="pieChartForOrderStatusLabel" [chartType]="pieChartType"
+                            [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+</div>
+
+<div class="row mt-2" *ngIf="paymentAnalytics">
+    <div class="col-12">
+        <div class="card card-custom card-stretch gutter-b">
+            <div class="card-header border-0">
+                <h3 class="card-title font-weight-bold text-success">
+                    Farmer Dues
+                    <small class="text-danger ml-4"> (Total Rs.{{paymentAnalytics.farmerPendingAmount.toLocaleString('en-IN')}}) </small>
+
+                </h3>
+            </div>
+
+            <div class="card-body pt-0">
+                <div class="row">
+                    <div class="col-xl-4" *ngFor="let farmer of paymentAnalytics?.farmersMostChawkiDues">
+                        <div class="mx-2 mb-3 bg-danger-o-20 rounded p-4">
+                            <div class="d-flex align-items-center">
+                                
+                                <div class="d-flex flex-column flex-grow-1 mr-2">
+                                    <a (click)="farmerDetails(farmer)"
+                                        class="font-weight-bold text-dark-75 text-hover-primary font-size-lg mb-1 cursor-pointer">{{farmer.name
+                                        ? farmer.name : 'UNKNOWN'}}</a>
+                                </div>
+                                <span
+                                    class="font-weight-bolder text-danger py-1 font-size-lg">Rs.{{farmer.amount.toLocaleString('en-IN')}}</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="card card-custom card-stretch gutter-b">
+            <div class="card-header border-0">
+                <h3 class="card-title font-weight-bold text-success">
+                    Top Farmer's with most Order's
+                    <!-- <small class="text-danger ml-4"> (Total Rs.{{paymentAnalytics.farmerPendingAmount.toLocaleString('en-IN')}}) </small> -->
+
+                </h3>
+            </div>
+
+            <div class="card-body pt-0">
+                <div class="row">
+                    <div class="col-xl-4" *ngFor="let order of paymentAnalytics?.farmersMostChawkiOrders">
+                        <div class="mx-2 mb-3 bg-danger-o-20 rounded p-4">
+                            <div class="d-flex align-items-center">
+                                
+                                <div class="d-flex flex-column flex-grow-1 mr-2">
+                                    <a (click)="farmerDetails(order)"
+                                        class="font-weight-bold text-dark-75 text-hover-primary font-size-lg mb-1 cursor-pointer">{{order.name
+                                        ? order.name : 'UNKNOWN'}}</a>
+                                </div>
+                                <span
+                                    class="font-weight-bolder text-danger py-1 font-size-lg">{{order.totalcount.toLocaleString('en-IN')}}</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+

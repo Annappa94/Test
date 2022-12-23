@@ -1,0 +1,60 @@
+<a matTooltip="Add Payment" class="btn btn-icon btn-sm mr-1 mt-1" (click)="payNow(payment)" 
+*ngIf="paymentInfo && paymentInfo?.paymentStatus!='Paid' && paymentInfo?.paymentStatus!='PAID' && paymentInfo?.cottonLotStatus!='Cancelled'  && paymentInfo?.cottonLotStatus!='Returned' && paymentInfo['orderStatus']!='CANCELED'">
+<i class="fas fa-money-check-alt text-success"></i>
+</a>
+
+
+<div class="payment-confirmation-preview">
+    <div>
+        <form [formGroup]="paymentForm">
+            <ng-template #payment let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Payment Details</h4>
+                </div>
+                <div class="modal-body">
+
+                    <p>Code : <strong> {{paymentDetail.code}}</strong></p>
+                    <p>Total Amount : <strong>Rs. {{highlightText[0]}}<span *ngIf="highlightText[1]">.{{highlightText[1]}}</span></strong></p>
+                    <!-- <p>Total Amount : <strong>Rs. <span class="text-danger h2">{{highlightText[0]}}</span><span *ngIf="highlightText[1]">.{{highlightText[1]}}</span></strong></p> -->
+                    <p>Due Amount : <strong>Rs. <span class="text-danger h2">{{paymentDetail.dueAmount ? paymentDetail.dueAmount?.toLocaleString('en-IN') : 0}}</span></strong></p>
+                    <!-- <p>Cost Per Unit : <strong>Rs. {{paymentDetail.sellingPricePerKg}}</strong></p> -->
+                    <p>Total Quantity : <strong>{{paymentDetail.totalQuantity}}</strong></p>
+                    <div class="form form-label-right">
+                        <div class="form-group row">
+
+                            <div class="col-lg-6 mt-2">
+                                <label class="form-label">Amount</label>
+                                <input type="number" class="form-control form-control-lg" name="amount"
+                                  placeholder="amount" autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('amount')"
+                                  [class.is-valid]="isControlValidForReeler('amount')" formControlName="amount" />
+                                <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'amount')">
+                                    Amount is required
+                                </div>
+                                <div style="color: #F64E60;" *ngIf="paymentForm.value.amount > paymentDetail.dueAmount">
+                                    Amount Exceeds
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 mt-2">
+                                <label class="form-label">Reference Number</label>
+                                <input type="text" class="form-control form-control-lg" name="referenceNumber"
+                                  placeholder="Reference Number" autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('referenceNumber')"
+                                  [class.is-valid]="isControlValidForReeler('referenceNumber')" formControlName="referenceNumber" />
+                                <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'referenceNumber')">
+                                    Reference Number is required
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+                    <button type="button" class="btn btn-sm btn-success" (click)="makeAPayment()" [disabled]="paymentForm.invalid || this.paymentForm.value.amount > paymentDetail.dueAmount">Pay Now</button>
+                </div>
+            </ng-template>
+        </form>
+    </div>
+  </div>

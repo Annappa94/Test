@@ -1,0 +1,13 @@
+.mat-datetimepicker-popup{
+    background-color: green !important;
+}
+::ng-deep.mat-datetimepicker-calendar-header {
+    background-color: #7ed321;
+}
+
+::ng-deep.mat-datetimepicker-clock-cell.mat-datetimepicker-clock-cell-selected{
+    background-color: #7ed321;
+}
+::ng-deep.mat-datetimepicker-calendar-body-cell-content.mat-datetimepicker-calendar-body-selected{
+    background-color: #7ed321;
+}

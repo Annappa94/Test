@@ -1,0 +1,193 @@
+<div class="bg-white rounded mb-4 d-flex align-items-center py-2 sticky-header justify-content-between" >
+    <ul id="breadcrumbs">
+        <li><span style="cursor: pointer;" class="hover-item" (click)="goBack()">All Device list</span></li>
+        <li><span>{{id}}</span></li>
+    </ul>
+    <div>
+        <app-back-button></app-back-button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-4">
+        <div class="card card-custom gutter-b">
+            <div class="card-body pt-4">
+                <div class="d-flex justify-content-between align-items-baseline mt-5">
+                    <div class="font-size-h5 mb-3 ">Device Details</div>
+                </div>
+                <div class="mb-7">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Device Code:</span>
+                        <span class="text-dark-75 font-weight-bold">{{deviceDetails.code}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Device Id:</span>
+                        <span class="text-dark-75 font-weight-bold">{{deviceDetails.id}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Device Type Code:</span>
+                        <span class="text-dark-75 font-weight-bold">
+                          <a matTooltip="Device Type " class="btn btn-link-success font-weight-bold" (click)="routeTodevicetype(deviceDetails?.deviceTypeId)">{{ deviceDetails?.deviceTypeCode }}</a>
+                        </span>
+
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Location Type:</span>
+                        <span class="text-dark-75 font-weight-bold">{{deviceDetails?.locationType}}</span>
+
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Location :</span>
+                        <span class="text-dark-75 font-weight-bold">{{deviceDetails?.location?.name || deviceDetails?.location?.centerName}}</span>
+
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Sim Number :</span>
+                        <span class="text-dark-75 font-weight-bold">{{deviceDetails?.simNumber}}</span>
+
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Device Serial Id :</span>
+                        <span class="text-dark-75 font-weight-bold">{{deviceDetails?.deviceSerialId}}</span>
+
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Device Health:</span>
+                        <span class="text-dark-75 font-weight-bold">{{deviceDetails?.health}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Status:</span>
+                        <span class="text-dark-75 font-weight-bold">{{deviceDetails?.status}}</span>
+                    </div>
+
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Assignee Name:</span>
+                        <span class="text-dark-75 font-weight-bold">{{deviceDetails?.assigneeName}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Assignee Phone:</span>
+                        <span class="text-dark-75 font-weight-bold">{{deviceDetails?.assigneePhone}}</span>
+
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Created Date:</span>
+                        <span class="text-dark-75 font-weight-bold">{{deviceDetails?.createdDate | date:'dd/MM/y'}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Created By:</span>
+                        <span class="text-dark-75 font-weight-bold">{{deviceDetails?.createdBy}}</span>
+                    </div>
+
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-12">
+        <div class="card card-custom gutter-b">
+            <div class="card-body pt-4">
+                <div class="d-flex justify-content-between align-items-baseline mt-5">
+                    <div class="font-size-h5 mb-3 ">Device Logs</div>
+                </div>
+                <ng-container>
+                    <div class="example example-basic mt-6">
+                        <div class="">
+                            <div class="timeline timeline-2">
+                                <div class="timeline-bar"></div>
+
+                                <!-- REPEAT for NO OF PAYMENTS //*ngFor="let item of khataList"-->
+                                <div class="timeline-item" *ngFor="let item of deviceLogResponse "> 
+                                    <span class="timeline-badge bg-success"></span>
+                                    <div class="timeline-content d-flex align-items-center justify-content-between">
+                                        <!-- <div> lotCocoonOrderDetails
+                                            <a matTooltip="Reeler details" class="btn btn-link-success font-weight-bold" (click)="goToReelerDetail(item)">{{item?.reelerName}} </a>
+                                        </div> -->
+                                        <span class="mr-3 font-weight-bold text-dark-50 font-size-sm d-flex flex-column">
+                                            <span class="text-dark-75 font-weight-bold d-block font-size-md">
+                                                Location: {{item?.deviceDetail?.location?.centerName || item?.deviceDetail?.location?.name}} ({{item?.deviceDetail?.locationType}})
+                                            </span>
+                                            <span class="text-dark-75 font-weight-bold d-block font-size-md">
+                                                Assignee : {{item?.deviceDetail?.assigneeName}} - {{item?.deviceDetail?.assigneePhone}}
+                                            </span>
+                                           <span class="text-dark-75 font-weight-bold d-block font-size-md">
+                                            Status: {{item?.deviceDetail?.status}}
+                                          </span>
+                                          <span class="text-dark-75 font-weight-bold d-block font-size-md">
+                                            Device Health: {{item?.deviceDetail?.health}}
+                                          </span>
+                                        </span>
+                                        <span class="text-muted text-right font-size-xs">{{item?.deviceDetail?.createdDate | date:'d/M/yyyy, h:mm a'}}</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!--end::Timeline-->
+                        </div>
+                    </div>
+
+                </ng-container>
+            </div>
+            <div class="row justify-content-center">
+                <div class="mr-2">
+                  <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                      <li class="page-item">
+                        <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(0)" href="javascript:void(0);">
+                          <span aria-hidden="true">&laquo;&laquo;</span>
+                          <span class="sr-only">First</span>
+                        </a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(paginationData.currentPage - 1)" href="javascript:void(0);">
+                          <span aria-hidden="true">&laquo;</span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link" *ngIf="paginationData?.currentPage !== 0 && paginationData?.currentPage !== 1" (click)="onPageChange(paginationData?.currentPage - 2)" href="javascript:void(0);">{{ paginationData?.currentPage -1 }}</a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link" *ngIf="paginationData?.currentPage !== 0" (click)="onPageChange(paginationData?.currentPage - 1)" href="javascript:void(0);">{{ paginationData?.currentPage}}</a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link active" href="javascript:void(0);">{{ paginationData?.currentPage + 1 }}</a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link" *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1" (click)="onPageChange(paginationData?.currentPage + 1)" href="javascript:void(0);">{{ paginationData?.currentPage + 2 }}</a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link" *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1 && paginationData?.currentPage !== paginationData.pages.length - 2" (click)="onPageChange(paginationData?.currentPage + 2)" href="javascript:void(0);">{{ paginationData?.currentPage + 3 }}</a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}" (click)="onPageChange(paginationData.currentPage + 1)" href="javascript:void(0);">
+                          <span aria-hidden="true">&raquo;</span>
+                          <span class="sr-only">Next</span>
+                        </a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}" (click)="onPageChange(paginationData.pages.length - 1)" href="javascript:void(0);">
+                          <span aria-hidden="true">&raquo;&raquo;</span>
+                          <span class="sr-only">Last</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+                <div class="mr-2">
+                  <select class="custom-select" style="height: calc(1.2em + 1rem + 2px); padding: 0.35rem 2rem 0.35rem 1rem;"
+                    [(ngModel)]="paginationData.pageSize" (change)="onPageSizeChange()">
+                    <option [ngValue]="10">10 per page</option>
+                    <option [ngValue]="50">50 per page</option>
+                    <option [ngValue]="100">100 per page</option>
+                  </select>
+                </div>
+                <div class="pt-2">
+                  <small class="text-muted">(Total: {{paginationData.total}})</small>
+                </div> 
+              </div>
+        </div>
+    </div>
+</div>

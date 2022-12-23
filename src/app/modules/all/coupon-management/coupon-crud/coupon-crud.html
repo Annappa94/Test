@@ -1,0 +1,231 @@
+<div class="card card-custom gutter-b">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">{{id ? "Update Coupon Details" : "New Coupon Details" }} </h3>
+    </div>
+    <div class="card-toolbar">
+      <!-- Nothing right now-->
+    </div>
+  </div>
+  <div class="card-body pt-0">
+
+    <!-- Farmer FORM -->
+    <div class="form form-label-right">
+      <div class="form-group row" style="padding-top: 0px;">
+        <div class="col-lg-12" [formGroup]="couponsForm">
+          <div class="row">
+            <div class="col-lg-3 mt-2">
+              <label class="form-label">Coupon Code<span class="text-danger">*</span></label>
+              <input type="text" class="form-control form-control-lg" name="couponCode" placeholder="Coupon Code"
+                autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('couponCode')"
+                [class.is-valid]="isControlValidForReeler('couponCode')" formControlName="couponCode" />
+              <!-- <div class="valid-feedback" *ngIf="isControlValidForReeler('name')">Name was entered correct</div> -->
+              <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'couponCode')">Code is required
+              </div>
+            </div>
+
+            <div class="col-lg-3 mt-2">
+              <label>Type<span class="text-danger">*</span></label>
+              <select class="form-control form-control-lg" formControlName="type">
+                <option value="FIXED">Fixed</option>
+                <option value="PERCENTAGE">Percentage</option>
+              </select>
+            </div>
+
+            <div class="col-lg-3 mt-2">
+              <label class="form-label">Value<span class="text-danger">*</span></label>
+              <input type="number" class="form-control form-control-lg" name="value" placeholder="coupon value"
+                autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('value')"
+                [class.is-valid]="isControlValidForReeler('value')" formControlName="value" />
+              <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'value')">Amount is required
+              </div>
+            </div>
+
+            <div class="col-lg-3 mt-2">
+              <label class="form-label">Minimum Purchase Amount<span class="text-danger">*</span></label>
+              <input type="number" class="form-control form-control-lg" name="Minimum Purchase Amount"
+                placeholder="Minimum Purchase Amount" autocomplete="off"
+                [class.is-invalid]="isControlInvalidForReeler('minTransactionAmount')"
+                [class.is-valid]="isControlValidForReeler('minTransactionAmount')"
+                formControlName="minTransactionAmount" />
+              <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'minTransactionAmount')">Minimum
+                Purchase Amount is required</div>
+            </div>
+
+            <div class="col-lg-3 mt-2">
+              <div class="d-flex flex-column">
+                <label>Applicable For<span class="text-danger">*</span></label>
+                <mat-form-field appearance="fill">
+                  <mat-select  multiple formControlName="applicableFor">
+                  <mat-option value="FARMER">Farmers</mat-option>
+                  <mat-option value="REELER">Reelers</mat-option>
+                  <mat-option value="WEAVER">Weavers</mat-option>
+                  <mat-option value="GINNER">Ginners</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+            </div>
+
+            <div class="col-lg-3 mt-2">
+              <label for="name">From</label>
+              <mat-form-field class="w-100 cursor-pointer" appearance="fill" (click)="dp3.open()">
+                <input formControlName="fromDate" class="cursor-pointer" matInput [matDatepicker]="dp3"
+                (click)="dp3.open()" readonly>
+                <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+                <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <div class="col-lg-3 col mt-2">
+              <label for="name">To</label>
+              <mat-form-field class="w-100 cursor-pointer" appearance="fill" (click)="dp.open()">
+                <input formControlName="toDate" class="cursor-pointer" matInput [matDatepicker]="dp" 
+                (click)="dp.open()" readonly>
+                <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                <mat-datepicker #dp disabled="false"></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            
+
+
+            <div class="col-lg-3 mt-2">
+              <label class="form-label">Max Usage Per Customer<span class="text-danger">*</span></label>
+              <input type="number" class="form-control form-control-lg" name="Max Usage Limit"
+                placeholder="Max Usage Limit" autocomplete="off"
+                [class.is-invalid]="isControlInvalidForReeler('noOfTimesCanBeUsedPerCustomer')"
+                [class.is-valid]="isControlValidForReeler('noOfTimesCanBeUsedPerCustomer')"
+                formControlName="noOfTimesCanBeUsedPerCustomer" />
+              <div class="invalid-feedback"
+                *ngIf="controlHasErrorForReeler('required', 'noOfTimesCanBeUsedPerCustomer')">Max Usage Limit is
+                required</div>
+            </div>
+
+            <div class="col-lg-3 mt-2">
+              <label class="form-label">Total Max Usage<span class="text-danger">*</span></label>
+              <input type="number" class="form-control form-control-lg" name="Max Usage Limit"
+                placeholder="Max Usage Limit" autocomplete="off"
+                [class.is-invalid]="isControlInvalidForReeler('noOfTimesCanBeUsedTotal')"
+                [class.is-valid]="isControlValidForReeler('noOfTimesCanBeUsedTotal')"
+                formControlName="noOfTimesCanBeUsedTotal" />
+              <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'noOfTimesCanBeUsedTotal')">Max
+                Usage Limit is required</div>
+            </div>
+
+            <div class="col-lg-3 mt-2">
+              <label>Display<span class="text-danger">*</span></label>
+              <select class="form-control form-control-lg" formControlName="isActive" name="isActive"
+                placeholder="Display">
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+            </div>
+
+          <!-- </div> -->
+
+          <!-- <div class="row"> -->
+            <div class="col-lg-3 mt-2">
+              <label class="form-label"> Description<span class="text-danger">*</span></label>
+              <input
+                type="text"
+                class="form-control form-control-lg"
+                name="name"
+                placeholder="Description"
+                autocomplete="off"
+                [class.is-invalid]="isControlInvalidForReeler('description')"
+                [class.is-valid]="isControlValidForReeler('description')"
+                formControlName="description"
+              />
+              <div class="valid-feedback" *ngIf="isControlValidForReeler('description')">Description was entered correct</div>
+              <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'description')">Description is required</div>
+            </div>
+            <div class="col-lg-3 mt-2">
+              <label class="form-label"> Description  <small class="text-muted">(Hindi)</small><span class="text-danger">*</span></label>
+              <input
+                type="text"
+                class="form-control form-control-lg"
+                name="name"
+                placeholder="विवरण"
+                autocomplete="off"
+                [class.is-invalid]="isControlInvalidForReeler('description_hi')"
+                [class.is-valid]="isControlValidForReeler('description_hi')"
+                formControlName="description_hi"
+              />
+              <div class="valid-feedback" *ngIf="isControlValidForReeler('description_hi')">Description was entered correct</div>
+              <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'description_hi')">Description is required</div>
+            </div>
+            <div class="col-lg-3 mt-2">
+              <label class="form-label"> Description  <small class="text-muted">(Marathi)</small><span class="text-danger">*</span></label>
+              <input
+                type="text"
+                class="form-control form-control-lg"
+                name="name"
+                placeholder="वर्णन"
+                autocomplete="off"
+                [class.is-invalid]="isControlInvalidForReeler('description_mr')"
+                [class.is-valid]="isControlValidForReeler('description_mr')"
+                formControlName="description_mr"
+              />
+              <div class="valid-feedback" *ngIf="isControlValidForReeler('description_mr')">Description was entered correct</div>
+              <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'description_mr')">Description is required</div>
+            </div>
+            <div class="col-lg-3 mt-2">
+              <label class="form-label"> Description  <small class="text-muted">(Kannada)</small><span class="text-danger">*</span></label>
+              <input
+                type="text"
+                class="form-control form-control-lg"
+                name="name"
+                placeholder="ವಿವರಣೆ"
+                autocomplete="off"
+                [class.is-invalid]="isControlInvalidForReeler('description_kn')"
+                [class.is-valid]="isControlValidForReeler('description_kn')"
+                formControlName="description_kn"
+              />
+              <div class="valid-feedback" *ngIf="isControlValidForReeler('description_kn')">Description was entered correct</div>
+              <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'description_kn')">Description is required</div>
+            </div>
+            <div class="col-lg-3 mt-2">
+              <label class="form-label"> Description  <small class="text-muted">(Telugu)</small><span class="text-danger">*</span></label>
+              <input
+                type="text"
+                class="form-control form-control-lg"
+                name="name"
+                placeholder="వివరణ"
+                autocomplete="off"
+                [class.is-invalid]="isControlInvalidForReeler('description_te')"
+                [class.is-valid]="isControlValidForReeler('description_te')"
+                formControlName="description_te"
+              />
+              <div class="valid-feedback" *ngIf="isControlValidForReeler('description_te')">Description was entered correct</div>
+              <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'description_te')">Description is required</div>
+            </div>
+            <div class="col-lg-3 mt-2">
+              <label class="form-label"> Description  <small class="text-muted">(Tamil)</small><span class="text-danger">*</span></label>
+              <input
+                type="text"
+                class="form-control form-control-lg"
+                name="name"
+                placeholder="விளக்கம்"
+                autocomplete="off"
+                [class.is-invalid]="isControlInvalidForReeler('description_ta')"
+                [class.is-valid]="isControlValidForReeler('description_ta')"
+                formControlName="description_ta"
+              />
+              <div class="valid-feedback" *ngIf="isControlValidForReeler('description_ta')">Description was entered correct</div>
+              <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'description_ta')">Description is required</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-toolbar">
+        <button type="button" class="btn btn-sm btn-secondary mr-2" (click)="goBack();">Back</button>
+
+        <button type="submit" class="btn btn-sm btn-success" [disabled]="couponsForm.invalid"
+          (click)="saveFarmerDetails(couponsForm.value)">Save</button>
+
+      </div>
+    </div>
+
+  </div>
+</div>

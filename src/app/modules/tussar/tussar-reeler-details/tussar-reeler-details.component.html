@@ -1,0 +1,536 @@
+<div class="bg-white rounded mb-4 d-flex align-items-center py-2 sticky-header justify-content-between" >
+    <ul id="breadcrumbs" *ngIf="reelerDetails">
+        <ng-container *ngIf="!router.url.includes('customer')">
+            <li><span style="cursor: pointer;" class="hover-item" (click)="goBack()">All Tussar Reelers</span></li>
+            <li><span>{{reelerDetails.code}}</span></li>
+        </ng-container>
+    </ul>
+    <div class="d-flex" >
+   
+        <ng-container *ngIf="(user.role==='ADMINISTRATOR' || user.role==='MudraManager' || user.role==='MudraAgent')&&mudraId">
+            <label class="form-label mt-3 mr-2">Status:</label>
+            <select class="form-control mr-4" style="width: 160px;"  name="yarnPurchaseStatus" [formControl]="status"
+            (change)="onStatusSelection($event)" (refresh)="listenAndRefresh()">
+            <option [value]="status.value" [disabled]="status.isDisabled" *ngFor="let status of listOfSettelmentStatus">{{status.displayName}}</option>
+            <option selected disabled [value]="" hidden>select</option>
+           </select>
+           <!-- <ng-container>
+            <label class="form-label mt-3 mr-2">Product Type:</label>
+            <select class="form-control mr-4" style="width: 160px;"  name="productType" 
+            (change)="onProductTypeSelection($event)" (refresh)="listenAndRefresh()">
+            <option [value]="type" *ngFor="let type of productTypeList">{{type}}</option>
+            <option selected disabled [value]="" hidden place>select</option>
+           </select>
+        </ng-container> -->
+    
+           <ng-template #popupOpenSettle let-c="close" let-d="dismiss" >
+            <div class="modal-header">
+                <h4 class="modal-title">Change to {{statusDisplay | titlecase}}</h4>
+                <button type="button" class="close" aria-label="Close" (click)="closeNgbModal()">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+            </div>
+            <div class="modal-body">
+            <p>Are you sure you want to mark the status {{statusDisplay | lowercase}}?</p>
+            <div class="row">
+                <div class="col-lg-6">
+                    <label class="form-label mt-3">Select Loan Product:<span class="text-danger">*</span></label>
+                    <select class="form-control"  name="productType" [(ngModel)]="selectedProductType">
+                    <option [value]="prod.id" *ngFor="let prod of bnplAccountIdArray">{{prod.productType}}</option>
+                   </select>
+                </div>
+            </div>
+                <ng-container  *ngIf="statusType =='SETTLED'">
+                    <div class="row" [formGroup]="createStatusForm">
+                      <div class="col-lg-12 mt-2">
+                        <label class="form-label">Settlement Amount</label><span class="text-danger">*</span>
+                        <input type="text" class="form-control form-control-lg" name="cancel" autocomplete="off" formControlName="settlementAmount" placeholder="Enter Amount" [class.is-invalid]="createStatusForm.get('settlementAmount').invalid&&(createStatusForm.get('settlementAmount').dirty || createStatusForm.get('settlementAmount').touched)"/>
+                        <label class="form-label mt-4">Reference Number</label><span class="text-danger">*</span>
+                        <input type="text" class="form-control form-control-lg" name="cancel" autocomplete="off" formControlName="referenceNum" placeholder="Reference Number" [class.is-invalid]="createStatusForm.get('referenceNum').invalid&&(createStatusForm.get('referenceNum').dirty || createStatusForm.get('referenceNum').touched)"/>
+                        <label class="form-label mt-4">Mode of Payment</label><span class="text-danger">*</span>
+                        <input type="text" class="form-control form-control-lg" name="cancel" autocomplete="off" formControlName="modeOfPayment" placeholder="Mode of Payment" [class.is-invalid]="createStatusForm.get('modeOfPayment').invalid&&(createStatusForm.get('modeOfPayment').dirty || createStatusForm.get('modeOfPayment').touched)"/>
+                      </div>
+                          <div class="col-lg-12 mt-4">
+                              <textarea class="w-100 form-control " placeholder="Remarks..."
+                            formControlName="remarks"></textarea>
+                          </div>
+                    </div>
+                </ng-container>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeNgbModal()">Cancel</button>
+                <button type="button" [disabled]="!selectedProductType" class="btn btn-primary" (click)="markToBeSettled()">Mark {{statusDisplay |
+                  lowercase}}</button>
+              </div>
+           </ng-template>
+    
+            <!-- <app-mudra-add-credit-information
+            [customerType]="'REELER'" 
+            [customerId]="id"
+            [customerName]="reelerDetails?.name"
+            [refreshOtherComponent]="refreshOtherComponent"
+            [mudraId]="mudraId"
+            [productTypes]="productTypes"
+            (listenAndRefresh)="listenAndRefresh()"
+            ></app-mudra-add-credit-information> -->
+        </ng-container>
+
+        <app-back-button></app-back-button>
+        <ng-container *ngIf="!router.url.includes('customer')">
+            <app-retailer-deposits  [customerId]="id" (listenAndRefresh)="listenAndRefresh()" [orderDetails]="reelerDetails"></app-retailer-deposits>
+        </ng-container>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-4">
+        <!--begin::Card-->
+        <div class="card card-custom gutter-b">
+            <!--begin::Body-->
+            <div class="card-body pt-4" *ngIf="reelerDetails">
+                <!--begin::Toolbar-->
+                <div class="d-flex justify-content-between align-items-baseline mt-5">
+                    <div class="font-size-h5 mb-3 ">
+                        Reeler Profile
+                    </div>
+                    <button *ngIf="user.role !== 'READADMIN'" class="btn btn-outline-success btn-sm " (click)="editReeler()">
+                        Edit
+                    </button>
+
+                </div>
+                <!--end::Toolbar-->
+                <!--begin::User-->
+                <div class="d-flex align-items-center mt-4 mb-7">
+                    <!--begin::Pic-->
+                    <div class="flex-shrink-0 mr-4 mt-lg-0 mt-3">
+                        <div class="image-input image-input-outline" id="kt_profile_avatar">
+                            <div *ngIf="!previewImage && reelerDetails?.initial" class="symbol symbol-lg-75 symbol-square symbol-secondary">
+                                <span class="symbol-label font-size-h3 font-weight-boldest">{{reelerDetails?.initial}}</span>
+                            </div>
+                            <img *ngIf="previewImage" class="image-input-wrapper" [src]="previewImage || './assets/media/users/blank.png'"/>
+                            <label *ngIf="user.role !== 'READADMIN'" class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                              data-action="change"
+                              data-toggle="tooltip"
+                              title=""
+                              data-original-title="Change avatar"
+                            >
+                              <i class="fa fa-pen icon-sm text-muted"></i>
+                              <input
+                                type="file"
+                                name="profile_avatar"
+                                accept=".png, .jpg, .jpeg"
+                                (change)="onImageUpload($event);"
+                              />
+                              <input type="hidden" name="profile_avatar_remove" />
+                            </label>
+                            <span
+                              class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                              data-action="cancel"
+                              data-toggle="tooltip"
+                              title=""
+                              data-original-title="Cancel avatar"
+                            >
+                              <i class="ki ki-bold-close icon-xs text-muted"></i>
+                            </span>
+                            <span
+                              *ngIf="previewImage && user.role !== 'READADMIN'"
+                              class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                              (click)="remove()"
+                              data-action="remove"
+                              data-toggle="tooltip"
+                              title=""
+                              data-original-title="Remove avatar"
+                            >
+                              <i class="ki ki-bold-close icon-xs text-muted"></i>
+                            </span>
+                          </div>
+                    </div>
+                    <!--end::Pic-->
+                    <!--begin::Title-->
+                    <div class="d-flex flex-column">
+                        <span class="text-success font-weight-bold font-size-h4 mb-0">
+                            {{reelerDetails.name}}
+                        </span>
+                        <span class="text-muted font-weight-bold">{{reelerDetails.code}}</span>
+                        <span class="text-muted font-weight-bold">{{reelerDetails.appVersion}}</span>
+                        <span class="text-success font-weight-bold" *ngIf="noOfKYCDocs?.length>0 && reelerDetails.customerTypeName">{{noOfKYCDocs.length}} document/s uploaded. Click <u class="text-warning cursor-pointer" (click)="navigateToKyc();">here</u> to update or add more.</span>
+                        <span class="text-danger font-weight-bold" *ngIf="noOfKYCDocs?.length==0 && reelerDetails.customerTypeName">No KYC documents uploaded. Click <u class="text-warning cursor-pointer" (click)="navigateToKyc();">here</u> to upload.</span>
+                        <span class="text-danger font-weight-bold" *ngIf="(noOfKYCDocs?.length==0 || noOfKYCDocs?.length>0) && !reelerDetails.customerTypeName">Please select a customer type to proceed with KYC.</span>
+                    </div>
+                    <!--end::Title-->
+                </div>
+                <!--end::User-->
+                <!--begin::Info-->
+                <div class="mb-7">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Phone:</span>
+                        <span class="text-dark-75 font-weight-bold">{{reelerDetails.phone}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bolder mr-2">Center:</span>
+                        <span class="text-dark-75 font-weight-bold">{{centerName}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bolder mr-2">PAN:</span>
+                        <span class="text-dark-75 font-weight-bold">{{reelerDetails.kycPANNumber}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bolder mr-2">Adhaar:</span>
+                        <span class="text-dark-75 font-weight-bold">{{reelerDetails.kycAdhaarNumber}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bolder mr-2" [ngClass]="!(reelerDetails.customerTypeName)?'danger':'muted'">Customer Type:</span>
+                        <span class="text-dark-75 font-weight-bold">{{reelerDetails.customerTypeName?reelerDetails.customerTypeName:'-'}} <i class="ml-2 flaticon2-pen text-muted cursor-pointer" (click)="selectCustomerType();"></i></span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center" *ngIf="selectCustomerBoolean">
+                        <span class="text-muted font-weight-bolder mr-2">Select Customer Type:</span>
+                        <span class="text-dark-75 font-weight-bold"> 
+                            <select class="form-control form-control-lg" [(ngModel)]="selectedCustomerType" (change)='onSelectOfCustomerType(selectedCustomerType, contentDelete);' placeholder="Select Type">
+                                <option *ngFor="let item of kycCustomerTypes" [value]="item.id">{{item.name}}
+                                </option>
+                            </select>
+                        </span>
+                    </div>
+
+                </div>
+                <!--end::Info-->
+                <!--begin::Info-->
+                <div class="mb-7">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Cocoon Capacity <small>(per
+                                day)</small>:</span>
+                        <span class="text-dark-75 font-weight-bold">{{reelerDetails.cocoonCapacity ?
+                            reelerDetails.cocoonCapacity : 0}} Kgs</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Yarn Capacity <small>(per
+                                day)</small>:</span>
+                        <span class="text-dark-75 font-weight-bold">{{reelerDetails.yarnCapacity ?
+                            reelerDetails.yarnCapacity : 0}} Kgs</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bolder mr-2">Pickup Wastage:</span>
+                        <span class="text-dark-75 font-weight-bold">{{reelerDetails.pickupWastage ? 'Yes' : 'No'}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bolder mr-2">Available Advance:</span>
+                        <span class="text-dark-75 font-weight-bold">{{reelerDetails.availableAdvance?reelerDetails.availableAdvance:0}} .Rs</span>
+                    </div>
+                </div>
+                <!--end::Info-->
+
+                <p class="mt-7 mb-2">
+                    <span class="text-dark-75 font-weight-bolder pr-1">Address</span>
+                </p>
+                <p>
+                    <span class="text-muted font-weight-bolder mr-2">
+                        {{reelerDetails?.address?.address}}, {{reelerDetails?.address?.village}},
+                        {{reelerDetails?.address?.taluk}}, {{reelerDetails?.address?.city}}
+                    </span><br />
+                    <span class="text-muted font-weight-bolder mr-2 pt-2">{{reelerDetails?.address?.district ?
+                        reelerDetails?.address?.district + ' District, ' : ''}} {{reelerDetails?.address?.state}}
+                        {{reelerDetails?.address?.pincode}}</span>
+                </p>
+
+                <!-- <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-muted font-weight-bolder mr-2">Mandate:</span>
+                    <span class="font-weight-bold" >Active</span>
+                </div> -->
+
+                <div class="d-flex justify-content-between align-items-center" *ngIf="mudraId">
+                    <span class="text-muted font-weight-bolder mr-2">Bank Accounts:</span>
+                    <span class="font-weight-bold cursor-pointer btn btn-success mt-2" (click)="routeToBank()">Manage</span>
+                </div>
+
+
+                <p class="mt-7 mb-2">
+                    <span class="text-dark-75 font-weight-bolder pr-1">Bank</span>
+                </p>
+                <div class="mb-7">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Beneficiary Name:</span>
+                        <span class="text-dark-75 font-weight-bold">{{reelerBankDetails?.beneficiaryName}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Bank:</span>
+                        <span class="text-dark-75 font-weight-bold">{{reelerBankDetails?.bankName}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">IFSC Code:</span>
+                        <span class="text-dark-75 font-weight-bold">{{reelerBankDetails?.ifscCode}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bolder mr-2">Account Number:</span>
+                        <span class="text-dark-75 font-weight-bold">{{reelerBankDetails?.accountNumber}}</span>
+                    </div>
+                </div>
+
+            </div>
+            <!--end::Body-->
+        </div>
+        <!--end::Card-->
+    </div>
+    <div class="col-lg-8 col-md-8 col-sm-8">
+
+        <!-- <mat-tab-group>
+            <mat-tab *ngIf="!(user.role==='MudraManager' || user.role==='MudraAgent')||user.role==='ADMINISTRATOR'"  label="Cocoon Purchase Khata">        
+                <app-cocoon-purchase-khata [reelerId]="id"  [masterLoanInfo]="masterLoanInfo" (listenAndRefresh)="listenAndRefresh()" ></app-cocoon-purchase-khata>
+            </mat-tab>
+           <ng-container>
+            <mat-tab *ngIf="!(user.role==='MudraManager' || user.role==='MudraAgent')|| user.role==='ADMINISTRATOR'"  label="Yarn Selling Khata">       
+                <app-yarn-selling-khata [reelerId]="id" (listenAndRefresh)="listenAndRefresh()" ></app-yarn-selling-khata>
+            </mat-tab>
+            <mat-tab *ngIf="!(user.role==='MudraManager' || user.role==='MudraAgent' )|| user.role==='ADMINISTRATOR'"  label="Follow Up">       
+                <app-individual-follow-up 
+                [customerId]="id"
+                customerRole='REELER'
+                [customerPhone]="reelerDetails?.phone" 
+                [customerName]="reelerDetails?.name"
+                ></app-individual-follow-up>
+            </mat-tab>
+           </ng-container>
+            <ng-container *ngIf="!(user.role==='MudraManager' || user.role==='MudraAgent')">
+                <mat-tab label="KYC">
+                    <app-customer-details
+                    [customerType]="'REELER'" 
+                    [customerId]="id"
+                    [refreshOtherComponent]="refreshOtherComponent"
+                    ></app-customer-details>
+                    <app-get-credit-score
+                    [title]="'Reelers'"
+                    [customerId]="id"       
+                    [code]="reelerDetails?.code"
+                    [customerType]="'REELER'"
+                    [phonenumber]="reelerDetails?.phone"
+                    [customerDetails]="reelerDetails"
+                    (refresh)="listenAndRefresh()"
+                    ></app-get-credit-score>
+                </mat-tab>
+            </ng-container>
+
+            <mat-tab label="Mudra" *ngIf="(user.role==='ADMINISTRATOR' || user.role==='MudraManager' || user.role==='MudraAgent')&&mudraId">
+                <div class="card card-custom gutter-b">
+                    <div class="card-header">
+                        <div class="card-title">
+                        </div>
+                        <div class="card-toolbar">
+                          <button class="btn btn-success btn-sm" (click)="recordDepositPayment()" *ngIf="masterDataFromLoans?.totalOutstandingAmount!==0 && productType !=='(BNPL,INVOICE_FINANCING)'">Mudra Payment</button>
+                        </div>
+                      </div>
+                      <app-overview-credit 
+                      [customerType]="'REELER'" 
+                      [customerId]="mudraId"
+                      [isHide]="true"
+                      (sendProductType)="sendProductType($event)"
+                      [refreshOtherComponent]="refreshOtherComponent"
+                      (sendTotalOutstanding) = "sendTotalOutstanding($event)"
+                      ></app-overview-credit>
+                </div>
+
+                <app-loans-listing *ngIf="mudraId"
+                [showAllDetailsOverview]="false"
+                [customerType]="'REELER'" 
+                [customerId]="mudraId"
+                [productType]="productType"
+                [refreshOtherComponent]="refreshOtherComponent"
+                [backButton]="false"
+                ></app-loans-listing>
+            </mat-tab> -->
+            <!--Loan products  -->
+            <!-- <mat-tab label="Loan Products" *ngIf="(user.role==='ADMINISTRATOR' || user.role==='MudraManager' || user.role==='MudraAgent')&&mudraId">
+                <div class="card card-custom gutter-b">
+                    <app-mudra-add-credit-information
+                    [customerType]="'REELER'" 
+                    [customerId]="id"
+                    [customerName]="reelerDetails?.name"
+                    [refreshOtherComponent]="refreshOtherComponent"
+                    [mudraId]="mudraId"
+                    (listenAndRefresh)="listenAndRefresh()"
+                    [invAccountId]="invoiceFinanceAccountId"
+                    ></app-mudra-add-credit-information>
+                </div>
+            </mat-tab>
+            <mat-tab label="Suppliers" *ngIf="(user.role==='ADMINISTRATOR' || user.role==='MudraManager' || user.role==='MudraAgent')&&suppliersBoolean">
+                <app-mudra-suppliers-map 
+                    [customerType]="'REELER'" 
+                    [customerId]="id"
+                    [customerName]="reelerDetails?.name"
+                    [refreshOtherComponent]="refreshOtherComponent"
+                    [mudraId]="mudraId"
+                    [accountId]="invoiceFinanceAccountId"
+                    (listenAndRefresh)="listenAndRefresh()"
+                ></app-mudra-suppliers-map>
+            </mat-tab>
+
+            <mat-tab *ngIf="!mudraId"  label="Deposits">
+                <app-approved-settlements [customerId]="id" [customerType]="'reeler'"></app-approved-settlements>
+            </mat-tab> -->
+        <!-- </mat-tab-group> -->
+
+    </div>
+</div>
+
+<div class="payment-confirmation-preview">
+    <div>
+        <form [formGroup]="reelerPaymentForm">
+            <ng-template #payment let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Payment Details</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Due Amount : <strong>Rs. {{paymentDetail.dueAmount.toLocaleString('en-IN')}}</strong></p>
+                    <p>Cost Per Kg : <strong>Rs. {{paymentDetail.sellingPricePerKg}}</strong></p>
+                    <p>Total Weight : <strong>{{paymentDetail.totalWeight}} kgs</strong></p>
+                    <div class="form form-label-right">
+                        <div class="form-group row">
+
+                            <div class="col-lg-6 mt-2">
+                                <label class="form-label">Amount</label>
+                                <input type="number" class="form-control form-control-lg form-control-solid" name="amount"
+                                  placeholder="amount" autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('amount')"
+                                  [class.is-valid]="isControlValidForReeler('amount')" formControlName="amount" />
+                                <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'amount')">
+                                    Amount is required
+                                </div>
+                                <div *ngIf="reeler.availableAdvance>0">
+                                    Available Advance : Rs. {{reeler.availableAdvance}}
+                                </div>
+                                <div style="color: #F64E60;" *ngIf="reelerPaymentForm.value.amount > paymentDetail.dueAmount">
+                                    Amount Exceeds
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 mt-2">
+                                <label class="form-label">Reference Number</label>
+                                <input type="text" class="form-control form-control-lg form-control-solid" name="referenceNumber"
+                                  placeholder="Reference Number" autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('referenceNumber')"
+                                  [class.is-valid]="isControlValidForReeler('referenceNumber')" formControlName="referenceNumber" [readonly]="isRefDisabled" />
+                                <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'referenceNumber')">
+                                    Reference Number is required
+                                </div>
+                                
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+                    <button type="button" class="btn btn-sm btn-success" (click)="reelerPayment()" [disabled]="reelerPaymentForm.invalid || this.reelerPaymentForm.value.amount > paymentDetail.dueAmount">Pay Now</button>
+                </div>
+            </ng-template>
+        </form>
+    </div>
+</div>
+
+<div class="details-confirmation-preview">
+    <div>
+            <ng-template #details let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Details</h4>
+                </div>
+                <div class="modal-body">
+                    <ng-container *ngIf="reelerKhataList?.length">
+                        <div *ngFor="let item of reelerKhataList">
+                          <p>Amount : <strong>Rs. {{item.amount.toLocaleString('en-IN')}}</strong></p>
+                          <p>Reference Number : <strong> {{item.referenceNumber}}</strong></p>
+                          <p>Date : <strong>{{item.lastModifiedDate}} </strong></p>
+                          <hr>
+                      </div>
+                      </ng-container>
+      
+                      <ng-container *ngIf="!reelerKhataList?.length">
+                        <div class="d-flex justify-content-between align-items-center">
+                          <strong> No Payments For This Cocoon Order</strong>
+                        </div>
+                      </ng-container>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-success" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+    </div>
+</div>
+
+<!-- **************** popUp **************** -->
+<div class="example-preview">
+    <div>
+        <ng-template #contentDelete let-c="close" let-d="dismiss">
+            <div class="modal-header">
+              <h3 >Are you sure that you want to change the customer type?</h3>
+            </div>
+            <div class="modal-body">
+                <p class="text-warning mt-2">Your existing KYC data will be lost after proceeding.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click');">No</button>
+                <button type="button" class="btn btn-primary" (click)="ConfirmDeleteRecord()">Yes</button>
+            </div>
+        </ng-template>
+    </div>
+  </div>
+  <div class="example-preview3">
+    <div>
+        <ng-template #popupOpen let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Deposit Amount</h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="row ml-1">
+                    <p class="text-muted">RMCODE:</p><h6 class="ml-2">RMREELER{{reelerDetails?.id}} </h6>
+                </div>
+
+                <div class="row ml-1">
+                    <p class="text-muted">Name:</p><h6 class="ml-2">{{reelerDetails?.name}}</h6>
+                </div>
+               <p class="text-warning">Available Credit Limit Rs {{masterDataFromLoans?.availableCreditLimit?masterDataFromLoans?.availableCreditLimit:0}}</p>
+               <!-- <p class="text-warning" *ngIf="masterLoanInfo?.principalDueAmount">Outstanding Principal DueAmount Rs {{masterLoanInfo?.principalDueAmount}}</p> -->
+               <p class="text-warning" *ngIf="masterDataFromLoans?.totalOutstandingAmount">Outstanding Amount Rs {{masterDataFromLoans?.totalOutstandingAmount}}</p>
+
+               <div class="row" [formGroup] = "depositFormGroup">
+                    
+                   <div class="col-lg-3">
+                    <label class="form-label">Amount<span class="text-danger">*</span></label>
+                    <input type="number" class="form-control form-control-lg" name="name" placeholder="Amount in Rs" autocomplete="off"
+                      [class.is-invalid]="depositFormGroup.get('amount').invalid && (depositFormGroup.get('amount').dirty || depositFormGroup.get('amount').touched)"
+                      [class.is-valid]="depositFormGroup.get('amount').invalid && (depositFormGroup.get('amount').dirty || depositFormGroup.get('amount').touched)"
+                       formControlName="amount" />
+                   </div>
+
+                   <div class="col-lg-3">
+                        <label class="form-label">Reference Number</label>
+                        <input type="text" class="form-control form-control-lg" name="referenceNumber"
+                        placeholder="Reference Number" autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('referenceNumber')"
+                        [class.is-valid]="isControlValidForReeler('referenceNumber')" formControlName="referenceNumber"/>
+                   </div>
+                   <div class="col-lg-3">
+                        <label class="form-label">Select Deposit Type:</label>
+                        <select class="form-control form-control-lg" name="depositType" 
+                        (change)="onDepositTypeSelection($event)">
+                        <option [disabled]="type == 'REVERSE' || type == 'SETTLE' || type == 'TO_BE_SETTLED' || type == 'WRITE_OFF'" [value]="type" *ngFor="let type of getDepositeType">{{type}}</option>
+                        <option selected disabled [value]="" hidden place>select </option>
+                       </select>
+                   </div>
+
+                   <div class="col-lg-3">
+                    <label>Value Date</label>
+                    <mat-form-field class="w-100 cursor-pointer" appearance="fill" (click)="dp3.open()">
+                      <input class="cursor-pointer" matInput [matDatepicker]="dp3" 
+                      (click)="dp3.open()" readonly [min]="minDate" [max]="maxDate"  placeholder="Value Date" formControlName="valueDate" >
+                      <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+                      <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+                  </mat-form-field>
+                   </div>
+               </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="close()">Cancel</button>
+                <button type="button" [disabled]="depositFormGroup.invalid" class="btn btn-success" (click)="save(depositFormGroup.value)">Save</button>
+            </div>
+        </ng-template>
+    </div>
+  </div>

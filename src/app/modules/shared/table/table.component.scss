@@ -1,0 +1,78 @@
+.page-item {
+    .active{
+        pointer-events: none;
+        color: #f9fdf6;
+        background-color: #7ed321;
+    }
+    .disabled{
+        opacity: 0.5;
+        cursor: default;
+        pointer-events: none;
+        &:hover{
+            background-color: #f9fdf6 !important;
+        }
+    }
+}
+    th{
+        cursor: pointer;
+    }
+   
+mat-form-field.mat-form-field {
+   font-size: 79%;
+}
+
+:host ::ng-deep .mat-form-field-wrapper{
+   padding: 0;
+}
+
+// for image modal
+ 
+  /* The Modal (background) */
+  .modal {
+    display: none; /* Hidden by default */
+    padding-top: 100px; /* Location of the box */
+    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+  }
+ 
+  /* Modal Content (Image) */
+  .modal-content {
+    height: 95%;
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    object-fit: contain;
+    background-color: black;
+  }
+ 
+  /* The Close Button */
+  .close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+ 
+  .close:hover,
+  .close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .display-none {
+      display: none !important;
+  }
+
+  .display-block {
+    display: block !important
+  }
+
+  @media only screen and (max-width: 700px) {
+    .modal-content {
+      width: 100%;
+    }
+  }

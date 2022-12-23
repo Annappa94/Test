@@ -1,0 +1,169 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">Farmer Followups</h3>
+        </div>
+        <div class="card-toolbar">
+            <!-- <button type="button" class="btn btn-sm btn-success" (click)="createNew();">+ New Followup</button> -->
+            <div ngbDropdown placement="bottom-right" class="dropdown dropdown-inline" matTooltip="Quick actions">
+                <a ngbDropdownToggle class="btn btn-clean btn-sm btn-icon" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    <i class="ki ki-bold-more-ver text-success"></i>
+                </a>
+                <div ngbDropdownMenu class="dropdown-menu dropdown-menu-md dropdown-menu-right">
+                    <ul class="navi navi-hover">
+
+                        <!-- <li class="navi-separator mb-3 opacity-70"></li> -->
+                        <li class="navi-item" (click)="exportexcel();">
+                            <a class="navi-link cursor-pointer">
+                                <span class="navi-text">
+                                    <i class="flaticon-download mr-2 text-success"></i>Download XLS
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body pt-0">
+
+
+        <div class="form form-label-right">
+            <div class="form-group row">
+                <div class="col-lg-8 mt-2">
+                    <input [(ngModel)]="searchText" (keyup)="onSearch()" type="text" class="form-control" placeholder="Search" value="" />
+                    <small class="form-text text-muted"><b>Search</b>in all fields</small>
+                </div>
+
+                <div class="col-lg-4 mt-2">
+                    <select class="form-control" name="status" (change)="onChangeRole($event)"
+                        placeholder="Filter by Role">
+                        <option value="ACTIVE" [selected]="true">Active</option>
+                        <option value="COMPLETED">Completed</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive angular-bootstrap-table">
+            <table id="excel-table" class="table table-head-custom table-vertical-center overflow-hidden">
+                <thead>
+                    <th name="Farmer" ngDefaultControl [(ngModel)]="tableHeader.farmerName" (click)="onSort('farmerName')">
+                        <i *ngIf="tableHeader.farmerName === 1 && activeSort === 'farmerName'" class="fas fa-long-arrow-alt-up"></i>
+                        <i *ngIf="tableHeader.farmerName === 0 && activeSort === 'farmerName'" class="fas fa-long-arrow-alt-down"></i>
+                        Farmer 
+                      </th>
+                      <th name="Phone" ngDefaultControl [(ngModel)]="tableHeader.farmerPhone" (click)="onSort('farmerPhone')">
+                        <i *ngIf="tableHeader.farmerPhone === 1 && activeSort === 'farmerPhone'" class="fas fa-long-arrow-alt-up"></i>
+                        <i *ngIf="tableHeader.farmerPhone === 0 && activeSort === 'farmerPhone'" class="fas fa-long-arrow-alt-down"></i>
+                        Phone 
+                      </th>
+                      <th name="type" ngDefaultControl [(ngModel)]="tableHeader.type" (click)="onSort('type')">
+                        <i *ngIf="tableHeader.type === 1 && activeSort === 'type'" class="fas fa-long-arrow-alt-up"></i>
+                        <i *ngIf="tableHeader.type === 0 && activeSort === 'type'" class="fas fa-long-arrow-alt-down"></i>
+                        Type 
+                      </th>
+                      <th name="displayCocoonType" ngDefaultControl [(ngModel)]="tableHeader.displayCocoonType" (click)="onSort('displayCocoonType')">
+                        <i *ngIf="tableHeader.displayCocoonType === 1 && activeSort === 'displayCocoonType'" class="fas fa-long-arrow-alt-up"></i>
+                        <i *ngIf="tableHeader.displayCocoonType === 0 && activeSort === 'displayCocoonType'" class="fas fa-long-arrow-alt-down"></i>
+                        Cocoon Type 
+                      </th>
+                      <th name="Cocoon Quantity" ngDefaultControl [(ngModel)]="tableHeader.cocoonQuantity" (click)="onSort('cocoonQuantity')">                        
+                        <i *ngIf="tableHeader.cocoonQuantity === 1 && activeSort === 'cocoonQuantity'" class="fas fa-long-arrow-alt-up"></i>
+                        <i *ngIf="tableHeader.cocoonQuantity === 0 && activeSort === 'cocoonQuantity'" class="fas fa-long-arrow-alt-down"></i>
+                        Cocoon Quantity 
+                      </th>
+                      <th name="centerName" ngDefaultControl [(ngModel)]="tableHeader.centerName" (click)="onSort('centerName')">
+                        <i *ngIf="tableHeader.centerName === 1 && activeSort === 'centerName'" class="fas fa-long-arrow-alt-up"></i>
+                        <i *ngIf="tableHeader.centerName === 0 && activeSort === 'centerName'" class="fas fa-long-arrow-alt-down"></i>
+                        Center 
+                      </th>
+                      <th name="Followup Date" ngDefaultControl [(ngModel)]="tableHeader.followupDisplayDate" (click)="onSort('followupDisplayDate')">
+                        <i *ngIf="tableHeader.followupDisplayDate === 1 && activeSort === 'followupDisplayDate'" class="fas fa-long-arrow-alt-up"></i>
+                        <i *ngIf="tableHeader.followupDisplayDate === 0 && activeSort === 'followupDisplayDate'" class="fas fa-long-arrow-alt-down"></i>
+                        Followup Date 
+                      </th>
+                      <th name="Notes" ngDefaultControl [(ngModel)]="tableHeader.notes" (click)="onSort('notes')">
+                        <i *ngIf="tableHeader.notes === 1 && activeSort === 'notes'" class="fas fa-long-arrow-alt-up"></i>
+                        <i *ngIf="tableHeader.notes === 0 && activeSort === 'notes'" class="fas fa-long-arrow-alt-down"></i>
+                        Notes 
+                      </th>
+                    <th>Actions</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of filteredFarmersList">
+                        <td>{{ item.farmerName }}</td>
+                        <td>{{ item.farmerPhone }}</td>
+                        <td>{{ item.type }}</td>
+                        <td>{{ item.displayCocoonType }}</td>
+                        <td>{{ item.cocoonQuantity }}</td>
+                        <td>{{ item.centerName }}</td>
+                        <td>{{ item.followupDisplayDate }}</td>
+                        <td>{{ item.notes }}</td>
+                        <td>
+                            <a matTooltip="Mark Complete" class="btn btn-icon btn-sm mr-1 mt-1"
+                                *ngIf="item.status.toUpperCase() === 'ACTIVE'" (click)="openPopUp(content, item)">
+                                <i class="far fa-check-square text-success"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="mr-2">
+              <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                  <li class="page-item">
+                    <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(paginationData.currentPage - 1)" href="javascript:void(0);">
+                      <span aria-hidden="true">&laquo;</span>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                  </li>
+                  <li *ngFor="let item of paginationData.pages" class="page-item">
+                    <a class="page-link" [ngClass]="{'active': paginationData?.currentPage === item }" (click)="onPageChange(item)" href="javascript:void(0);">{{ item + 1 }}</a>
+                  </li>
+                  <li class="page-item">
+                    <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1}" (click)="onPageChange(paginationData.currentPage + 1)" href="javascript:void(0);">
+                      <span aria-hidden="true">&raquo;</span>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+            <div class="">
+              <select class="custom-select" style="height: calc(1.2em + 1rem + 2px); padding: 0.35rem 2rem 0.35rem 1rem;" [(ngModel)]="paginationData.pageSize" (change)="onPageSizeChange()">
+                <option [ngValue]="20">20 per page</option>
+                <option [ngValue]="50">50 per page</option>
+                <option [ngValue]="100">100 per page</option>
+              </select>
+            </div>
+          </div>
+    </div>
+</div>
+
+<div class="example-preview">
+    <div>
+        <ng-template #content let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Mark Followup Complete</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Please provide notes for completion below:</p>
+                <form [formGroup]="followupForm">
+                    <input type="text" class="form-control form-control-lg" name="notes" placeholder="Spoke to farmer"
+                        autocomplete="off" formControlName="notes" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Cancel</button>
+                <button type="button" class="btn btn-primary" (click)="markComplete()">Mark Complete</button>
+            </div>
+        </ng-template>
+    </div>
+</div>

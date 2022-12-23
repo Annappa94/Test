@@ -1,0 +1,39 @@
+<app-paginated-table [titleOfTable]="'Sales order list'"
+ [tableHeaders]="tableHeaders"
+ (infoFromTable)="tableInfo($event)"
+ [rowDataList]="salesDataList"
+ [totalRecords]="totalRecords"
+ [searchClass]="'col-lg-7'"
+ [searchHint]="'By Name,Phone,Id'">
+  <div class="card-toolbar New">
+    <div>
+    <button type="button" class="btn btn-sm btn-success mr-2" routerLink="/resha-farms/device-management/sales-order-crud"> + New Sale Order</button>
+    </div>
+  </div>
+  <div class="col-lg-2">
+    <div class="row">
+      <div class="col-lg-12" [formGroup]="filterForm">
+        <select class="form-control" name="status" formControlName="devicePlanType" placeholder="Filter by Plan Type">
+          <option value="(RentalPlan,NormalPayment)">All</option>
+          <option value="RentalPlan">RENTAL</option>
+          <option value="NormalPayment" >NORMAL</option>
+
+        </select><small class="form-text text-muted"><b>Filter</b> by Plan Type</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-2">
+    <div class="row">
+      <div class="col-lg-12"  [formGroup]="filterForm">
+        <select class="form-control" name="status" formControlName="devicePaymentStatus" placeholder="Filter by Payment status">
+          <option value="(Paid,Pending)" >All</option>
+          <option value="Paid" >PAID</option>
+          <option value="Pending" >PENDING</option>
+
+          
+        </select><small class="form-text text-muted"><b>Filter</b> by Payment status</small>
+      </div>
+    </div>
+  </div>
+</app-paginated-table>

@@ -1,0 +1,22 @@
+export interface Product{
+    productID: number,
+    productName: String,
+    variantName: String,
+    categoryID: number,
+    categoryName: String,
+    onlinePrice: number,
+    mrp: number,
+    discountPercentage: number,
+    taxIDs: String,
+    additionalChargeIDs: String,
+    brandID: number,
+    subCategoryID: number,
+    priceIncludesTaxes: number,
+    variantID: number,
+    inventoryLevel: number,
+    safeStockLevel: String,
+    subCategoryName: String,
+    brandName: String,
+    image: String,
+    imageType: String
+}

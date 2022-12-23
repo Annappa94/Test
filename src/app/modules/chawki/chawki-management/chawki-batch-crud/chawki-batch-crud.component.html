@@ -1,0 +1,51 @@
+<div class="card card-custom">
+  <div class="card-header pl-0 pt-0 pb-2">
+    <div class="card-title">
+      <h3 class="card-label">Create New Batch</h3>
+    </div>
+    <div class="card-toolbar">
+    </div>
+  </div>
+  <div class="card-body pt-0">
+
+    <div class="form form-label-right">
+      <div class="form-group row pt-1" [formGroup]="batchCreateForm">
+        <div class="col-lg-4 col mt-2">
+          <label for="name">Available on<span class="text-danger">*</span></label>
+          <mat-form-field class="w-100 cursor-pointer" appearance="fill" (click)="dp.open()">
+            <input formControlName="availableOn" class="cursor-pointer" matInput [matDatepicker]="dp" [min]="minDate"  [max]="maxDate"
+            (click)="dp.open()" readonly>
+            <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+            <mat-datepicker #dp disabled="false"></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="col-lg-4 mt-2">
+          <label class="form-label">Total Available DFL<span class="text-danger">*</span></label>
+          <input type="number" class="form-control form-control-lg form-control-solid" name="totalAvailableDFL"
+            placeholder="Total Available DFL" autocomplete="off"
+            [class.is-invalid]="isControlInvalidForReeler('totalAvailableDFL')"
+            [class.is-valid]="isControlValidForReeler('totalAvailableDFL')" formControlName="totalAvailableDFL" />
+          <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'totalAvailableDFL')">Total Available DFL is required</div>
+        </div>
+        
+        <div class="col-lg-4 mt-2">
+          <label>Select Type<span class="text-danger">*</span></label>
+          <select class="form-control form-control-lg" 
+              formControlName="batchType"
+              name="Center" placeholder="Select Type">
+              <option *ngFor="let item of chawkiTypes" [value]="item">{{item}}</option>
+          </select>
+      </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="card-footer pb-0 text-right">
+    <button type="button" class="btn btn-sm btn-secondary mr-2" (click)="onCancel()">Cancel</button>
+    <button type="button" class="btn btn-sm btn-success" (click)="createBatch()"
+      [disabled]="batchCreateForm.invalid">Save</button>
+  </div>
+</div>

@@ -1,0 +1,363 @@
+<div class="card card-custom gutter-b">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">Cotton Lots</h3>
+    </div>
+    <!-- <div class="card-toolbar">
+      <button type="button" class="btn btn-sm btn-outline-success mr-2 py-3" (click)="onMarkSold();">+ Marks Sold
+        0</button>
+      <button type="button" class="btn btn-sm btn-outline-success mr-2 py-3" (click)="navigateToNewLot()">+ New
+        Lot</button>
+    </div> -->
+    <div class="card-toolbar New" *ngIf="!farmarId">
+      <div class="card-toolbar">
+        <button
+          *ngIf="user.role !== 'COperationsAgent' && user.role !== 'COCOON_PROCUREMENT_EXEC' && user.role !== 'COCOON_SALES_EXEC'"
+          [disabled]="selectedCottonLot.length == 0" type="button" class="btn btn-sm btn-outline-dark mr-2 py-3"
+          (click)="onMarkSold();">
+          Mark Sold
+          <span class='badge badge-warning p-1' id='lblCartCount'> {{selectedCottonLot?.length}}</span>
+        </button>
+      </div>
+
+      <div>
+        <button type="button" class="btn btn-sm btn-success mr-2" (click)="navigateToNewLot()">+ New Lot</button>
+      </div>
+    </div>
+  </div>
+  <div class="card-body pt-0">
+    <div class="form form-label-right">
+      <div class="form-group row">
+          <div class="col-lg-4">
+          <input type="text" class="form-control" (keyup.enter)="onSearch();" (keyup)="!searchText&&getCottonLotList();paginationData.currentPage=0" [(ngModel)]="searchText" placeholder="Search" value="" />
+
+          <small class="form-text text-muted"><b>Search</b> By Lot id.</small>
+        </div>
+        <div class="col-lg-1">
+          <button type="button" class="btn btn-sm btn-success mr-2 mt-1" (click)="onSearch()">Search</button>
+        </div>     
+
+        <div class="col-lg-2 mt-2">
+          <ng-container [formGroup]="filterForm">
+            <select class="form-control" name="status" formControlName="status" placeholder="Filter by status">
+              <option value="(New,Sold,AVAILABLE)">All</option>
+              <option value="New">New</option>
+              <option value="AVAILABLE ">Available</option>
+              <option value="Sold">Sold	</option>
+
+            </select><small class="form-text text-muted"><b>Filter</b> by Status</small>
+          </ng-container>
+        </div>
+        <div class="col-lg-2 mt-2">
+          <ng-container [formGroup]="filterForm">
+            <select class="form-control" name="status" formControlName="transctionStatus" placeholder="Filter by status">
+              <option value="(REGULAR,MANUFACTURING)">All</option>
+              <option value="REGULAR">Regular</option>
+              <option value="MANUFACTURING">Manufacturing</option>
+              </select>
+              <small class="form-text text-muted"><b>Filter</b> by TransactionType</small>
+              </ng-container>
+              </div>
+        <!-- <div class="col-lg-2 mt-2">
+          <ng-container [formGroup]="filterForm">
+            <select class="form-control" name="status" formControlName="orderStatus" placeholder="Filter by status">
+              <option value="(New,Purchased,Returned,Cancelled,AVAILABLE)">All</option>
+              <option value="New">New</option>
+              <option value="Purchased">Purchased</option>
+              <option value="Returned">Returned</option>
+              <option value="Cancelled">Canceled</option>
+            </select><small class="form-text text-muted"><b>Filter</b> by order Status</small>
+          </ng-container>
+        </div> -->
+        <div class="col  d-flex justify-content-end align-items-start">
+        </div>
+      </div>
+    </div>
+    <div class="example-preview">
+      <div>
+        <ng-template #changeStatusPopUp let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <h4 class="modal-title"></h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to mark the order</p>
+
+            <!-- if status is Cancelled -->
+            <ng-container *ngIf="cottonLotOrderStatus == 'Canceled'">
+              <div class="row">
+
+                <div class="col-lg-12 mt-2">
+                  <label class="form-label">Reason for cancel<span class="text-danger">*</span></label>
+                  <input type="text" class="form-control form-control-lg" name="cancel" autocomplete="off" />
+                  <!-- <div class="invalid-feedback" *ngIf="controlHasErrorForLogistics('required', 'driverName')">Name is required</div> -->
+                </div>
+              </div>
+            </ng-container>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary">Cancel</button>
+            <button type="button" class="btn btn-primary">
+            </button>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+    <div class="table-responsive angular-bootstrap-table">
+
+      <table id="excel-table" class="table table-head-custom table-vertical-center overflow-hidden">
+        <thead>
+          <th></th>
+          <th> RM CODE </th>
+          <th name="name">
+            FARMER NAME<br>
+           PHONE NO
+          </th>
+          <th name="phone">
+            CENTER
+          </th>
+          <th name="phone">
+            TYPE
+          </th>
+          <th name="phone"> WEIGHT
+          </th>
+          <th name="phone">
+            AVL QTY
+            
+            <br>
+            <small>TOTAL QTY</small>
+          </th>
+          <th>TRANSACTION 
+            <br>
+            TYPE</th>
+          <th name="phone">
+           INVENTORY 
+            <br>
+            STATUS
+          </th>
+          <!-- <th name="phone">
+            ORDER STATUS
+          </th> -->
+          <th>PAYMENT STATUS</th>
+          <th>CREATED <br>DATE AND TIME</th>
+          <th>ACTION</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of cocoondata">
+            <td class="selection-cell">
+              <label *ngIf="(item.status == 'AVAILABLE' && item.transactionType =='REGULAR')" class="checkbox checkbox-single">
+                <input type="checkbox" [(ngModel)]="item.selected" [ngModelOptions]="{standalone: true}" (change)="selectedCottonLotFromTable($event, item)"/>
+                <span></span>
+              </label>
+            </td>
+            <!-- <td class="selection-cell">
+                {{item.code}}
+            </td> -->
+            <td><a matTooltip="Lot Details" class="btn btn-link-success font-weight-bold" (click)="editCottonLDeatailes(item)"> {{item.code }}</a></td>
+            <td>{{item.farmerName}}<br>{{item.farmerPhone}}</td>
+            <td>{{item.centerName}}</td>
+            <td>{{item.cottonType}}</td>
+            <td>{{item.lotWeight}}</td>
+            <td>{{item.availableQuantity}}</td>
+            <td>{{item.transactionType}}</td>
+            <td class="text-success" *ngIf="item.status !='Sold'">{{item.status}}</td>
+            <td class="text-danger" *ngIf="item.status =='Sold'">{{item.status}}</td>
+
+           
+<!--     
+            <ng-container [formGroup]="filterForm">
+              <select class="form-control" name="status" formControlName="orderStatus">
+                <option value="New">New</option>
+                <option value="Purchased">Purchased</option>
+                <option value="Returned">Returned</option>
+                <option value="Cancelled">Canceled</option>
+              </select>
+            </ng-container> -->
+
+            <td>{{item.paymentStatus}}</td>
+            <td>{{item.createdDate | date: 'd/M/yy, h:mm a'}}</td>
+            <td>
+              <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-hover-text-primary p-0 ml-4 dropdown menu-item menu-item-submenu menu-item-rel"
+                  id="approovalActionsdropdown" ngbDropdownToggle style="height:72px">
+                  <i class="fas fa-ellipsis-v icon-lg text-muted"></i>
+                </button>
+                <div class="palns_activation_actions" style="max-width: 150px;top:-28px !important" ngbDropdownMenu
+                  aria-labelledby="approovalActionsdropdown">
+                  <a matTooltip *ngIf="item.status == 'New'">
+                    <p class="pl-4 cursor dropdow_list" (click)="editCottonCrud(item)">Edit</p>
+                  </a>
+                  <a matTooltip *ngIf="item.status == 'New'">
+                    <p class="pl-4 cursor dropdow_list" (click)="outtonprocesspopup(outton,item)">Out-Ton</p>
+                  </a>
+                  <a matTooltip *ngIf="item.status == 'New'">
+                    <p class="pl-4 cursor dropdow_list">Cancel</p>
+                  </a>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="row">
+      <div class=" ml-3 mr-2">
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item">
+              <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(0)"
+                href="javascript:void(0);">
+                <span aria-hidden="true">&laquo;&laquo;</span>
+                <span class="sr-only">First</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}"
+                (click)="onPageChange(paginationData.currentPage - 1)" href="javascript:void(0);">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" *ngIf="paginationData?.currentPage !== 0 && paginationData?.currentPage !== 1"
+                (click)="onPageChange(paginationData?.currentPage - 2)" href="javascript:void(0);">{{
+                paginationData?.currentPage -1 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" *ngIf="paginationData?.currentPage !== 0"
+                (click)="onPageChange(paginationData?.currentPage - 1)" href="javascript:void(0);">{{
+                paginationData?.currentPage}}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link active" href="javascript:void(0);">{{ paginationData?.currentPage + 1 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link"
+                *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1"
+                (click)="onPageChange(paginationData?.currentPage + 1)" href="javascript:void(0);">{{
+                paginationData?.currentPage + 2 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link"
+                *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1 && paginationData?.currentPage !== paginationData.pages.length - 2"
+                (click)="onPageChange(paginationData?.currentPage + 2)" href="javascript:void(0);">{{
+                paginationData?.currentPage + 3 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link"
+                [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}"
+                (click)="onPageChange(paginationData.currentPage + 1)" href="javascript:void(0);">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link"
+                [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}"
+                (click)="onPageChange(paginationData.pages.length - 1)" href="javascript:void(0);">
+                <span aria-hidden="true">&raquo;&raquo;</span>
+                <span class="sr-only">Last</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div class="mr-2">
+        <select class="custom-select" style="height: calc(1.2em + 1rem + 2px); padding: 0.35rem 2rem 0.35rem 1rem;"
+          [(ngModel)]="paginationData.pageSize" (change)="onPageSizeChange()">
+          <option [ngValue]="10">10 per page</option>
+          <option [ngValue]="50">50 per page</option>
+          <option [ngValue]="100">100 per page</option>
+        </select>
+      </div>
+      <div class="pt-2">
+        <small class="text-muted">(Total: {{totalRecords}})</small>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="details-confirmation-preview" [formGroup]="outTunform">
+  <div>
+    <ng-template #outton let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <!-- <h4 class="modal-title">
+         
+        </h4> -->
+
+        <div class="col-lg-5 mt-5">
+          <h4>Out-Ton Process</h4>
+          <label class="form-label">Number of Kgs<span class="text-danger"></span></label>
+          <input type="number" class="form-control form-control-lg" placeholder="" autocomplete="off"
+            (input)="pricecalculation()" formControlName="numberofkgs" />
+        </div>
+      </div>
+
+      <div class="modal-body m-4">
+        <h4 class="section_with__border--title">Output (Kgs)</h4>
+        <!-- <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" value="KGS" name="uom" id="uom" formControlName="uom" checked>
+          <label class="form-check-label" for="uom" >
+            Kgs
+          </label>
+        </div> -->
+     
+        <!-- <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" value="GRAM" name="flexRadioDefault" id="flexRadioDefault1">
+          <label class="form-check-label" for="flexRadioDefault1" formControlName="GRAM">
+            grams
+          </label>
+        </div> -->
+
+
+        <div class="row pb-12">
+          <div class="col-lg-6 mt-5">
+            <label class="form-label">Lint<span class="text-danger"></span></label>
+            <input type="number" class="form-control form-control-lg" placeholder="" autocomplete="off"
+              formControlName="lint" step="any" (input)="lintSeedCalculate()" />
+          </div>
+          <div class="col-lg-6 mt-5">
+            <label class="form-label">Seeds<span class="text-danger"></span></label>
+            <input type="number" class="form-control form-control-lg" placeholder="" autocomplete="off"
+              formControlName="seeds" step="any" (input)="lintSeedCalculate()" />
+          </div>
+          <p class="text-danger m-2 ml-4" *ngIf="outTonWarningMsg">{{outTonWarningMsg}}</p>
+          <div class="col-lg-6 mt-5">
+            <label class="form-label">Role Dust<span class="text-danger"></span></label>
+            <input type="number" class="form-control form-control-lg" placeholder="" autocomplete="off" disabled
+              formControlName="roledust" />
+          </div>
+          <div class="col-lg-6 mt-5">
+            <label class="form-label">lint Dust<span class="text-danger"></span></label>
+            <input type="number" class="form-control form-control-lg" placeholder="" autocomplete="off" disabled
+              formControlName="lintdust" />
+          </div>
+          <div class="col-lg-6 mt-5">
+            <label class="form-label">Kawdi<span class="text-danger"></span></label>
+            <input type="number" class="form-control form-control-lg" placeholder="" autocomplete="off" disabled
+              formControlName="kwadi" />
+          </div>
+          <!-- <div class="col-lg-6 mt-5">
+            <label class="form-label">Buying Price/kgs<span class="text-danger"></span></label>
+            <input type="text" class="form-control form-control-solid form-control-lg" {{SlectedCottonLot?.ratePerKg}} autocomplete="off"  readonly/>
+          </div>   -->
+          <div class="col-md-12 border-top mt-4">
+            <div class="col-md-6 mt-5 p-0">
+              <label class="form-label">Buying Price/kgs<span class="text-danger">*</span></label>
+              <input type="number" class="form-control form-control-lg" formControlName="buyingprice" (input)="changeBuyPrice()"/>
+            </div>
+          </div>
+          
+
+        </div>
+        <h6>Net Paybale Amount:{{netPaybleamnt  | number:'1.0-2'}}</h6>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click');">Cancel</button>
+        <button type="button" class="btn btn-sm btn-success" (click)="OutTonProcess()" [disabled]="outTunform.invalid || disableConfirmButton">Confirm</button>
+      </div>
+    </ng-template>
+  </div>
+</div>

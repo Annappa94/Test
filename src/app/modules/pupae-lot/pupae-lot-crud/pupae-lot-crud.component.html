@@ -1,0 +1,291 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">Pupae Details</h3>
+        </div>
+        <div class="card-toolbar">
+
+        </div>
+    </div>
+
+    <!-- Yarn FORM -->
+    <div class="card-body pt-0">
+        <div class="form form-label-right">
+            <div class="form-group row pt-0">
+                <div class="col-lg-12">
+
+                    <div [formGroup]="pupaeCreateForm">
+                        <div class="row">
+                            <div class="col-lg-3 mb-4" *ngIf="id">
+                                <label class="form-label">Pupae Code</label>
+                                <input type="text" class="form-control form-control-lg form-control-solid" name="code"
+                                    placeholder="Pupae Code" autocomplete="off" readonly formControlName="code" />
+                            </div>
+                            <div class="col-lg-9 mt-4" *ngIf="id"></div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-lg-3 mt-4" *ngIf="id&&purchasedBy">
+                                <label>Select pupae Supplier</label>
+                                <input type="text" class="form-control form-control-lg form-control-solid" name="code"
+                                    placeholder="Pupae Code" autocomplete="off" readonly [value]="purchasedBy" />
+                            </div>
+
+                            <div *ngIf="!id" class="col-lg-3 mt-4 selectWrapper">
+                                <label class="w-100 d-flex justify-content-between">Select Pupae Supplier<span
+                                    class="text-danger">*</span><span class="float-right"><a class="text-primary cursor-pointer"
+                                    (click)="open(content)">+ New Supplier</a></span></label>
+                                <ng-select formControlName="pupaeSupplier" placeholder="Please enter mobile number" (search)='getPupaeSupplierList($event)' (change)="onSupplierSelection($event)" (clear)="clearAllTheData()" >
+                                    <ng-option *ngFor="let item of pupaeSupplierList" [value]="item.id">{{ item.name
+                                        }} - {{ item.phone }}</ng-option>
+                                </ng-select>
+                            </div>
+
+                            <div class="col-lg-3 mt-2">
+                                <label>Select Center<span class="text-danger">*</span></label>
+                                <select class="form-control form-control-lg" formControlName="centerId" name="Center"
+                                    placeholder="Select Center">
+                                    <option *ngFor="let item of centerList" [value]="item.id">{{item.centerName}}</option>
+                                </select>
+                            </div>
+
+                            <!-- <div class="col-lg-3 mt-4">
+                                <label>Select Uom<span class="text-danger">*</span></label>
+                                <select class="form-control form-control-lg"  formControlName="uom" name="type" placeholder="Select Type">
+                                    <option value="KGS">Kg</option>
+                                </select>
+                            </div> -->
+
+                            <div class="col-lg-3 mt-2">
+                                <label>Select type<span class="text-danger">*</span></label>
+                                <select class="form-control form-control-lg" formControlName="type" name="Center"
+                                    placeholder="Select Center">
+                                    <option *ngFor="let item of pupaeTypes" [value]="item.value">{{item.displayName}}</option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-3 mt-4">
+                                <label class="form-label">Quantity<span
+                                        class="text-danger">*</span></label>
+                                <input type="number" class="form-control form-control-lg"
+                                    name="quantity" autocomplete="off" formControlName="quantity" />
+                            </div>
+                            
+                            <div class="col-lg-3 mt-4">
+                                <label class="form-label">Price<small>(per/kg)</small><span
+                                        class="text-danger">*</span></label>
+                                <input type="number" class="form-control form-control-lg"
+                                    name="pricePerKg" autocomplete="off" formControlName="pricePerKg" />
+                            </div>
+
+                            <div class="col-lg-3 mt-4">
+                                <label class="form-label">Gross Total<span class="text-danger">*</span></label>
+                                <input type="number" class="form-control form-control-lg form-control-solid"
+                                    name="grossTotal" readonly placeholder="Total" autocomplete="off"
+                                    formControlName="grossTotal" />
+                            </div>
+
+
+                            <!-- <div class="col-lg-3 mt-4">
+                                <label class="form-label">Selling Price <small>(per/kg)</small> <span
+                                        class="text-danger">*</span></label>
+                                <input type="number" class="form-control form-control-lg form-control-solid" readonly
+                                    name="sellingPricePerKg" autocomplete="off" formControlName="sellingPricePerKg" />
+                            </div> -->
+
+                            <div class="col-lg-3 mt-4">
+                                <label class="form-label">logistics Cost</label>
+                                <input type="number" class="form-control form-control-lg" 
+                                    name="quantity" autocomplete="off" formControlName="logisticsCost" />
+                            </div>
+
+                            <div class="col-lg-3 mt-3 selectWrapper" *ngIf="!id">
+                                <label class="form-label">Representative <small>(Sold by)</small><span class="text-danger"> *</span></label>
+                                <ng-select class="form-control form-control-lg form-control-solid select-custom"
+                                  formControlName="rmRepresentative">
+                                  <ng-option *ngFor="let item of usersList" [value]="item">{{ item.name }} - {{ item.phone }} <span
+                                      *ngIf="item.role">- {{item.role}}</span></ng-option>
+                                </ng-select>
+                            </div>
+                            
+                        </div>
+                        <div class="row">
+
+                            <!-- <div class="col-lg-2 mt-4">
+                                <label>Within State ?<span class="text-danger">*</span></label>
+                                <select class="form-control form-control-lg" formControlName="outOfState" name="outOfState"
+                                    placeholder="Within State ?">
+                                    <option value="true">Same State</option>
+                                    <option value="false">Out Of state</option>
+                                </select>
+                            </div> -->
+
+                            <div class="col-lg-2 mt-4">
+                                <label>Payment by</label>
+                                <select class="form-control form-control-lg" formControlName="creditDays"
+                                    name="creditDays" placeholder="Payment type">
+                                    <option value="1">Today</option>
+                                    <option value="3">3 Days</option>
+                                    <option value="7">7 Days</option>
+                                </select>
+                            </div>
+
+
+                            <!-- <div class="col-lg-2 mt-4">
+                                <label class="form-label">SGST <small>2.5%</small><span
+                                        class="text-danger">*</span></label>
+                                <input type="number" class="form-control form-control-lg form-control-solid" name="gst"
+                                    readonly  autocomplete="off" formControlName="gst" />
+                            </div>
+ 
+
+                            <div class="col-lg-2 mt-4">
+                                <label class="form-label">CGST <small>2.5%</small><span
+                                        class="text-danger">*</span></label>
+                                <input type="number" class="form-control form-control-lg form-control-solid" name="cst"
+                                    readonly autocomplete="off" formControlName="cst" />
+                            </div>
+
+                            <div class="col-lg-2 mt-4">
+                                <label class="form-label">IGST <small>5%</small><span
+                                        class="text-danger">*</span></label>
+                                <input type="number" class="form-control form-control-lg form-control-solid" name="igst"
+                                    readonly autocomplete="off" formControlName="igst" />
+                            </div> -->
+
+
+                            <div class="col-lg-2 mt-4">
+                                <label class="form-label">Net Payable Amount<span class="text-danger">*</span></label>
+                                <input type="number" class="form-control form-control-lg form-control-solid"
+                                    name="totalPreTaxPrice" readonly placeholder="Including Tax" autocomplete="off"
+                                    formControlName="netPaybleAmount" />
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-12 mt-6">
+                            <bank-form [layouttype]="'page'" [accname] [accnumber] [ifsccode] [bankname] [branchname]></bank-form>
+                        </div>
+<!-- 
+                        <div class="col-lg-12 mt-6 p-0" [formGroup]="pupaeCreateForm.get('bank')">
+                            <ngb-accordion #acc11="ngbAccordion">
+                                <ngb-panel id="toggle-bank">
+                                    <ng-template ngbPanelTitle>
+                                        <span class="card-header--title text-success">Bank Details<span
+                                                class="text-danger">*</span></span>
+                                    </ng-template>
+                                    <ng-template ngbPanelContent>
+                                        <p class="text-warning font-weight-bolder">
+                                            Please note that the IFSC code for ALLAHABAD BANK (ALLA), SYNDICATE BANK
+                                            (SYNB),
+                                            DENA BANK (BKDN) and VIJAYA BANK (VIJB) has been disabled by RBI.
+                                            Transactions initiated to
+                                            these IFSCs will be rejected.
+                                        </p>
+                                        <div class="row">
+                                            <div class="col-lg-3 mt-2">
+                                                <label class="form-label">Account Holder’s Name<span
+                                                        class="text-danger">*</span></label>
+                                                <input type="text" class="form-control form-control-lg"
+                                                    placeholder="Account Holder’s Name" autocomplete="off"
+                                                    formControlName="beneficiaryName" />
+                                            </div>
+                                            <div class="col-lg-3 mt-2">
+                                                <label class="form-label">Account Number<span
+                                                        class="text-danger">*</span></label>
+                                                <input type="text" class="form-control form-control-lg"
+                                                    placeholder="8493 xxxx xxxx xxxx" autocomplete="off"
+                                                    formControlName="accountNumber" />
+                                            </div>
+                                            <div class="col-lg-3 mt-2">
+                                                <label class="form-label">Bank Name<span
+                                                        class="text-danger">*</span></label>
+                                                <input type="text" class="form-control form-control-lg"
+                                                    placeholder="Bank Name" autocomplete="off"
+                                                    formControlName="bankName" />
+                                            </div>
+                                            <div class="col-lg-3 mt-2">
+                                                <label class="form-label">IFSC Code<span
+                                                        class="text-danger">*</span></label>
+                                                <input type="text" class="form-control form-control-lg"
+                                                    placeholder="SBINxxxxx" autocomplete="off"
+                                                    formControlName="ifscCode" />
+                                            </div>
+
+                                        </div>
+                                    </ng-template>
+                                </ngb-panel>
+                            </ngb-accordion>
+                        </div> -->
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="card-toolbar">
+                <button type="button" class="btn btn-sm btn-secondary mr-2"
+                    [routerLink]="['/resha-farms/rm-pupae-lot']">Back</button>
+                <submit-button [disabledButton]="pupaeCreateForm.invalid" (clickButton)="onSubmit(pupaeCreateForm.value)"></submit-button>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+<div class="create-new-farmer">
+    <div>
+        <ng-template #content let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Create New Supplier</h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-12">
+                    <div class="row" [formGroup]="supplierCreateForm">
+                        <div class="col-lg-12 mt-2">
+                            <label class="form-label">Name<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="name" placeholder="Name"
+                                autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('name')"
+                                [class.is-valid]="isControlValidForReeler('name')" formControlName="name" />
+                            <div class="valid-feedback" *ngIf="isControlValidForReeler('name')">Name was entered correct</div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'name')">Name is required</div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('pattern', 'name')">Name should not contain digits</div>
+
+                        </div>
+                        <div class="col-lg-12 mt-2">
+                            <label class="form-label">Mobile Number<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="phone"
+                                placeholder="Mobile Number" autocomplete="off"
+                                [class.is-invalid]="isControlInvalidForReeler('phone')"
+                                [class.is-valid]="isControlValidForReeler('phone')" formControlName="phone" />
+                            <div class="valid-feedback" *ngIf="isControlValidForReeler('phone')">Mobile number was
+                                entered correct
+                            </div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'phone')">Mobile
+                                number is
+                                required</div>
+                        </div>
+                        <div class="col-lg-12 mt-2">
+                            <label>Select Center<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg" formControlName="center" name="Center"
+                                placeholder="Select Center">
+                                <option *ngFor="let item of centerList" [value]="item.id">{{item.centerName}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+                <button type="button" class="btn btn-sm btn-success" [disabled]="supplierCreateForm.invalid"
+                    (click)="createGinner(supplierCreateForm.value)">Save</button>
+            </div>
+        </ng-template>
+    </div>
+  </div>

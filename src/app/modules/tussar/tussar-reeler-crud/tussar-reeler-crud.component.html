@@ -1,0 +1,306 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+      <div class="card-title">
+        <h3 class="card-label">Tussar Reeler Details</h3>
+      </div>
+      <div class="card-toolbar">
+        <!-- Nothing right now-->
+      </div>
+    </div>
+    <div class="card-body pt-0">
+  
+      <!-- Reeler FORM -->
+      <div class="form form-label-right">
+        <div class="form-group row">
+          <div class="col-lg-12">
+            <div class="row" [formGroup]="reelerCreateForm">
+              <div class="col-lg-3 mt-2">
+                <label class="form-label">Reeler Name<span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-lg" name="name" placeholder="Name"
+                  autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('name')"
+                  [class.is-valid]="isControlValidForReeler('name')" formControlName="name" />
+                <div class="valid-feedback" *ngIf="isControlValidForReeler('name')">Name was entered correct</div>
+                <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'name')">Name is required</div>
+                <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('pattern', 'name')">Name should not contain digits</div>
+
+              </div>
+              
+  
+              <div class="col-lg-3 mt-2">
+                <label class="form-label">Mobile Number<span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-lg" name="phone"
+                  placeholder="Mobile Number" autocomplete="off" 
+                  [class.is-invalid]="isControlInvalidForReeler('phone')"
+                  [class.is-valid]="isControlValidForReeler('phone')" formControlName="phone" />
+                <div class="valid-feedback" *ngIf="isControlValidForReeler('phone')">Mobile number was entered correct
+                </div>
+                <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'phone')">Mobile number is
+                  required</div>
+                  <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('pattern', 'phone')">Enter valid Mobile number</div>
+              </div>
+  
+              <div class="col-lg-3 mt-2">
+                <label>Select Center<span class="text-danger">*</span></label>
+                <select class="form-control form-control-lg" formControlName="center" name="Center"
+                  placeholder="Select Center" [class.is-invalid]="isControlInvalidForReeler('center')">
+                  <option *ngFor="let item of centerList" [value]="item.id">{{item.centerName}}</option>
+                </select>
+              </div>
+  
+              <div class="col-lg-3 mt-2">
+                <label class="form-label">Referred by</label>
+                <input type="text" class="form-control form-control-lg"
+                  placeholder="Referred by" autocomplete="off" formControlName="refferedBy" />
+              </div>
+  
+              <div class="col-lg-3 mt-2">
+                <label class="form-label">Advance</label>
+                <input type="number" class="form-control form-control-lg"
+                  placeholder="Advance" autocomplete="off" formControlName="advance" />
+              </div>
+  
+              <div class="col-lg-3 mt-2">
+                <label>Select Customer Type </label>
+                <select class="form-control form-control-lg" formControlName="customerType" name="customerType"
+                  placeholder="Select Customer Type">
+                  <option *ngFor="let item of kycCustomerTypes" [value]="item.id">{{item.name}}</option>
+                </select>
+              </div>
+  
+              <div class="col-lg-3 mt-2">
+                <label>Date of Birth</label>
+                <mat-form-field class="w-100 cursor-pointer" appearance="fill" (click)="dp3.open()">
+                  <input class="cursor-pointer" matInput [matDatepicker]="dp3" 
+                  (click)="dp3.open()" readonly [min]="minDate" [max]="maxDate"  placeholder="Date of Birth" formControlName="dateOfBirth" >
+                  <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+                  <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+              </mat-form-field>
+              </div>
+  
+              <div class="col-lg-12 mt-6">
+                <ngb-accordion #acc11="ngbAccordion">
+                  <ngb-panel id="toggle-11">
+                    <ng-template ngbPanelTitle>
+                      <span class="card-header--title text-success">Proprietor Name</span>
+                    </ng-template>
+                    <ng-template ngbPanelContent>
+                      <div class="row">
+                        <div class="col-lg-3 mt-2">
+                          <label>First Name</label>
+                          <input type="text" class="form-control form-control-lg"
+                            placeholder="First Name" autocomplete="off" formControlName="firstName" />
+                        </div><div class="col-lg-3 mt-2">
+                          <label>Last Name</label>
+                          <input type="text" class="form-control form-control-lg"
+                            placeholder="Last Name" autocomplete="off" formControlName="lastName" />
+                        </div>
+                      </div>
+                    </ng-template>
+                  </ngb-panel>
+                </ngb-accordion>
+              </div>
+  
+              <div class="col-lg-12 mt-6">
+                <ngb-accordion #acc11="ngbAccordion">
+                  <ngb-panel id="toggle-11">
+                    <ng-template ngbPanelTitle>
+                      <span class="card-header--title text-success">Reeling Unit Details</span>
+                    </ng-template>
+                    <ng-template ngbPanelContent>
+                      <div class="row">
+  
+                        <div class="col-lg-4 mt-4 mb-4">
+                          <label class="form-label">Tussar Consumption <small>(pcs/day)</small></label>
+                          <input type="number" class="form-control form-control-lg" name="cocoonCapacity"
+                            placeholder="1000" autocomplete="off" formControlName="cocoonCapacity" />
+                        </div>
+                        <div class="col-lg-4 mt-4 mb-4">
+                          <label class="form-label">Yarn Capacity <small>(Kgs/Day)</small></label>
+                          <input type="number" class="form-control form-control-lg" name="yarnCapacity"
+                            placeholder="200" autocomplete="off" formControlName="yarnCapacity" />
+                        </div>
+  
+                        <div class="col-lg-2 mt-4 mb-4">
+                          <label>Contact for Wastage</label>
+                          <select class="form-control form-control-lg" formControlName="pickupWastage"
+                            name="pickupWastage" placeholder="Sell Wastage"
+                            [class.is-invalid]="isControlInvalidForReeler('pickupWastage')">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                          </select>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </ngb-panel>
+                </ngb-accordion>
+              </div>
+  
+              <!-- <div class="col-lg-12 mt-6">
+                <ngb-accordion #acc11="ngbAccordion">
+                  <ngb-panel id="toggle-12">
+                    <ng-template ngbPanelTitle>
+                      <span class="card-header--title text-success">Address Details</span>
+                    </ng-template>
+                    <ng-template ngbPanelContent>
+                      <div class="row">
+  
+  
+                        <div class="col-lg-4 mt-4">
+                          <label class="form-label">Address</label>
+                          <input type="text" class="form-control form-control-lg" name="Address"
+                            placeholder="Address" autocomplete="off" formControlName="address" />
+                        </div>
+                        <div class="col-lg-3 mt-4">
+                          <label class="form-label">City</label>
+                          <input type="text" class="form-control form-control-lg" name="City"
+                            placeholder="City" autocomplete="off" formControlName="city" />
+                        </div>
+                        <div class="col-lg-3 mt-4">
+                          <label class="form-label">Village</label>
+                          <input type="text" class="form-control form-control-lg" name="Village"
+                            placeholder="Village" autocomplete="off" formControlName="village" />
+                        </div>
+                        <div class="col-lg-2 mt-4">
+                          <label class="form-label">District</label>
+                          <input type="text" class="form-control form-control-lg" name="District"
+                            placeholder="District" autocomplete="off" formControlName="district" />
+                        </div>
+                        <div class="col-lg-4 mt-4">
+                          <label class="form-label">PIN Code</label>
+                          <input type="text" class="form-control form-control-lg" name="PIN Code"
+                            placeholder="PIN Code" autocomplete="off" formControlName="pincode" />
+                        </div>
+                        <div class="col-lg-4 mt-4">
+                          <label class="form-label">Taluk</label>
+                          <input type="text" class="form-control form-control-lg" name="Taluk"
+                            placeholder="Taluk" autocomplete="off" formControlName="taluk" />
+                        </div> -->
+                        <!-- Saurabh Not Needed <div class="col-lg-4 mt-4">
+                          <label class="form-label">Region</label>
+                          <input type="text" class="form-control form-control-lg" name="region"
+                            placeholder="Region" autocomplete="off" formControlName="region" />
+                        </div> -->
+                        <!-- <div class="col-lg-4 mt-4">
+                          <label class="form-label">State</label>
+                          <input type="text" class="form-control form-control-lg" name="State"
+                            placeholder="State" autocomplete="off" formControlName="state" />
+                        </div>
+  
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">Latitude</label>
+                          <input type="text" readonly class="form-control form-control-lg" name="PIN Code"
+                            placeholder="PIN Code" autocomplete="off" formControlName="latitude" />
+                        </div>
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">Longitude</label>
+                          <input type="text" readonly class="form-control form-control-lg" name="PIN Code"
+                            placeholder="PIN Code" autocomplete="off" formControlName="longitude" />
+                        </div>
+  
+  
+                      </div>
+                    </ng-template>
+                  </ngb-panel>
+                </ngb-accordion>
+              </div> -->
+              <div class="col-lg-12 mt-6">
+                <address-pincode-form [layouttype]="'page'" #address></address-pincode-form>
+              </div>
+  
+              <!-- <div class="col-lg-12 mt-6">
+                <ngb-accordion #acc11="ngbAccordion">
+                  <ngb-panel id="toggle-11">
+                    <ng-template ngbPanelTitle>
+                      <span class="card-header--title text-success">KYC Details</span>
+                    </ng-template>
+                    <ng-template ngbPanelContent>
+                      <div class="row">
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">PAN Number</label>
+                          <input type="text" class="form-control form-control-lg"
+                            placeholder="PAN Number" autocomplete="off" formControlName="kycPANNumber" />
+                        </div>
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">Aadhaar Number</label>
+                          <input type="text" class="form-control form-control-lg"
+                            placeholder="Aadhaar Number" autocomplete="off" formControlName="kycAdhaarNumber" />
+                        </div>
+                        <div class="col-lg-3 mt-4 mb-4">
+                          <label class="form-label">CSB Id</label>
+                          <input type="text" class="form-control form-control-lg" name="csbId"
+                            placeholder="CSB/***/*****" autocomplete="off" formControlName="csbId" />
+                        </div>
+                        <div class="col-lg-3 mt-4 mb-4">
+                          <label class="form-label">GST Number</label>
+                          <input type="text" class="form-control form-control-lg" name="gstNumber"
+                            placeholder="GST********" autocomplete="off" formControlName="gstNumber" />
+                        </div>
+                      </div>
+                    </ng-template>
+                  </ngb-panel>
+                </ngb-accordion>
+              </div> -->
+  
+  
+              <!-- <div class="col-lg-12 mt-6">
+                <ngb-accordion #acc11="ngbAccordion">
+                  <ngb-panel id="toggle-11">
+                    <ng-template ngbPanelTitle>
+                      <span class="card-header--title text-success">Bank Details</span>
+                    </ng-template>
+                    <ng-template ngbPanelContent>
+                      <p class="text-warning font-weight-bolder">
+                        Please note that the IFSC code for ALLAHABAD BANK (ALLA), SYNDICATE BANK (SYNB),
+                        DENA BANK (BKDN) and VIJAYA BANK (VIJB) has been disabled by RBI. Transactions initiated to
+                        these IFSCs will be rejected.
+                      </p>
+                      <div class="row">
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">Account Holder’s Name</label>
+                          <input type="text" class="form-control form-control-lg"
+                            placeholder="Account Holder’s Name" autocomplete="off" formControlName="beneficiaryName" />
+                        </div>
+  
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">Bank Name</label>
+                          <input type="text" class="form-control form-control-lg"
+                            placeholder="Bank Name" autocomplete="off" formControlName="bankName" />
+                        </div>
+  
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">Bank Account Number</label>
+                          <input type="text" class="form-control form-control-lg"
+                            placeholder="Bank Account Number" autocomplete="off" formControlName="accountNumber">
+                        </div>
+                        <div class="col-lg-2 mt-2">
+                          <label class="form-label">IFSC Code</label>
+                          <input type="text" class="form-control form-control-lg"
+                            placeholder="IFSC Code" autocomplete="off" formControlName="ifscCode">
+                        </div>
+                        
+                      </div>
+                    </ng-template>
+                  </ngb-panel>
+                </ngb-accordion>
+              </div> -->
+              <div class="col-lg-12 mt-6">
+                <bank-form [layouttype]="'page'" #bank></bank-form>
+              </div>
+  
+              
+  
+  
+            </div>
+          </div>
+        </div>
+        <div class="card-toolbar">
+          <button type="button" class="btn btn-sm btn-secondary mr-2" (click)="goBack();">Back</button>
+  
+          <button type="submit" class="btn btn-sm btn-success" [disabled]="reelerCreateForm.invalid"
+            (click)="saveReelerDetails(reelerCreateForm.value)">Save</button>
+          
+        </div>
+      </div>
+  
+    </div>
+  </div>

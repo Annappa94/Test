@@ -1,0 +1,19 @@
+<button [disabled]="isCancelled" (click)="cancelMandatePopUp()" class="p-0 border-0 bg-white"  >
+    <i class="icon-2x flaticon-cancel" [ngClass]="{'text-danger':!isCancelled}"></i>
+</button>
+
+<div class="delete-confirmation-preview">
+    <div>
+        <ng-template #Confirm let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Cancel Mandate</h4>
+            </div>
+            <div class="modal-body">
+                 <p> Are you sure want to Cancel Mandate?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">No</button>
+                <button type="button" class="btn btn-sm btn-success" (click)="cancelMandate()">Yes</button>
+            </div>
+        </ng-template>
+</div>

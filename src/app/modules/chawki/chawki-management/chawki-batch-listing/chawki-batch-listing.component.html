@@ -1,0 +1,27 @@
+<app-paginated-table [rowDataList]="rowDataList" [tableHeaders]="tableHeaders" [totalRecords]="totalRecords"
+  (infoFromTable)="infoFromTable($event)" (onPageChange)="onPageChange($event)"
+  [titleOfTable]="'Batch Lists'" [searchClass]="'col-lg-10'" [searchHint]="'By id'">
+  <div class="card-toolbar New">
+    <ng-content></ng-content>
+  </div>
+</app-paginated-table>
+
+
+<div class="details-confirmation-preview">
+  <div>
+      <ng-template #deleteBatchHTML let-c="close" let-d="dismiss">
+          <div class="modal-header">
+              <h4 class="modal-title">Delete</h4>
+          </div>
+          <div class="modal-body">
+              <p><strong>Are You Sure You Want To Delete This Batch?</strong></p>
+              <p class="text-danger" *ngIf="errormsg">{{errormsg}}</p>
+          </div>
+
+          <div class="modal-footer">
+              <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+              <button type="button" class="btn btn-sm btn-success" (click)="deleteBatch()">Yes</button>
+          </div>
+      </ng-template>
+  </div>
+</div>

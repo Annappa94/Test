@@ -1,0 +1,455 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+      <div class="card-title">
+        <h3 class="card-label">Cocoon Logistics</h3>
+      </div>
+    </div>
+    <div class="card-body pt-0">
+      <div class="form form-label-right">
+          <div class="form-group row">
+            <div class="col-lg-5">
+              <input [(ngModel)]="searchText" (keyup.enter)="onSearch();" (keyup)="onSearchKey($event)" type="text" class="form-control" placeholder="Search"/>
+              <small class="form-text text-muted"><b>Search</b> By Name and Phone.</small>
+            </div>
+            <div class="col-lg-1">
+              <button type="button" class="btn btn-sm btn-success mr-2 mt-1" [disabled]="!enableSearch" (click)="onSearch();">Search</button>
+            </div>
+
+            <div class="col-lg-3">
+              <select class="form-control" name="logisticstatus" (change)="onChangeStatusfilter($event)" placeholder="Filter by status">
+                <option value="(NEW,CANCELLED,SHIPPED,DELIVERED)" [selected]="dispatchedStatus == '(NEW,CANCELLED,SHIPPED,DELIVERED)'">All</option>
+                <option value="NEW">New</option>
+                <option value="SHIPPED">Shipped</option>
+                <option value="DELIVERED">Delivered</option>
+                <option value="CANCELLED">Canceled</option>
+              </select><small class="form-text text-muted"><b>Filter</b> by status</small>
+            </div>
+
+            <div class="col-lg-3">
+              <select class="form-control" name="status" (change)="onChangeOfStatusFilter($event)"
+                placeholder="Filter by status">
+                <option value="(Paid,Pending)">All</option>
+                <option value="Paid">Paid</option>
+                <option value="Pending" [selected]="true">Pending Payment</option>
+              </select><small class="form-text text-muted"><b>Filter</b> by Payment status</small>
+            </div>
+          </div>
+        </div>
+      <div class="table-responsive angular-bootstrap-table">
+        <table id="excel-table" class="table table-head-custom table-vertical-center overflow-hidden">
+          <thead>
+            <th>Code</th>
+            <th name="driverName" ngDefaultControl [(ngModel)]="tableHeader.logistics.driverName" (click)="onSort('logistics.driverName')">
+              <i *ngIf="tableHeader.logistics.driverName === 1 && activeSort === 'logistics.driverName'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.logistics.driverName === 0 && activeSort === 'logistics.driverName'" class="fas fa-long-arrow-alt-down"></i>
+              Driver 
+            </th>
+
+            <!-- <th name="phone" ngDefaultControl [(ngModel)]="tableHeader.logistics.driverNumber" (click)="onSort('logistics.driverNumber')">
+              <i *ngIf="tableHeader.logistics.driverNumber === 1 && activeSort === 'logistics.driverNumber'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.logistics.driverNumber === 0 && activeSort === 'logistics.driverNumber'" class="fas fa-long-arrow-alt-down"></i>
+              Driver Phone
+            </th> -->
+
+            <th name="fromCenter" ngDefaultControl [(ngModel)]="tableHeader.center.centerName" (click)="onSort('center.centerName')">
+              <i *ngIf="tableHeader.center.centerName === 1 && activeSort === 'center.centerName'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.center.centerName === 0 && activeSort === 'center.centerName'" class="fas fa-long-arrow-alt-down"></i>
+              Location
+            </th>
+
+            <!-- <th name="toCenter" ngDefaultControl [(ngModel)]="tableHeader.toCenter.centerName" (click)="onSort('toCenter.centerName')">
+              <i *ngIf="tableHeader.toCenter.centerName === 1 && activeSort === 'toCenter.centerName'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.toCenter.centerName === 0 && activeSort === 'toCenter.centerName'" class="fas fa-long-arrow-alt-down"></i>
+              To Center / Warehouse
+            </th> -->
+
+            <!-- <th>Address</th> -->
+
+            <th name="totalCost" ngDefaultControl [(ngModel)]="tableHeader.logistics.totalCost" (click)="onSort('logistics.totalCost')">
+              <i *ngIf="tableHeader.logistics.totalCost === 1 && activeSort === 'logistics.totalCost'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.logistics.totalCost === 0 && activeSort === 'logistics.totalCost'" class="fas fa-long-arrow-alt-down"></i>
+              Total Cost
+            </th>
+
+            <!-- <th name="logisticsCostPerKg" ngDefaultControl [(ngModel)]="tableHeader.logisticsCostPerKg" (click)="onSort('logisticsCostPerKg')">
+              <i *ngIf="tableHeader.logisticsCostPerKg === 1 && activeSort === 'logisticsCostPerKg'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.logisticsCostPerKg === 0 && activeSort === 'logisticsCostPerKg'" class="fas fa-long-arrow-alt-down"></i>
+              Cost<small>/kg</small>
+            </th> -->
+
+            <th>Lots</th>
+            <th name="paymentStatus" ngDefaultControl [(ngModel)]="tableHeader.paymentStatus" (click)="onSort('paymentStatus')">
+              <i *ngIf="tableHeader.paymentStatus === 1 && activeSort === 'paymentStatus'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.paymentStatus === 0 && activeSort === 'paymentStatus'" class="fas fa-long-arrow-alt-down"></i>
+              Payment Status
+            </th>
+            <th>Status</th>
+
+
+            <th name="sortCreatedDate" ngDefaultControl [(ngModel)]="tableHeader.createdDate" (click)="onSort('createdDate')">
+              <i *ngIf="tableHeader.createdDate === 1 && activeSort === 'createdDate'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.createdDate === 0 && activeSort === 'createdDate'" class="fas fa-long-arrow-alt-down"></i>
+              Date
+            </th>
+            <th>Actions</th>
+            <!-- <th>Delivered Time</th> -->
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of filteredDispatchedLotsData;">
+              <!-- <td><a title="Reeler Details" class="btn btn-link-success font-weight-bold" (click)="reelerDetails(item)"> {{ item.code }}</a></td> -->
+              <td>{{item.code}}</td>
+              <td>
+                <a title="Driver Details" class="btn btn-link-success font-weight-bold" (click)="logisticsDetails(item, driverDetails)">
+                  {{ item?.shipment?.driverName | titlecase }}</a> <br>
+                  <span>{{ item?.shipment?.driverPhone }}</span>
+               </td>
+              <!-- <td>{{ item.driverNumber }}</td> -->
+              <td>{{item?.shipment?.startPointName | titlecase}} <br>
+                  <small class="text-center">To</small> <br>
+                  {{item?.shipment?.endPointName}}</td>
+              <!-- <td>{{item.toCenter|| item.toWareHouse | titlecase}}</td> -->
+              <!-- <td>{{item.toCenterAddress}}</td> -->
+              <td>Rs.{{ item?.shipment?.totalCost}} <br>{{item.logisticsCostPerKg}}/KG</td>
+              <!-- <td>{{ item.logisticsCostPerKg}}</td> -->
+              <td style="width: 200px">
+                <a title="Lot Details" class="btn btn-link-success font-weight-bold mr-2" (click)="lotDetails(lots)" *ngFor="let lots of item?.shipment?.items">RMLOT{{lots['itemId']}}</a>
+               </td>
+               <td><span class="label label-primary label-pill label-inline"
+                [ngClass]="{'label-warning' : item.payoutStatus?.toUpperCase() === 'PENDING'}">
+              {{ item.payoutStatus}}</span></td>
+              
+              <td>
+                <select class="form-control" (change)="openStatuspopup(changeStatusPopUp,item.shipment?.id,$event.target.value)" >{{item.id}} 
+                  <option *ngFor="let it of item?.statusList" [value]="it.value" [disabled]="it.isDisabled" [selected]="it.value==item.status">{{it.name}}</option>
+                </select>
+              </td>
+               <td>{{item.createdDate}}</td>
+              <td>
+                <a title="Edit" class="btn btn-icon btn-sm"
+                    *ngIf="item?.payoutStatus?.toUpperCase() === 'PENDING' && rolesService.checkAccess(user.role, {type: 'actions', component: 'DispatchedCocoonLots', action: 'payment'}) && item.status=='NEW'"
+                      (click)="openEditLogistics(item, editLogistics)">
+                  <i class="flaticon-edit-1 text-success"></i>
+                </a>
+                <!-- <a title="Make Payment" *ngIf="item?.payoutStatus?.toUpperCase() === 'PENDING' && item?.status !='CANCELLED' && rolesService.checkAccess(user.role, {type: 'actions', component: 'DispatchedCocoonLots', action: 'payment'})" class="btn btn-icon btn-sm mr-1 mt-1" (click)="makePayment(markSold, item)">
+                  <i class="fas fa-money-check-alt text-success"></i>
+                </a>  -->
+                <a title="Make Payment" *ngIf="item?.status === 'DELIVERED' && item?.payoutStatus?.toUpperCase() === 'PENDING' && rolesService.checkAccess(user.role, {type: 'actions', component: 'DispatchedCocoonLots', action: 'payment'})" class="btn btn-icon btn-sm mr-1 mt-1" (click)="makePayment(markSold, item)">
+                  <i class="fas fa-money-check-alt text-success"></i>
+                </a>
+                <!-- <a *ngIf="rolesService.checkAccess(user.role, {type: 'actions', component: 'DispatchedCocoonLots', action: 'delete'}) && (item?.paymentStatus.toUpperCase() !== 'PAID')"
+                 title="Delete" class="btn btn-icon btn-sm"
+                (click)="confirmDelete(content,item)">
+                  <i class="flaticon-delete text-danger"></i>
+                </a> -->
+              </td>
+              <!-- <td>
+                {{item.deliveredTime}}
+              </td> -->
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row">
+        <div class="mr-2">
+          <nav aria-label="Page navigation example">
+            <ul class="pagination">
+              <li class="page-item">
+                <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(0)" href="javascript:void(0);">
+                  <span aria-hidden="true">&laquo;&laquo;</span>
+                  <span class="sr-only">First</span>
+                </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(paginationData.currentPage - 1)" href="javascript:void(0);">
+                  <span aria-hidden="true">&laquo;</span>
+                  <span class="sr-only">Previous</span>
+                </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" *ngIf="paginationData?.currentPage !== 0 && paginationData?.currentPage !== 1" (click)="onPageChange(paginationData?.currentPage - 2)" href="javascript:void(0);">{{ paginationData?.currentPage -1 }}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" *ngIf="paginationData?.currentPage !== 0" (click)="onPageChange(paginationData?.currentPage - 1)" href="javascript:void(0);">{{ paginationData?.currentPage}}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link active" href="javascript:void(0);">{{ paginationData?.currentPage + 1 }}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" *ngIf="paginationData?.currentPage !== paginationData.pages.length - 1" (click)="onPageChange(paginationData?.currentPage + 1)" href="javascript:void(0);">{{ paginationData?.currentPage + 2 }}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" *ngIf="paginationData?.currentPage !== paginationData.pages.length - 1 && paginationData?.currentPage !== paginationData.pages.length - 2" (click)="onPageChange(paginationData?.currentPage + 2)" href="javascript:void(0);">{{ paginationData?.currentPage + 3 }}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1}" (click)="onPageChange(paginationData.currentPage + 1)" href="javascript:void(0);">
+                  <span aria-hidden="true">&raquo;</span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1}" (click)="onPageChange(paginationData.pages.length - 1)" href="javascript:void(0);">
+                  <span aria-hidden="true">&raquo;&raquo;</span>
+                  <span class="sr-only">Last</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <div class="mr-2">
+          <select class="custom-select" style="height: calc(1.2em + 1rem + 2px); padding: 0.35rem 2rem 0.35rem 1rem;" [(ngModel)]="paginationData.pageSize" (change)="onPageSizeChange()">
+            <option [ngValue]="10">10 per page</option>
+            <option [ngValue]="50">50 per page</option>
+            <option [ngValue]="100">100 per page</option>
+          </select>
+        </div>
+        <div class="pt-2">
+          <small class="text-muted">(Total: {{totalElements}})</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="details-confirmation-preview">
+    <div>
+      <ng-template #markSold let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            Mark Paid!
+          </h4>
+        </div>
+
+        <div class="modal-body">
+          <p>You are marking payment sent to Logistics!</p>
+          <p>Reshamandi paid Rs  Total Rs. <strong>{{markSoldItem?.shipment?.totalCost}}</strong>
+          </p>
+          <!-- <p></p> -->
+        </div>
+
+        <div class="row p-4">
+          <div class="col-6">
+              <label class="form-label">Total Rs</label>
+              <input type="text" class="form-control form-control-solid form-control-lg" [value]="markSoldItem?.shipment?.totalCost" autocomplete="off"  readonly/>
+          </div>
+
+          <div class="col-6">
+              <label class="form-label">Reference Number<span class="text-danger">*</span></label>
+              <input type="text" class="form-control form-control-lg" name="refRenceNumber"
+                placeholder="Reference Number" autocomplete="off"
+                [class.is-valid]="payoutReferenceNumber" [(ngModel)]="payoutReferenceNumber" />
+          </div>
+      </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+          <button type="button" [disabled]="!payoutReferenceNumber" class="btn btn-sm btn-success" (click)="markAsSold()">Confirm</button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+
+
+  <div class="delete-confirmation-preview">
+    <div>
+        <ng-template #content let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Delete Logistics</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete Logistics ?</p>
+                <p>Total Amount <strong>{{deletedLogistics.totalCost}}</strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+                <button type="button" class="btn btn-sm btn-success" (click)="deleteLogistics()">Yes</button>
+            </div>
+        </ng-template>
+    </div>
+  </div>
+
+  <div class="example-preview">
+    <div>
+      <ng-template #driverDetails let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Logistics Details</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-4"><span class="text-success font-weight-bold">Driver Details</span></p>
+          <p><span class="text-muted font-weight-bold">Driver Name:</span><strong>{{driverDetail?.driverName}}</strong></p>
+          <p><span class="text-muted font-weight-bold">Driver Phone:</span><strong>{{driverDetail?.driverPhone}}</strong></p>
+          <hr>
+          <p class="my-4"><span class="text-success font-weight-bold">Bank Details</span></p>
+          <p><span class="text-muted font-weight-bold">Account Holder Name:</span><strong>{{driverDetail?.driverBankDetails[0]?.beneficiaryName}}</strong></p>
+          <p><span class="text-muted font-weight-bold">Bank Name:</span> <strong>{{driverDetail?.driverBankDetails[0]?.bankName}}</strong></p>
+          <p> <span class="text-muted font-weight-bold">Account Number:</span><strong>{{driverDetail?.driverBankDetails[0]?.accountNumber}}</strong></p>
+          <p><span class="text-muted font-weight-bold">IFSC Code:</span> <strong>{{driverDetail?.driverBankDetails[0]?.ifscCode}}</strong></p>
+          <hr>
+          <p class="mt-4"><span class="text-success font-weight-bold">Total Amount: </span> <strong>{{driverDetail?.totalCost}}</strong></p>
+          <p class="mt-4" *ngIf="driverDetail?.payoutReferenceNumber"><span class="text-success font-weight-bold">Reference Number: </span> <strong>{{driverDetail?.payoutReferenceNumber}}</strong></p>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+
+  <div class="Edit-Logistics">
+    <div>
+        <ng-template #editLogistics let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Logistics Details</h4>
+            </div>
+            <div class="modal-body form-height pt-0">
+
+                <div class="col-lg-12">
+
+                    <div class="row" [formGroup]="editLogisticsForm">
+                      <div class="col-lg-12 mt-2">
+                        <label>From Center<span class="text-danger">*</span></label>
+                        <input class="form-control form-control-lg form-control-solid app-disable"
+                           formControlName="fromCenterId" name="Center"
+                          placeholder="From Center">
+                      </div>
+                      <div class="col-lg-12 mt-2">
+                        <label>To Proc Center<span class="text-danger">*</span></label>
+                        <input class="form-control form-control-lg form-control-solid app-disable"
+                           formControlName="toCenterId" name="Center"
+                          placeholder="From Center">                 
+                      </div>
+                      <div class="col-lg-12 mt-2" *ngIf="editLogisticsForm.get('shipToType').value == 'RM_CENTER'">
+                        <label>To Center<span class="text-danger">*</span></label>
+                        <select class="form-control form-control-lg form-control-solid app-disable"
+                          formControlName="toCenterId" name="Center"
+                          placeholder="To Center">
+                          <option *ngFor="let item of centerList" [value]="item.id">{{item.centerName}}</option>
+                        </select>
+                      </div>
+                       <div class="col-lg-12 mt-2" *ngIf="editLogisticsForm.get('shipToType').value == 'RM_WAREHOUSE'">
+                        <label>To Warehouse<span class="text-danger">*</span></label>
+                        <select class="form-control form-control-lg form-control-solid app-disable"
+                          formControlName="toWarehouseId" name="Center"
+                          placeholder="To Center">
+                          <option *ngFor="let item of warehouseList" [value]="item.id">{{item.name}}</option>
+                        </select>
+                      </div> 
+
+                      <div class="col-lg-12 mt-2">
+                        <label class="form-label">Total Cost<span class="text-danger">*</span></label>
+                        <input type="number" class="form-control form-control-lg" name="totalCost" placeholder="1000"
+                          autocomplete="off"
+                          formControlName="totalCost" />
+                        <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'totalCost')">Cost is required</div>
+                    </div>
+                    
+                      <div class="col-lg-12 mt-6">
+                        <ngb-accordion #acc11="ngbAccordion">
+                          <ngb-panel id="toggle-detail">
+                            <ng-template ngbPanelTitle>
+                              <span class="ard-header--title text-success">Driver Details</span>
+                            </ng-template>
+                            <ng-template ngbPanelContent>
+                              <div>
+                                <div class="row">
+                                </div>
+                                  <div class="col-lg-12 mt-2 ">
+                                    <label class="form-label">Select Driver</label>
+                                    <ng-select class=" select-custom" (change)="driverToChanged($event)" formControlName="driverName" placeholder="Please enter the name or mobile number">
+                                      <ng-container *ngFor="let driver of driverList">
+                                        <ng-option  [value]="driver" *ngIf="driver.companyId && (!driver.isBlackListed)">{{ driver.name }} - {{ driver.mobile }}</ng-option>
+                                      </ng-container>
+                                    </ng-select>
+                                  </div>
+          
+                                  <div class="col-lg-12 mt-2 selectWrapper">
+                                    <label class="form-label">Select Vehicle</label>
+                                    <ng-select class=" select-custom" (change)="vehicleToChanged($event)"  formControlName="vehicleNumber"  placeholder="Please enter the name or mobile number">
+                                      <ng-option *ngFor="let vehicle of vehiclesList" [value]="vehicle">{{ vehicle.vehicleNumber }} - {{ vehicle.vehicleType }}</ng-option>
+                                    </ng-select>
+                                  </div>
+                                
+                              </div>
+                            </ng-template>
+                          </ngb-panel>
+                        </ngb-accordion>
+                      </div>
+                        <div class="col-lg-12 mt-6" >
+                          <ngb-accordion #acc11="ngbAccordion">
+                            <ngb-panel id="toggle-bank">
+                              <ng-template ngbPanelTitle>
+                                <span class="ard-header--title text-success">Bank Details</span>
+                              </ng-template>
+                              <ng-template ngbPanelContent>
+                                <div>
+
+                                  <div class="row pb-10" >
+                                    <div class="col-lg-12 mt-2">
+                                      <label class="form-label">Account Holder’s Name<span class="text-danger">*</span></label>
+                                      <input type="text" class="form-control form-control-lg"
+                                        placeholder="Account Holder’s Name" autocomplete="off" formControlName="beneficiaryName" />
+                                    </div>
+
+                                    <div class="col-lg-12 mt-2">
+                                      <label class="form-label">Bank Name<span class="text-danger">*</span></label>
+                                      <input type="text" class="form-control form-control-lg"
+                                        placeholder="Bank Name" autocomplete="off" formControlName="bankName" />
+                                    </div>
+
+                                    <div class="col-lg-12 mt-2">
+                                      <label class="form-label">Bank Account Number<span class="text-danger">*</span></label>
+                                      <input type="text" class="form-control form-control-lg"
+                                        placeholder="Bank Account Number" autocomplete="off" formControlName="accountNumber"/>
+                                    </div>
+                                    <div class="col-lg-12 mt-2">
+                                      <label class="form-label">IFSC Code<span class="text-danger">*</span></label>
+                                      <input type="text" class="form-control form-control-lg"
+                                        placeholder="IFSC Code" autocomplete="off" formControlName="ifscCode" />
+                                    </div>
+                                  </div>
+                                 
+                                </div>
+                              </ng-template>
+                            </ngb-panel>
+                          </ngb-accordion>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click');editLogisticsForm.reset();">Cancel</button>
+                <button type="button" class="btn btn-sm btn-success" [disabled]="editLogisticsForm.invalid" (click)="editLogisticsDetails(editLogisticsForm.value)">Save</button>
+            </div>
+        </ng-template>
+    </div>
+</div>
+
+<div class="example-preview">
+  <div>
+    <ng-template #changeStatusPopUp let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title">Change The Status</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to change the status of this logistics-lot</p>
+      </div>
+
+      <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+            <!-- <button type="button" class="btn btn-primary" (click)="onclickStatus($event,id)">Change To {{status | titlecase}}</button> -->
+
+            <submit-button
+                  [loading]="loading" 
+                  [text]="'Change To' +' '+ status "
+                  (clickButton)="onclickStatus($event,id)">
+              </submit-button>
+      </div>
+    </ng-template>
+  </div>
+</div>

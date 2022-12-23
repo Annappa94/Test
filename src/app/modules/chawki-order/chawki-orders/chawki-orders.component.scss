@@ -1,0 +1,30 @@
+.page-item {
+    .active{
+        pointer-events: none;
+        color: #f9fdf6;
+        background-color: #7ed321;
+    }
+    .disabled{
+        opacity: 0.5;
+        cursor: default;
+        pointer-events: none;
+        &:hover{
+            background-color: #f9fdf6 !important;
+        }
+    }
+}
+#excel-table{
+    th{
+        cursor: pointer;
+    }
+}
+.dropdown-menu.show {
+    top: -70px !important;
+}
+.palns_activation_actions {
+    p{
+        &:hover {
+            background-color: #EEF0F8;
+        }
+    }
+}

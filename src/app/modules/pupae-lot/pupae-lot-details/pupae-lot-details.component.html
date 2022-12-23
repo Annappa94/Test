@@ -1,0 +1,228 @@
+<div class="bg-white rounded mb-4 d-flex align-items-center py-2 sticky-header justify-content-between">
+    <ul id="breadcrumbs">
+        <li><span style="cursor: pointer;" class="hover-item"
+            (click)="goBack()">All Pupae List</span></li>
+        <li><span>{{pupaeOrderDetails?.code}}</span></li>
+    </ul>
+    <div>
+        <button class="btn btn-secondary btn-sm font-weight-bolder font-size-sm py-3 px-6 mr-5"
+        (click)="goBack()">Back</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-4 mt-4">
+
+        <!--begin::Card-->
+        <div class="card card-custom gutter-b" *ngIf="pupaeOrderDetails">
+            <!--begin::Body-->
+            <div class="card-body pt-4">
+                <!--begin::Toolbar-->
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <div class="font-size-h5 mb-3 font-weight-bolder text-success">
+                        {{pupaeOrderDetails?.code}}
+                    </div>
+    
+                </div>
+                <!--end::Toolbar-->
+    
+                <p class="mb-4">
+                    <span class="text-success font-weight-bold pr-1">Details</span>
+                </p>
+                <div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Order Status:</span>
+                        <span class="text-dark-75 font-weight-bold">{{pupaeOrderDetails?.orderStatus}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Type:</span>
+                        <span class="text-dark-75 font-weight-bold">{{pupaeOrderDetails?.type}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Created By:</span>
+                        <span class="text-dark-75 font-weight-bold">{{pupaeOrderDetails?.createdBy}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Updated By:</span>
+                        <span class="text-dark-75 font-weight-bold">{{pupaeOrderDetails?.lastModifiedBy}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Credit Days:</span>
+                        <span class="text-dark-75 font-weight-bold">{{pupaeOrderDetails?.creditDays}}</span>
+                    </div>
+                    <!-- <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Due Amount:</span>
+                        <span class="text-dark-75 font-weight-bold">{{pupaeOrderDetails?.dueAmount?.toLocaleString('en-IN')}} Rs</span>
+                    </div> -->
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Gross Total:</span>
+                        <span class="text-dark-75 font-weight-bold">{{pupaeOrderDetails?.grossTotal?.toLocaleString('en-IN')}} Rs</span>
+                    </div>
+
+                    </div>
+                    <!-- <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">IGST:</span>
+                        <span class="text-dark-75 font-weight-bold">{{pupaeOrderDetails?.igst?pupaeOrderDetails?.igst:0}} Rs</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">CGST:</span>
+                        <span class="text-dark-75 font-weight-bold">{{pupaeOrderDetails?.cst?pupaeOrderDetails?.cst:0}} Rs</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">SGST:</span>
+                        <span class="text-dark-75 font-weight-bold">{{pupaeOrderDetails?.gst?pupaeOrderDetails?.gst:0}} Rs</span>
+                    </div> -->
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Net Payable Amount:</span>
+                        <span class="text-dark-75 font-weight-bold">{{pupaeOrderDetails?.netPaybleAmount?.toLocaleString('en-IN')}} Rs</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Payment Status:</span>
+                        <span class="text-dark-75 font-weight-bold">{{pupaeOrderDetails?.paymentStatus}}</span>
+                    </div>
+    
+                    <!-- <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">RM Representative:</span>
+                        <span class="text-dark-75 font-weight-bold">{{pupaeOrderDetails?.rmRepresentativeName+' - '+pupaeOrderDetails?.rmRepresentativePhone}}</span>
+                    </div> -->
+    
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Total Weight:</span>
+                        <span class="text-dark-75 font-weight-bold">{{pupaeOrderDetails?.quantity}} Kg</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Price Per Kg:</span>
+                        <span class="text-dark-75 font-weight-bold">{{pupaeOrderDetails?.pricePerKg?pupaeOrderDetails?.pricePerKg?.toLocaleString('en-IN'):0}} Rs</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Logistics Cost:</span>
+                        <span class="text-dark-75 font-weight-bold">{{pupaeOrderDetails?.logisticsCost?pupaeOrderDetails?.logisticsCost?.toLocaleString('en-IN'):0}} Rs</span>
+                    </div>
+    
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Updated Date:</span>
+                        <span class="text-dark-75 font-weight-bold">{{util.getDisplayTime(pupaeOrderDetails?.lastModifiedDate)}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">RM Representative:</span>
+                        <span class="text-dark-75 font-weight-bold">{{pupaeOrderDetails?.rmRepresentativeName}} - {{pupaeOrderDetails?.rmRepresentativePhone}}</span>
+                    </div>
+
+                </div>
+    
+                <p class="ml-3 mb-0">
+                    <span class="text-success font-weight-bold pr-1">Bank Details</span>
+                </p>
+                <div class="p-3">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Account Number:</span>
+                        <span class="text-dark-75 font-weight-bold">{{pupaeOrderDetails?.bank?.accountNumber}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Bank Name:</span>
+                        <span class="text-dark-75 font-weight-bold">{{pupaeOrderDetails?.bank?.bankName}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Beneficiary Name:</span>
+                        <span class="text-dark-75 font-weight-bold">{{pupaeOrderDetails?.bank?.beneficiaryName}}</span>
+                    </div>
+    
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Cost:</span>
+                        <span class="text-dark-75 font-weight-bold">{{pupaeOrderDetails?.bank?.ifscCode}}</span>
+                    </div>
+                </div>
+    
+                <p class="mt-4 ml-2">
+                    <span class="text-success font-weight-bold pr-1">Pupae Supplier</span>
+                </p>
+                <div class="mb-7 pl-3" *ngIf="pupaeSupplier">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Name:</span>
+                        <span class="text-dark-75 font-weight-bold">{{pupaeSupplier?.name}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Phone:</span>
+                        <span class="text-dark-75 font-weight-bold mr-2">{{pupaeSupplier?.phone}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Code:</span>
+                        <span class="btn btn-link-success font-weight-bold mr-2"  (click)="routeToSupplier()">{{pupaeSupplier?.code}}</span>
+                    </div>
+                </div>
+    
+            </div>
+            <!--end::Body-->
+        <!-- </div> -->
+        <!--end::Card-->
+    
+    </div>
+
+    <div class="col-lg-4 mt-4">
+        
+        <div class="card card-custom " >    
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <div class="font-size-h5 font-weight-bold text-success">Payments</div>
+                    
+                    <!-- <button matTooltip="Pay Now" class="btn btn-sm btn-icon float-right" 
+                    *ngIf="pupaeOrderDetails?.orderPaymentStatus == 'Pending' && (pupaeOrderDetails?.orderStatus != 'Cancel') && rolesService.checkAccess(user.role, {type: 'actions', component: 'YarnOrderDetailsComponent', action: 'payment'})" 
+                            (click)="payNow(payment, pupaeOrderDetails)">
+                        <i class="fas fa-money-check-alt text-success"></i>
+                    </button> -->
+                    <button matTooltip="Pay Now" class="btn btn-sm btn-icon float-right">
+                    <app-generic-payment [paymentInfo]="pupaeOrderDetails" (refresh)="ngOnInit()"></app-generic-payment>
+                    </button>
+
+
+                </div>
+                <div class="mt-4">
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="pupaeOrderDetails?.netPaybleAmount">
+                        <span class="text-dark-50 mr-2">Net Amount:</span>
+                        <span class="text-muted">{{pupaeOrderDetails?.netPaybleAmount?.toLocaleString('en-IN')}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="pupaeOrderDetails?.dueAmount">
+                        <span class="text-dark-50 mr-2">Due Amount:</span>
+                        <span class="text-danger">{{pupaeOrderDetails?.dueAmount?.toLocaleString('en-IN')}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="pupaeOrderDetails?.paymentStatus">
+                        <span class="text-dark-50 mr-2">Payment Status:</span>
+                        <span [ngClass]="{'text-danger': pupaeOrderDetails?.paymentStatus == 'Pending', 'text-success': pupaeOrderDetails?.paymentStatus != 'Pending'}">{{pupaeOrderDetails?.paymentStatus}}</span>
+                    </div>
+                </div>
+
+
+                <div class="example example-basic mt-6" *ngIf="khataList?.length">
+                    <div class="">
+                        <div class="timeline timeline-2">
+                            <div class="timeline-bar"></div>
+
+                            <!-- REPEAT for NO OF PAYMENTS-->
+                            <div class="timeline-item" *ngFor="let item of khataList">
+                                <span class="timeline-badge bg-success"></span>
+                                <div class="timeline-content d-flex align-items-center justify-content-between">
+                                    <span class="mr-3 font-weight-bold text-dark-50 font-size-sm d-flex flex-column">Rs. {{item?.amount.toLocaleString('en-IN')}}
+                                        <span class="label label-inline label-outline-success">
+                                            {{item.referenceNumber}}</span>
+                                       </span>
+                                    <span class="text-muted font-italic text-right font-size-xs">{{util.getDisplayTime(item.paymentDate)}}</span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!--end::Timeline-->
+                    </div>
+                </div>
+
+            </div>
+            <!--end: Card Body-->
+        </div>
+        <!--end: List Widget 9-->
+    </div>
+    
+</div>

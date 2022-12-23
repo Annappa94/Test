@@ -1,0 +1,13 @@
+<app-paginated-table
+    [tableHeaders]="tableHeaders"
+    (infoFromTable)="tableInfo($event)"
+    [rowDataList]="deviceList"
+    [totalRecords]="totalRecords"
+    [titleOfTable]="'Rearing Device list'"
+    (onPageChange)="onPageChange($event)"
+    [searchClass]="'col-lg-11'"
+    [searchHint]="'By Id,Farmer,Agronomist'">
+    <!-- <div class="card-toolbar New">
+        
+    </div> -->
+</app-paginated-table>

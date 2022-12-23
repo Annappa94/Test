@@ -1,0 +1,9 @@
+<app-paginated-table [rowDataList]="rowDataList" [tableHeaders]="tableHeaders" [totalRecords]="totalRecords"
+  (infoFromTable)="infoFromTable($event)" (onPageChange)="onPageChange($event)"
+  [titleOfTable]="'Followups'" [searchClass]="'col-lg-11'" [searchHint]="'By Name,Phone,Note,AssignedBy'">
+  <div class="card-toolbar New"  >
+    <div>
+      <button type="button" class="btn btn-sm btn-success mr-2" (click)="createOrEditFollowUp()">+ New Follow Up</button>
+    </div>
+  </div>
+</app-paginated-table>

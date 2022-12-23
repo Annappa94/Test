@@ -1,0 +1,220 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+      <div class="card-title">
+        <h3 class="card-label">System Audit</h3>
+      </div>
+    </div>
+    <div class="card-body pt-0">
+      <div class="form form-label-right">
+        
+        <br>
+        <div class="form-group row">
+          <div class="col-lg-11">
+            <input [(ngModel)]="searchText" (keyup.enter)="onSearch();" (keyup)="!this.searchText&&applyFilter();paginationData.currentPage=0" type="text" class="form-control" placeholder="Search"/>
+            <small class="form-text text-muted"><b>Search</b> By ID.</small>
+          </div>
+          <div class="col-lg-1">
+            <button type="button" class="btn btn-sm btn-success mr-2 mt-1" [disabled]="!(searchText&&searchText.length>0)" (click)="onSearch();">Search</button>
+          </div>
+        </div>
+        <div class="row form-group" [formGroup]="filterForm">
+          <div class="col-lg-3">
+                <select class="form-control" name="status" formControlName="moduleOperation"  placeholder="Filter by operation">
+                  <option *ngFor="let item of operationList" [value]="item.value">{{item?.name}}</option>
+                  <option value="" selected disabled hidden>Select Operation</option>
+                </select><small class="form-text text-muted"><b>Filter</b> by operation</small>
+          </div>
+          <div class="col-lg-3">
+            <div class="row">
+              <div class="col-lg-12">
+                <select class="form-control" name="status" formControlName="moduleName"  placeholder="Filter by module name">
+                  <option *ngFor="let item of moduleNameList" [value]="item.value">{{item?.name}}</option>
+                  <option value="" selected disabled hidden>Select Module Name</option>
+                 </select><small class="form-text text-muted"><b>Filter</b> by module name</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2">
+            <mat-form-field class="w-100 cursor-pointer" appearance="fill" (click)="dp1.open()">
+              <input matInput [matDatepicker]="dp1" class="cursor-pointer" formControlName="startDate"
+              (click)="dp1.open()" readonly>
+              <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
+              <mat-datepicker #dp1 disabled="false"></mat-datepicker>
+            </mat-form-field>
+            <small class="form-text text-muted"><b>Filter</b>by start date</small>
+          </div>
+          <div class="col-lg-2">
+             <mat-form-field class="w-100 cursor-pointer" appearance="fill" (click)="dp2.open()">
+                <input matInput [matDatepicker]="dp2" class="cursor-pointer" formControlName="endDate"
+                (click)="dp2.open()" readonly>
+                <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
+                <mat-datepicker #dp2 disabled="false"></mat-datepicker>
+             </mat-form-field>
+            <small class="form-text text-muted"><b>Filter</b>by end date</small>
+        </div>
+          <div class="col-lg-1.5">
+            <button  class="btn btn-sm btn-success mr-2 mt-1" (click)="applyFilter()">Apply</button>
+        </div>
+          <div class="col-lg-1.5">
+            <button  class="btn btn-sm btn-success mr-2 mt-1" (click)="clearFilterForm()">Clear</button>
+        </div>
+        </div>
+      </div>
+      <div class="table-responsive angular-bootstrap-table">
+        <table class="table table-head-custom table-vertical-center overflow-hidden">
+          <thead>
+            <th name="id" ngDefaultControl [(ngModel)]="tableHeader.id" (click)="onSort('id')">
+              <i *ngIf="tableHeader.id === 1 && activeSort === 'id'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.id === 0 && activeSort === 'id'"
+                class="fas fa-long-arrow-alt-down"></i>
+              Id
+            </th>
+  
+            <th name="logs">
+              Logs Information
+            </th>
+            <th name="operationName" ngDefaultControl [(ngModel)]="tableHeader.operationName" (click)="onSort('operationName')">
+              <i *ngIf="tableHeader.operationName === 1 && activeSort === 'operationName'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.operationName === 0 && activeSort === 'operationName'"
+                class="fas fa-long-arrow-alt-down"></i>
+                Operation
+            </th>
+            <th name="moduleName" ngDefaultControl [(ngModel)]="tableHeader.moduleName" (click)="onSort('moduleName')">
+              <i *ngIf="tableHeader.moduleName === 1 && activeSort === 'moduleName'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.moduleName === 0 && activeSort === 'moduleName'"
+                class="fas fa-long-arrow-alt-down"></i>
+                Module Name
+            </th>
+  
+            <th name="lastModifiedBy" ngDefaultControl [(ngModel)]="tableHeader.lastModifiedBy"
+              (click)="onSort('lastModifiedBy')">
+              <i *ngIf="tableHeader.lastModifiedBy === 1 && activeSort === 'lastModifiedBy'"
+                class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.lastModifiedBy === 0 && activeSort === 'lastModifiedBy'"
+                class="fas fa-long-arrow-alt-down"></i>
+                Last Modified By
+            </th>
+            <th name="lastModifiedDate" ngDefaultControl [(ngModel)]="tableHeader.lastModifiedDate"
+              (click)="onSort('lastModifiedDate')">
+              <i *ngIf="tableHeader.lastModifiedDate === 1 && activeSort === 'lastModifiedDate'"
+                class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.lastModifiedDate === 0 && activeSort === 'lastModifiedDate'"
+                class="fas fa-long-arrow-alt-down"></i>
+                Last Modified Date
+            </th>
+            <th name="createdBy" ngDefaultControl [(ngModel)]="tableHeader.createdBy"
+              (click)="onSort('createdBy')">
+              <i *ngIf="tableHeader.createdBy === 1 && activeSort === 'createdBy'"
+                class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.createdBy === 0 && activeSort === 'createdBy'"
+                class="fas fa-long-arrow-alt-down"></i>
+                Created By
+            </th>
+            <th name="createdDate" ngDefaultControl [(ngModel)]="tableHeader.createdDate"
+              (click)="onSort('createdDate')">
+              <i *ngIf="tableHeader.createdDate === 1 && activeSort === 'createdDate'"
+                class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.createdDate === 0 && activeSort === 'createdDate'"
+                class="fas fa-long-arrow-alt-down"></i>
+                Created Date
+            </th>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of filteredCentersList">
+                <td>
+                    {{ item.id }}
+                </td>
+                <td class="text-center"><a title="" class="btn btn-link-success font-weight-bold">
+                    <i (click)="open(content,item.message)" class="flaticon-eye text-success"></i></a>
+                </td>
+                <td>{{ item.operation }}</td>
+                <td>{{ item.moduleName }}</td>
+                <td>{{ item.lastModifiedBy }}</td>
+                <td>{{ item.lastModifiedDate }}</td>
+                <td>{{ item.createdBy }}</td>
+                <td>{{ item.createdDate }}</td>
+              
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row">
+        <div class="mr-2">
+          <nav aria-label="Page navigation example">
+            <ul class="pagination">
+              <li class="page-item">
+                <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(0)" href="javascript:void(0);">
+                  <span aria-hidden="true">&laquo;&laquo;</span>
+                  <span class="sr-only">First</span>
+                </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(paginationData.currentPage - 1)" href="javascript:void(0);">
+                  <span aria-hidden="true">&laquo;</span>
+                  <span class="sr-only">Previous</span>
+                </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" *ngIf="paginationData?.currentPage !== 0 && paginationData?.currentPage !== 1" (click)="onPageChange(paginationData?.currentPage - 2)" href="javascript:void(0);">{{ paginationData?.currentPage -1 }}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" *ngIf="paginationData?.currentPage !== 0" (click)="onPageChange(paginationData?.currentPage - 1)" href="javascript:void(0);">{{ paginationData?.currentPage}}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link active" href="javascript:void(0);">{{ paginationData?.currentPage + 1 }}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1" (click)="onPageChange(paginationData?.currentPage + 1)" href="javascript:void(0);">{{ paginationData?.currentPage + 2 }}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1 && paginationData?.currentPage !== paginationData.pages.length - 2" (click)="onPageChange(paginationData?.currentPage + 2)" href="javascript:void(0);">{{ paginationData?.currentPage + 3 }}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}" (click)="onPageChange(paginationData.currentPage + 1)" href="javascript:void(0);">
+                  <span aria-hidden="true">&raquo;</span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}" (click)="onPageChange(paginationData.pages.length - 1)" href="javascript:void(0);">
+                  <span aria-hidden="true">&raquo;&raquo;</span>
+                  <span class="sr-only">Last</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <div class="mr-2">
+          <select class="custom-select" style="height: calc(1.2em + 1rem + 2px); padding: 0.35rem 2rem 0.35rem 1rem;"
+            [(ngModel)]="paginationData.pageSize" (change)="onPageSizeChange()">
+            <option [ngValue]="10">10 per page</option>
+            <option [ngValue]="50">50 per page</option>
+            <option [ngValue]="100">100 per page</option>
+            <option [ngValue]="500">500 per page</option>
+          </select>
+        </div>
+        <div class="pt-2">
+          <small class="text-muted">(Total: {{paginationData.total}})</small>
+        </div> 
+      </div>
+    </div>
+  </div>
+  <div class="example-preview">
+    <div>
+      <ng-template #content let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Logs Information</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            {{logs}}
+          <!-- <p>Are You Sure You Want To Delete <strong>{{center.centerName}}</strong>?</p> -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Ok</button>
+        </div>
+      </ng-template>
+    </div>
+  </div>

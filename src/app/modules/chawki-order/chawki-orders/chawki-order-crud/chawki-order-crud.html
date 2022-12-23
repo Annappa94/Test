@@ -1,0 +1,295 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">Please enter the details</h3>
+        </div>
+        <div class="card-toolbar">
+
+        </div>
+    </div>
+
+    <!-- Yarn FORM -->
+    <div class="card-body pt-0">
+        <div class="form form-label-right">
+            <div class="form-group row pt-0">
+                <div class="col-lg-12">
+                    <div [formGroup]="chawkiOrderForm">
+
+                        <div class="row">
+
+                          <div class="col-lg-3 mt-4 selectWrapper">
+                              <label class="w-100 d-flex justify-content-between"><span>Select Farmer<span class="text-danger">*</span></span></label>
+                              <ng-select class="" [(ngModel)]="seletedFarmer"
+                                  [ngModelOptions]="{standalone: true}"
+                                  placeholder="Please enter the mobile number or name"
+                                  (search)='getFarmerList($event)' (change)="onFarmerSelection($event)">
+                                  <ng-option *ngFor="let item of farmerList" [value]="item.id">{{ item.name
+                                      }} - {{ item.phone }}</ng-option>
+                              </ng-select>
+                          </div>
+
+                            <div class="col-lg-3 mt-4">
+                                <label>Select CRC <span class="text-danger">*</span></label>
+                                <select class="form-control form-control-lg" (change)="onChawkiSelection($event)" formControlName="chawki" name="chawki"
+                                    placeholder="Select Chawki Center">
+                                    <option *ngFor="let item of chawkiList" [value]="item.id">{{ item.name }}
+                                        - {{ item.phone }}</option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-3 mt-4">
+                              <label>Select Batch<span class="text-danger">*</span></label>
+                              <select class="form-control form-control-lg" (change)="onBatchSelection($event)" formControlName="chawkiBatch" name="chawkiBatch"
+                                  placeholder="Select Type">
+                                  <option *ngFor="let item of batchesList" [value]="item.id">{{ item.displayAvailableOn }}
+                                    - {{ item.currentlyAvailableDFL }} (DFL) {{item.batchType}}
+                                      </option>
+                              </select>
+                              <span class="text-danger" *ngIf="chawkiOrderForm.get('chawki').value && !batchesList.length">Batches are not available for Selected CRC</span>
+
+                            </div>
+
+
+                            <!-- <div class="col-lg-3 mt-4 selectWrapper">
+                                <label class="w-100 d-flex justify-content-between"><span>Select Farmer<span class="text-danger">*</span></span></label>
+                                <ng-select class="" [(ngModel)]="seletedFarmer"
+                                    [ngModelOptions]="{standalone: true}"
+                                    placeholder="Please enter the mobile number or name"
+                                    (search)='getFarmerList($event)' (change)="onFarmerSelection($event)">
+                                    <ng-option *ngFor="let item of farmerList" [value]="item.id">{{ item.name
+                                        }} - {{ item.phone }}</ng-option>
+                                </ng-select>
+                            </div> -->
+
+                            <div class="col-lg-3 mt-4">
+                              <label>Select Type<span class="text-danger">*</span></label>
+                              <select class="form-control form-control-lg form-control-solid app-disable"
+                                  formControlName="chawkiType" name="type"
+                                  placeholder="Select Type">
+                                  <option *ngFor="let item of chawkiType" [value]="item.type">{{ item.type }}
+                                      </option>
+                              </select>
+  
+                          </div>
+
+                            <div class="col-lg-3 mt-4">
+                                <label class="form-label">Selling Price/DFL<span class="text-danger">*</span></label>
+                                <input type="number" class="form-control form-control-lg form-control-solid" name="pricePerDFL"
+                                    readonly autocomplete="off" formControlName="pricePerDFL" />
+                            </div>
+    
+                            <div class="col-lg-3 mt-4">
+                                <label class="form-label">No of DFL's<span class="text-danger">*</span></label>
+                                <input (keyup)="onValueChanges()" type="number" class="form-control form-control-lg"
+                                    name="totalDFLs" placeholder="100" autocomplete="off"
+                                    formControlName="totalDFLs" />
+                              <div class="text-danger pl-3" *ngIf="errorMessage">{{errorMessage}}</div>
+                            </div>
+
+                            
+
+                            <div class="col-lg-3 mt-4">
+                                <label for="name">Delivery Date<span class="text-danger">*</span></label>
+                                <mat-form-field class="w-100 cursor-pointer" appearance="fill" (click)="dp.open()">
+                                  <input formControlName="deliveryDate" class="cursor-pointer" matInput [matDatepicker]="dp" 
+                                  [min]="minDate" [max]="maxDate" (click)="dp.open()" readonly>
+                                  <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                                  <mat-datepicker #dp disabled="false"></mat-datepicker>
+                                </mat-form-field>
+                              </div>
+
+                              <!-- <div class="col-lg-3 mt-4">
+                                <label>Self Pickup ?<span class="text-danger">*</span></label>
+                                <select class="form-control form-control-lg" (change)="onSelfPickup($event)" formControlName="selfPickUp" name="selfPickUp"
+                                    placeholder="Self pickup">
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div> -->
+
+                            <div class="col-lg-3 mt-4">
+                              <label class="form-label">Gross Amount<span class="text-danger">*</span></label>
+                              <input type="number" class="form-control form-control-lg form-control-solid" name="grossAmount"
+                                  readonly placeholder="Total" autocomplete="off" formControlName="grossAmount" />
+                          </div>
+
+                          <div class="col-lg-3 mt-4">
+                            <label class="form-label">Discount Amount<span class="text-danger">*</span></label>
+                            <input type="number" class="form-control form-control-lg form-control-solid" name="totalDiscount"
+                                readonly placeholder="Total" autocomplete="off" formControlName="totalDiscount" />
+                        </div>
+
+                            <div class="col-lg-3 mt-4">
+                                <label class="form-label">Total Amount<span class="text-danger">*</span></label>
+                                <input type="number" class="form-control form-control-lg form-control-solid" name="totalAmount"
+                                    readonly placeholder="Total" autocomplete="off" formControlName="totalAmount" />
+                            </div>
+
+                            <!-- <div class="col-lg-4 mt-4">
+                              <div class="row">
+                                  <div class="col-7">
+                                      <label class="form-label">Coupon Code</label>
+                                      <input type="text" class="form-control form-control-lg" name="couponCode" placeholder="Redeem Coupon"
+                                          autocomplete="off" formControlName="couponCode" 
+                                          />
+                                  </div>
+                                  <div class="col-5 d-flex align-items-end mb-2 px-0">
+                                      <button type="submit" class="btn btn-sm btn-success font-weight-bold" [disabled]="couponAmt > 0"
+                                          (click)="redeemCode(chawkiOrderForm.value)">Redeem</button>
+                                      <button type="submit" class="btn btn-sm btn-bg-danger ml-2 font-weight-bold text-white"
+                                              (click)="cancelCouponRedeem()">Clear</button>
+                                  </div>
+                                  <div class="text-success pl-3" *ngIf="couponValid">{{couponMsg}}</div>
+                                  <div class="text-danger pl-3" *ngIf="!couponValid">{{couponMsg}}</div>
+                              </div>
+                              <ng-container *ngIf="couponList?.length">
+                                  <div class="row mx-0 mt-2">
+                                      <span class="label label-outline-info label-pill label-inline mr-2 cursor-pointer mt-2" 
+                                          *ngFor="let coupon of couponList" (click)="couponClicked(coupon)">
+                                          {{coupon}}
+                                      </span>
+                                  </div>
+                              </ng-container>
+                              
+                          </div>                      -->
+                            
+                        </div>
+
+                        <div class="row">
+                          <div class="col-lg-3 mt-3 selectWrapper">
+                            <label class="form-label">Representive<span class="text-danger">*</span></label>
+                            <ng-select class="form-control form-control-lg form-control-solid select-custom" formControlName="representive">
+                              <ng-option *ngFor="let item of usersList" [value]="item">{{ item.name }} - {{ item.phone }} <span *ngIf="item.role">- {{item.role}}</span></ng-option>
+                            </ng-select>
+                          </div>
+
+                          <!-- <div class="col-lg-3 mt-3">
+                            <label>Credit Days<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg" formControlName="creditDays" placeholder="Select Type">
+                                <option *ngFor="let item of CHAWKI_ORDER" [value]="item">{{ item }}</option>
+                            </select>
+                          </div>   -->
+                  
+                          <!-- <div class="col-lg-6 mt-3">
+                            <label class="form-label">Delivery Notes</label>
+                            <textarea type="textarea" class="form-control form-control-lg" name="deliveryNotes"
+                            placeholder="Delivery Notes" autocomplete="off" formControlName="deliveryNotes" maxlength="200"></textarea>
+                          </div> -->
+                  
+                          <div class="col-lg-12 mt-3 mb-3">
+                            <label class="form-label">Terms And Conditions</label>
+                            <app-text-editor (innerHtmldata)="dataFromTextEditor($event)" [data]="termsAndConditions"></app-text-editor>
+                          </div>
+                        </div>  
+
+
+                        <div class="col-lg-12 mt-6" >
+                          <address-pincode-form [address]="true" [village]="true" [city]="true" [region]="true" [taluk]="true" [pincode]="true" [state]="true" [district]="true" [layouttype]="'page'"></address-pincode-form>
+                      </div>
+
+                        <!-- <ng-container *ngIf="showAddress">
+                            <div class="col-lg-12 mt-6 px-0">
+                                <ngb-accordion #acc11="ngbAccordion">
+                                  <ngb-panel id="toggle-address">
+                                    <ng-template ngbPanelTitle>
+                                      <span class="ard-header--title text-success">Address Details</span>
+                                    </ng-template>
+                                    <ng-template ngbPanelContent>
+                                      <div class="row">
+                                        <div class="col-lg-3 mt-2">
+                                          <label class="form-label">Address</label>
+                                          <input type="text" class="form-control form-control-lg" name="Address"
+                                            placeholder="Address" autocomplete="off" formControlName="address" />
+                                        </div>
+                                        <div class="col-lg-3 mt-2">
+                                          <label class="form-label">Village</label>
+                                          <input type="text" class="form-control form-control-lg" name="Village"
+                                            placeholder="Village" autocomplete="off" formControlName="village" />
+                                        </div>
+                                        <div class="col-lg-3 mt-2">
+                                          <label class="form-label">City</label>
+                                          <input type="text" class="form-control form-control-lg" name="city"
+                                            placeholder="City" autocomplete="off" formControlName="city" />
+                                        </div>
+                                        <div class="col-lg-3 mt-2">
+                                          <label class="form-label">District</label>
+                                          <input type="text" class="form-control form-control-lg" name="District"
+                                            placeholder="District" autocomplete="off" formControlName="district" />
+                                        </div>
+                                        <div class="col-lg-3 mt-2">
+                                          <label class="form-label">Taluk</label>
+                                          <input type="text" class="form-control form-control-lg" name="Taluk"
+                                            placeholder="Taluk" autocomplete="off" formControlName="taluk" />
+                                        </div>
+                                        <div class="col-lg-3 mt-2">
+                                          <label class="form-label">Region</label>
+                                          <input type="text" class="form-control form-control-lg" name="region"
+                                            placeholder="Region" autocomplete="off" formControlName="region" />
+                                        </div>
+                                        <div class="col-lg-3 mt-2">
+                                          <label class="form-label">State</label>
+                                          <input type="text" class="form-control form-control-lg" name="State"
+                                            placeholder="State" autocomplete="off" formControlName="state" />
+                                        </div>
+                                        <div class="col-lg-3 mt-2">
+                                          <label class="form-label">PIN Code</label>
+                                          <input type="text" class="form-control form-control-lg" name="PIN Code"
+                                            placeholder="PIN Code" autocomplete="off" formControlName="pincode" />
+                                        </div>
+                                        
+                  
+                                      </div>
+                                    </ng-template>
+                                  </ngb-panel>
+                                </ngb-accordion>
+                              </div>
+                        </ng-container> -->
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="card-toolbar">
+                <button type="button" class="btn btn-sm btn-secondary mr-2"
+                    [routerLink]="['/resha-farms/chawki-orders']">Back</button>
+                <!-- <button type="submit" class="btn btn-sm btn-success" 
+                [disabled]="chawkiOrderForm.invalid || chawkiOrderForm.get('pricePerDFL').value == 0 || chawkiOrderForm.get('pricePerDFL').value == '' || errorMessage  "
+                    (click)="onSubmit(chawkiOrderForm.value)">Save</button> -->
+                <submit-button [disabledButton]="chawkiOrderForm.invalid || chawkiOrderForm.get('pricePerDFL').value == 0 || chawkiOrderForm.get('totalAmount').value <= 0 || errorMessage || seletedFarmer === null || chawkiOrderForm.get('pricePerDFL').value == 0 " [loading]="loading" (clickButton)="onSubmit(chawkiOrderForm.value)" >
+
+                </submit-button>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+<div class="update-name">
+  <div>
+      <ng-template #updateNameHTML let-c="close" let-d="dismiss">
+          <div class="modal-header">
+              <h4 class="modal-title">Update Chawki Name</h4>
+          </div>
+          <div class="modal-body">
+              <div class="col-lg-12">
+                  <div class="row">
+                      <div class="col-lg-12 mt-2">
+                          <label class="form-label">Name<span class="text-danger">*</span></label>
+                          <input type="text" class="form-control form-control-lg" name="name" placeholder="Name"
+                            autocomplete="off" [formControl]="updateNameForm" [class.is-invalid]="updateNameForm.invalid&&(updateNameForm.dirty || updateNameForm.touched)"  [class.is-valid]="updateNameForm.valid"/>
+                        </div>
+                  </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-sm btn-secondary" (click)="close()">Cancel</button>
+              <button type="button" class="btn btn-sm btn-success" [disabled]="updateNameForm.invalid" (click)="updateNameAPI(updateNameForm.value)">Save</button>
+          </div>
+      </ng-template>
+  </div>
+</div>
