@@ -1,0 +1,61 @@
+<a matTooltip="Presentation" class="mr-1 mt-1 cursor-pointer"
+(click)="openPopUp()"  *ngIf="event == 'apimndt.destaccept'">
+<i class="fas fa-money-check-alt text-success mt-3" ></i>
+</a>
+
+
+<a matTooltip="Details"
+class="text-muted font-weight-bold ml-2" (click)="viewPaymentHistory()"
+>
+ <i class="flaticon2-time"></i>
+</a>
+
+
+<!-- [disabled]="disabled" -->
+<div class="example-preview3">
+    <div>
+        <ng-template #htmlContent let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Initiate Payment</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row" [formGroup]="initiatePaymentForm">
+                    <div class="col-lg-12 mt-2">
+
+                      <label class="form-label mt-3 mr-2">Select Loan Product Type</label><span class="text-danger">*</span>
+                        <!-- <select class="form-control mr-4" style="width: 200px;"  name="productType" formControlName="productType">
+                        <option selected disabled [value]="" hidden place>select </option>
+                        <option [value]="type.productType" (change)="selectedLoanProductChange($event)"  *ngFor="let type of getProductTypeDetails">{{type.productType}}</option>
+                       </select> -->
+
+                       <ng-select class="mb-2" placeholder="search" formControlName="productType" >
+                        <ng-option *ngFor="let item of getProductTypeDetails"  [value]="item">
+                          {{ item.productType }}
+                        </ng-option>
+                       </ng-select>
+
+
+                      <label class="form-label mt-2">Amount</label> <span class="text-danger">*</span>
+                      <input type="number" class="form-control form-control-lg" name="cancel" autocomplete="off" formControlName="amount"  placeholder="Enter amount" [class.is-invalid]="initiatePaymentForm.get('amount').invalid&&(initiatePaymentForm.get('amount').dirty || initiatePaymentForm.get('amount').touched)"/>
+                      <label class="form-label mt-2">Settlement Date</label> <span class="text-danger">*</span>
+                      <mat-form-field class="w-100 cursor-pointer" appearance="fill" (click)="dp3.open()">
+                        <input class="cursor-pointer" matInput [matDatepicker]="dp3" 
+                        (click)="dp3.open()" readonly [min]="minDate" [max]="maxDate"  placeholder="Settlement date" formControlName="rm_settlement_date" >
+                        <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+                        <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+                      </mat-form-field>
+                      <label class="form-label">Reference</label> <span class="text-danger">*</span>
+                      <input type="text" class="form-control form-control-lg" name="cancel" autocomplete="off" formControlName="reference"  placeholder="Reference" [class.is-invalid]="initiatePaymentForm.get('reference').invalid&&(initiatePaymentForm.get('reference').dirty || initiatePaymentForm.get('reference').touched)"/>
+                      <label class="form-label mt-2">Notes</label> <span class="text-danger">*</span>
+                      <input type="text" class="form-control form-control-lg" name="cancel" autocomplete="off" formControlName="comments"  placeholder="Notes" [class.is-invalid]="initiatePaymentForm.get('comments').invalid&&(initiatePaymentForm.get('comments').dirty || initiatePaymentForm.get('comments').touched)"/>
+                    </div>
+                  </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="close()">Cancel</button>
+                <button type="button" class="btn btn-success" (click)="initiateMandate()" [disabled]="!initiatePaymentForm.valid">Save</button>
+            </div>
+        </ng-template>
+    </div>
+  </div>

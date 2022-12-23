@@ -1,0 +1,91 @@
+<div class="" [formGroup]="addressForm">
+    <ngb-accordion #acc11="ngbAccordion" activeIds="toggle-address">
+        <ngb-panel id="toggle-address">
+          <ng-template ngbPanelTitle>
+            <span class="ard-header--title text-success">Address Details</span>
+          </ng-template>
+          <ng-template ngbPanelContent>
+            <p class="text-warning font-weight-bolder">
+                Please Enter the pincode to Get the details.
+            </p>
+            <div class="row">
+              <!-- <div class="mt-2 selectWrapper" [ngClass]="{'col-lg-3': layouttype == 'page', 'col-lg-12': layouttype == 'popup'}">
+                <label class="form-label">State<span class="text-danger">*</span></label>
+                  <ng-select class=""  formControlName="state" (change)="onSateSelection()"
+                    ngDefaultControl
+                    placeholder="Please enter the state">
+                      <ng-option *ngFor="let item of statesArray" [value]="item">
+                        {{ item }}
+                      </ng-option>
+                  </ng-select>
+              </div> -->
+              <!-- <div class=" mt-2" [ngClass]="{'col-lg-3': layouttype == 'page', 'col-lg-12': layouttype == 'popup'}">
+                <label class="form-label">PIN Code<span class="text-danger">*</span></label>
+                <ng-select class=""  formControlName="pincode" (change)="getPincodeInfo()"
+                    ngDefaultControl
+                    placeholder="Please enter the pincode">
+                      <ng-option *ngFor="let item of pinCodeArray" [value]="item">
+                        {{ item }}
+                      </ng-option>
+                  </ng-select>
+              </div> -->
+              <div class=" mt-2" [ngClass]="{'col-lg-3': layouttype == 'page', 'col-lg-12': layouttype == 'popup'}">
+                <label class="form-label">Pincode<span class="text-danger"  *ngIf="this.pincode">*</span></label>
+                <input type="text" class="form-control form-control-lg" name="pincode"
+                  placeholder="pincode" autocomplete="off" formControlName="pincode" [attr.disabled]="isVerfied ? true : null"/>
+              </div>
+              <!-- <div class="mt-5">
+                <button type="submit" class="btn btn-sm btn-success" (click)="getPincodeInfo()">Search</button>
+              </div> -->
+            </div>
+            <div class="row">
+              <div class=" mt-2" [ngClass]="{'col-lg-3': layouttype == 'page', 'col-lg-12': layouttype == 'popup'}">
+                <label class="form-label">Address<span class="text-danger"  *ngIf="this.address">*</span></label>
+                <input type="text" class="form-control form-control-lg" name="Address"
+                  placeholder="Address" autocomplete="off" formControlName="address" />
+              </div>
+              <div class=" mt-2" [ngClass]="{'col-lg-3': layouttype == 'page', 'col-lg-12': layouttype == 'popup'}">
+                <label class="form-label">District<span class="text-danger"  *ngIf="this.district">*</span></label>
+                <input type="text" class="form-control form-control-lg form-control-solid" name="district" placeholder="District"
+                  autocomplete="off" formControlName="district" readonly/>
+              </div>
+              <div class=" mt-2" [ngClass]="{'col-lg-3': layouttype == 'page', 'col-lg-12': layouttype == 'popup'}">
+                <label class="form-label">Village<span class="text-danger"  *ngIf="this.village">*</span></label>
+                <input type="text" class="form-control form-control-lg" name="Village"
+                  placeholder="Village" autocomplete="off" formControlName="village" />
+              </div>
+              <div class=" mt-2" [ngClass]="{'col-lg-3': layouttype == 'page', 'col-lg-12': layouttype == 'popup'}">
+                <label class="form-label">City<span class="text-danger"  *ngIf="this.city">*</span></label>
+                <input type="text" class="form-control form-control-lg" name="city"
+                  placeholder="City" autocomplete="off" formControlName="city" />
+              </div>
+              <div class=" mt-2" [ngClass]="{'col-lg-3': layouttype == 'page', 'col-lg-12': layouttype == 'popup'}">
+                <label class="form-label">Taluk<span class="text-danger"  *ngIf="this.taluk">*</span></label>
+                <input type="text" class="form-control form-control-lg form-control-solid" name="Taluk"
+                  placeholder="Taluk" autocomplete="off" formControlName="taluk" readonly/>
+              </div>
+              <div class=" mt-2" [ngClass]="{'col-lg-3': layouttype == 'page', 'col-lg-12': layouttype == 'popup'}">
+                <label class="form-label">Region<span class="text-danger"  *ngIf="this.region">*</span></label>
+                <input type="text" class="form-control form-control-lg form-control-solid" name="region"
+                  placeholder="Region" autocomplete="off" formControlName="region" readonly/>
+              </div>
+              <div class=" mt-2" [ngClass]="{'col-lg-3': layouttype == 'page', 'col-lg-12': layouttype == 'popup'}">
+                <label class="form-label">State<span class="text-danger"  *ngIf="this.state">*</span></label>
+                <input type="text" class="form-control form-control-lg form-control-solid" name="state"
+                  placeholder="State" autocomplete="off" formControlName="state" readonly/>
+              </div>
+              <div class=" mt-2" [ngClass]="{'col-lg-3': layouttype == 'page', 'col-lg-12': layouttype == 'popup'}">
+                <label class="form-label">Latitude<span class="text-danger"  *ngIf="this.lat">*</span></label>
+                <input type="text" class="form-control form-control-lg" name="latitude"
+                  placeholder="Latitude" autocomplete="off" formControlName="latitude" />
+              </div>
+              <div class=" mt-2" [ngClass]="{'col-lg-3': layouttype == 'page', 'col-lg-12': layouttype == 'popup'}">
+                <label class="form-label">Longitude<span class="text-danger" *ngIf="this.long">*</span> </label>
+                <input type="text" class="form-control form-control-lg" name="longitude"
+                  placeholder="Longitude" autocomplete="off" formControlName="longitude" />
+              </div>
+            </div>
+          </ng-template>
+        </ngb-panel>
+      </ngb-accordion>
+</div>

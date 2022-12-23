@@ -1,0 +1,12 @@
+<app-paginated-table [titleOfTable]="'Rearing iot Device type list'"
+ [tableHeaders]="tableHeaders"
+ [rowDataList]="riotdeviceDataList"
+ [totalRecords]="totalRecords"
+ [searchClass]="'col-lg-11'"
+ [searchHint]="'By Name,Phone,Id'">
+  <div class="card-toolbar New">
+    <div>
+    <button type="button" class="btn btn-sm btn-success mr-2" routerLink="/resha-farms/device-management/device-type-crud"> + New type</button>
+    </div>
+  </div>
+</app-paginated-table>

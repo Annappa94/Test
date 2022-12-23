@@ -1,0 +1,63 @@
+<ngb-accordion #acc11="ngbAccordion" activeIds="toggle-bank" [formGroup]="bankForm">
+    <ngb-panel id="toggle-bank">
+        <ng-template ngbPanelTitle>
+            <span class="card-header--title text-success">Bank Details</span>
+        </ng-template>
+        <ng-template ngbPanelContent>
+            <p class="text-warning font-weight-bolder">
+                Please note that the IFSC code for ALLAHABAD BANK (ALLA), SYNDICATE BANK
+                (SYNB),
+                DENA BANK (BKDN) and VIJAYA BANK (VIJB) has been disabled by RBI.
+                Transactions initiated to
+                these IFSCs will be rejected.
+            </p>
+            <div class="row">
+                <div class="col-lg-3 mt-2">
+                    <label class="form-label">Account Holder’s Name <span
+                            class="text-danger" *ngIf="accname">*</span></label>
+                    <input type="text" class="form-control form-control-lg"
+                        placeholder="Account Holder’s Name" autocomplete="off"
+                        formControlName="beneficiaryName" [attr.disabled]="isVerfied ? true : null"/>
+                </div>
+                <div class="col-lg-3 mt-2">
+                    <label class="form-label">Account Number <span
+                            class="text-danger"  *ngIf="accnumber">*</span></label>
+                    <input type="text" class="form-control form-control-lg"
+                        placeholder="8493 xxxx xxxx xxxx" autocomplete="off"
+                        formControlName="accountNumber" [attr.disabled]="isVerfied ? true : null"/>
+                </div>
+                <div class=" col-lg-6 d-flex ">
+                    <div class="col-lg-7 mt-2">
+                        <label class="form-label">IFSC Code <span class="text-danger"  *ngIf="ifsccode">*</span></label>
+                        <input type="text" class="form-control form-control-lg" placeholder="SBINxxxxx" autocomplete="off" formControlName="ifscCode" [attr.disabled]="isVerfied ? true : null"/>
+                    </div>
+                    <div class="col-lg-5 mb-2 d-flex align-items-end" *ngIf="!isVerfied">
+                        <button type="submit" class="btn btn-sm btn-success" (click)="getBankInfo()" [disabled]="!(bankForm.get('ifscCode').value)">Get Bank Details</button>
+                    </div>
+                   
+                    
+                </div>
+               
+                <div class="col-lg-3 mt-2">
+                    <label class="form-label">Bank Name <span
+                            class="text-danger" *ngIf="bankname">*</span></label>
+                    <input type="text" class="form-control form-control-lg"
+                        placeholder="Bank Name" autocomplete="off"
+                        formControlName="bankName" disabled/>
+                </div>
+                <div class="col-lg-3 mt-2">
+                    <label class="form-label">Branch Name <span
+                            class="text-danger" *ngIf="branchname">*</span></label>
+                    <input type="text" class="form-control form-control-lg"
+                        placeholder="Branch Name" autocomplete="off"
+                        formControlName="branchName" disabled/>
+                </div>
+                <div class="col-lg-5 mb-2 d-flex align-items-end" *ngIf="showHideButton">
+                    <button type="submit" class="btn btn-sm btn-success" (click)="verifyBankInfo()" [disabled]="!(bankForm.get('beneficiaryName').value && bankForm.get('accountNumber').value && bankForm.get('bankName').value && bankForm.get('ifscCode').value && bankForm.get('branchName').value)">Verify Bank</button>
+                </div>
+                
+
+            </div>
+        </ng-template>
+    </ngb-panel>
+</ngb-accordion>

@@ -1,0 +1,16 @@
+<app-paginated-table 
+[titleOfTable]="'Advisory-List Management'"
+ [tableHeaders]="tableHeaders"
+ (infoFromTable)="tableInfo($event)"
+ [rowDataList]="advisoryList"
+ [totalRecords]="totalRecords"
+ (onPageChange)="onPageChange($event)"
+ [searchClass]="'col-lg-11'"
+ [searchHint]="'By Name,Phone,Id'">
+  <div class="card-toolbar New">
+    <!-- <div>
+    <button type="button" class="btn btn-sm btn-success mr-2" routerLink="/device-management/device-type-crud"> + New plot</button>
+    </div> -->
+  </div>
+</app-paginated-table>
+

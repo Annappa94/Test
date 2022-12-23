@@ -1,0 +1,28 @@
+.arrow_angle_down {
+    display: block;
+}
+.arrow_angle_up {
+    display: none;
+}
+// .collapse{
+//     .arrow_angle_down {
+//         display: block;
+//     }
+//     .arrow_angle_up {
+//         display: none;
+//     }
+// }
+.collapsed{
+    .arrow_angle_down {
+        display: none;
+    }
+    .arrow_angle_up {
+        display: block;
+    }
+}
+
+.image-input [data-action=change] {
+    bottom: -11px !important;
+    top: unset !important;
+    background-color: #D1D8FC !important;
+}

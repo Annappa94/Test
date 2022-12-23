@@ -1,0 +1,251 @@
+<div class="bg-white rounded mb-4 d-flex align-items-center py-2 sticky-header justify-content-between">
+    <ul id="breadcrumbs" *ngIf="farmerDetails">
+        <li><span style="cursor: pointer;" class="hover-item" (click)="goBack()">All Pupae Buyers</span></li>
+        <li><span>{{farmerDetails.code}}</span></li>
+    </ul>
+    <div>
+        <app-back-button></app-back-button>
+    </div>
+</div>
+<div class="row">
+
+    <div class="col-lg-4 col-md-4 col-sm-4">
+        <!--begin::Card-->
+        <div class="card card-custom gutter-b">
+            <!--begin::Body-->
+            <div class="card-body pt-4" *ngIf="farmerDetails">
+                <!--begin::Toolbar-->
+                <div class="d-flex justify-content-between align-items-baseline mt-5 mb-2">
+                    <div class="font-size-h5 mb-3">
+                        Buyer Profile
+                    </div>
+                    <button class="btn btn-outline-success btn-sm " *ngIf="userType.role !== 'READADMIN'"  (click)="editFarmer()">
+                        Edit
+                    </button>
+
+                </div>
+                <!--end::Toolbar-->
+                <!--begin::User-->
+                <div class="d-flex align-items-center mb-7">
+                    <!--begin::Pic-->
+                    <div class="flex-shrink-0 mr-4 mt-lg-0 mt-3">
+                        <!-- <div class="symbol symbol-lg-75 symbol-square symbol-secondary">
+                            <span class="symbol-label font-size-h3 font-weight-boldest">{{farmerDetails.initial}}</span>
+                        </div> -->
+                        <div class="image-input image-input-outline" id="kt_profile_avatar">
+                            <div *ngIf="!previewImage && farmerDetails?.initial" class="symbol symbol-lg-75 symbol-square symbol-secondary">
+                                <span class="symbol-label font-size-h3 font-weight-boldest">{{farmerDetails?.initial}}</span>
+                            </div>
+                            <img *ngIf="previewImage" class="image-input-wrapper" [src]="previewImage || './assets/media/users/blank.png'"/>
+                            <!-- <label *ngIf="userType.role !== 'READADMIN'" class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                              data-action="change"
+                              data-toggle="tooltip"
+                              title=""
+                              data-original-title="Change avatar"
+                            >
+                              <i class="fa fa-pen icon-sm text-muted"></i>
+                              <input
+                                type="file"
+                                name="profile_avatar"
+                                accept=".png, .jpg, .jpeg"
+                                (change)="onImageUpload($event);"
+                              />
+                              <input type="hidden" name="profile_avatar_remove" />
+                            </label> -->
+                            <!-- <span
+                              class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                              data-action="cancel"
+                              data-toggle="tooltip"
+                              title=""
+                              data-original-title="Cancel avatar"
+                            >
+                              <i class="ki ki-bold-close icon-xs text-muted"></i>
+                            </span> -->
+                            <!-- <span
+                              *ngIf="previewImage && userType.role !== 'READADMIN'"
+                              class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                              (click)="remove()"
+                              data-action="remove"
+                              data-toggle="tooltip"
+                              title=""
+                              data-original-title="Remove avatar"
+                            >
+                              <i class="ki ki-bold-close icon-xs text-muted"></i>
+                            </span> -->
+                          </div>
+                    </div>
+                    <!--end::Pic-->
+                    <!--begin::Title-->
+                    <div class="d-flex flex-column">
+                        <span class="text-success font-weight-bold font-size-h4 mb-0">
+                            {{farmerDetails.name}}
+                        </span>
+                        <span class="text-muted font-weight-bold">{{farmerDetails.code}}</span>
+                        <span class="text-success font-weight-bold" *ngIf="noOfKYCDocs?.length>0 && farmerDetails.customerTypeName">{{noOfKYCDocs.length}} document/s uploaded. Click <u class="text-warning cursor-pointer" (click)="navigateToKyc();">here</u> to update or add more.</span>
+                        <span class="text-danger font-weight-bold" *ngIf="noOfKYCDocs?.length==0 && farmerDetails.customerTypeName">No KYC documents uploaded. Click <u class="text-warning cursor-pointer" (click)="navigateToKyc();">here</u> to upload.</span>
+                        <span class="text-danger font-weight-bold" *ngIf="(noOfKYCDocs?.length==0 || noOfKYCDocs?.length>0) && !farmerDetails.customerTypeName">Please select a customer type to proceed with KYC.</span>
+                    </div>
+                    <!--end::Title-->
+                </div>
+                <!--end::User-->
+                <!--begin::Info-->
+                <div class="mb-7">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bolder mr-2">Phone:</span>
+                        <span class="text-dark-75 font-weight-bold">{{farmerDetails.phone}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bolder mr-2">RM Center:</span>
+                        <span class="text-dark-75 font-weight-bold">{{centerName}}</span>
+                    </div>
+                    <!-- <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bolder mr-2">PAN:</span>
+                        <span class="text-dark-75 font-weight-bold">{{farmerDetails.kycPANNumber}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bolder mr-2">Adhaar:</span>
+                        <span class="text-dark-75 font-weight-bold">{{farmerDetails.kycAdhaarNumber}}</span>
+                    </div> -->
+
+                </div>
+                <!--end::Info-->
+                <!--begin::Info-->
+                <div class="mb-7">
+                    
+                    
+                    
+
+                    
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bolder mr-2" [ngClass]="!(farmerDetails.customerTypeName)?'danger':'muted'">Customer Type:</span>
+                        <span class="text-dark-75 font-weight-bold">{{farmerDetails.customerTypeName?farmerDetails.customerTypeName:'-'}} <i class="ml-2 flaticon2-pen text-muted cursor-pointer" (click)="selectCustomerType();"></i></span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center" *ngIf="selectCustomerBoolean">
+                        <span class="text-muted font-weight-bolder mr-2">Select Customer Type:</span>
+                        <span class="text-dark-75 font-weight-bold"> 
+                            <select class="form-control form-control-lg" [(ngModel)]="selectedCustomerType" (change)='onSelectOfCustomerType(selectedCustomerType, contentDelete);' placeholder="Select Type">
+                                <option *ngFor="let item of kycCustomerTypes" [value]="item.id">{{item.name}}
+                                </option>
+                            </select>
+                        </span>
+                    </div>
+                </div>
+                <!--end::Info-->
+
+                <p class="mt-7 mb-2">
+                    <span class="text-success-75 font-weight-bolder pr-1">Address</span>
+                </p>
+                <p>
+                    <span class="text-muted font-weight-bolder mr-2">
+                        {{farmerDetails?.address?.address}} {{farmerDetails?.address?.village}}
+                        {{farmerDetails?.address?.taluk}} {{farmerDetails?.address?.city}}
+                    </span><br /><br />
+                    <span class="text-muted font-weight-bolder mr-2 pt-2">{{farmerDetails?.address?.district ?
+                        farmerDetails?.address?.district + ' District, ' : ''}} {{farmerDetails?.address?.state}},
+                        {{farmerDetails?.address?.pincode}}</span>
+                </p>
+
+                <p class="mt-7 mb-2">
+                    <span class="text-success-75 font-weight-bolder pr-1">Bank</span>
+                </p>
+                <div class="mb-7">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Beneficiary Name:</span>
+                        <span
+                            class="text-dark-75 font-weight-bold">{{farmerDetails?.bankDetails[0]?.beneficiaryName}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Bank:</span>
+                        <span class="text-dark-75 font-weight-bold">{{farmerDetails?.bankDetails[0]?.bankName}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">IFSC Code:</span>
+                        <span class="text-dark-75 font-weight-bold">{{farmerDetails?.bankDetails[0]?.ifscCode}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bolder mr-2">Account Number:</span>
+                        <span
+                            class="text-dark-75 font-weight-bold">{{farmerDetails?.bankDetails[0]?.accountNumber}}</span>
+                    </div>
+                </div>
+
+            </div>
+            <!--end::Body-->
+        </div>
+        <!--end::Card-->
+
+    </div>
+
+    <div class="col-lg-8 col-md-8 col-sm-8">
+
+
+        <mat-tab-group>
+            <!-- <mat-tab label="Khata">         -->
+                <!-- <app-farmer-khata [farmarId]="id"></app-farmer-khata> -->
+            <!-- </mat-tab> -->
+            <mat-tab label="Order's">       
+                 <app-pupae-order-listing [pupaeBuyerId]="id"></app-pupae-order-listing>
+            </mat-tab>
+            <mat-tab label="Follow Up">       
+                <!-- <app-individual-follow-up 
+                [customerId]="id" 
+                customerRole='Pupae Supplier'
+                [customerPhone]="farmerDetails?.phone" 
+                [customerName]="farmerDetails?.name"
+               ></app-individual-follow-up> -->
+            </mat-tab>
+            <ng-container *ngIf="userType.role==='ADMINISTRATOR' || userType.role==='MudraManager' || userType.role==='MudraAgent'">
+            <mat-tab label="KYC">
+                <app-customer-details
+                [customerType]="'PUPAEBUYER'" 
+                [apiServiceURL]="'pupaesvc'"
+                [customerId]="id"
+                ></app-customer-details>
+            </mat-tab>
+            </ng-container>
+        </mat-tab-group>
+
+    </div>
+
+
+</div>
+<!-- **************** popUp **************** -->
+<div class="example-preview">
+    <div>
+        <ng-template #contentDelete let-c="close" let-d="dismiss">
+            <div class="modal-header">
+              <h3 >Are you sure that you want to change the customer type?</h3>
+            </div>
+            <div class="modal-body">
+                <p class="text-warning mt-2">Your existing KYC data will be lost after proceeding.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click');">No</button>
+                <button type="button" class="btn btn-primary" (click)="ConfirmDeleteRecord()">Yes</button>
+            </div>
+        </ng-template>
+    </div>
+  </div>
+
+
+
+  <div>
+    <ng-template #paymentDetails let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <h4 class="modal-title">Payment Details</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Amount Paid: <strong>{{paymentDetail.amountPaid.toLocaleString('en-IN')}}</strong></p>
+            <p>Payment Date: <strong>{{utils.getDisplayTime(paymentDetail.paymentDate)}}</strong></p>
+            <p>Reference Number: <strong>{{paymentDetail.referenceNumber}}</strong></p>
+            <p>Payment Mode: <strong>{{paymentDetail.paymentMode}}</strong></p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">Ok</button>
+        </div>
+    </ng-template>
+</div>

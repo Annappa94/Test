@@ -1,0 +1,80 @@
+
+
+.flex-container {
+    display: flex;
+}
+
+.flex-child {
+    flex: 1;
+    background-color: #F0F0F0;
+    background-color: #00aae4;
+
+    height: 40px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    font-size: 15px;
+    color:white;
+    
+
+}  
+.flex-child:first-child {
+    background-color: #F0F0F0;
+
+    height: 40px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    font-size: 15px;
+    color:black;
+
+} 
+
+
+.has-search .form-control {
+    padding-left: 1.375rem;
+}
+.vl {
+    
+    border-left: 2px solid rgb(180, 179, 245);
+    height: 70px;
+    position: absolute;
+    left: 50%;
+    margin-left: -3px;
+    top: 0;
+    text-align: flex;
+    
+  
+  
+  }
+  .whiteSmoke
+  {
+      background-color: #F0F8FF;
+  }
+  .child white cursor
+  {
+      background-color: whitesmoke;
+  }
+.manufacture
+{
+    background-color: #00c2e4;
+    color: white;
+}
+.positioned {
+    position: absolute; 
+    background:white;
+    bottom: 30px;
+    left: 23px; 
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  .purchased
+  {
+      background-color: white;
+  }
+  
+

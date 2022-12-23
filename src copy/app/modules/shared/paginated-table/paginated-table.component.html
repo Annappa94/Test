@@ -1,0 +1,596 @@
+<div class="card card-custom gutter-b">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">{{titleOfTable}}</h3> <ng-content select="[titleInsideH3Tag]"></ng-content>
+    </div>
+
+    <div class="card-toolbar" *ngIf="backButton">
+      <app-back-button></app-back-button>
+      <ng-content select="div.preClose"></ng-content>
+    </div>
+    <ng-content select="div.New"></ng-content>
+  </div>
+  <div class="card-body pt-0">
+    <div class="form form-label-right">
+      <div class="form-group row"  *ngIf="isSearch">
+        <div class="mt-3" [class]="searchClass">
+          <input [(ngModel)]="searchText" (keyup.enter)="search();"  (keyup) = "!searchText && search()" type="text" class="form-control" placeholder="Search"/>
+          <small class="form-text text-muted"><b>Search</b> {{searchHint}}</small>
+        </div>
+        <div class="col-lg-1 col-1 mt-3">
+          <button type="button" class="btn btn-sm btn-success mt-1" [disabled] ="!searchText" (click)="search();">Search</button>
+        </div>
+        <ng-content></ng-content>
+      </div>
+    </div>
+    <div class="table-responsive angular-bootstrap-table">
+      <table id="excel-table" class="table table-head-custom table-vertical-center overflow-hidden">
+        
+        <thead>
+          <th  *ngFor="let header of tableHeaders"  [name]="header.sortName" [ngModelOptions]="{standalone: true}" ngDefaultControl [(ngModel)]="header.sortName"  (click)="onSort(header.sortName)">
+            <span *ngIf="header.sort" class="float-left">
+              <i *ngIf="tableHeader[header.sortName] === 1 && activeSort === header.sortName" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader[header.sortName] === 0 && activeSort === header.sortName" class="fas fa-long-arrow-alt-down"></i>
+            </span>
+            {{header.name}}
+          </th> 
+        </thead>
+        
+        <!-- @Table Body starts here -->
+        <tbody>
+          <tr  *ngFor="let item of filteredList | keyvalue : originalOrder; let index = index" [ngClass]="{blacklist:item.value[CONSTANT.BLACKLIST]}">
+             <!-- @
+             [{
+                 id: 422
+                 imageUrl: "https://reshamandibucket.s3.us-east-2.amazonaws.com/type/ffd286fc-4a3f-439d-97b0-479438b1e085.jpeg"
+                 name: "Baluchari"
+             }] 
+            item.value|keyvalue =[422,https://reshamandibucket.s3.us-east-2.amazonaws.com/type/ffd286fc-4a3f-439d-97b0-479438b1e085.jpeg,Baluchari]
+            -->
+              <ng-container  *ngFor="let val of item.value | keyvalue:originalOrder;">
+               
+
+                <ng-container *ngIf="val.key == CONSTANT.STATUS;else second">
+                  <td>
+                    <div class="label label-pill label-inline" 
+                    [ngClass]="{
+                    'label-outline-danger': val.value == 'SOLD' && colorStatus[0] ,
+                    'label-outline-info': val.value ==  'AVAILABLE' && colorStatus[1], 
+                    'label-outline-warning' : val.value == colorStatus[2]
+                    }"
+                    >{{val.value}}</div>
+                  </td>
+                </ng-container>
+
+                <ng-template #second>
+                    <ng-container *ngIf="val.key == CONSTANT.ACTION && userType.role !== 'READADMIN';else third">
+                        <td>
+                          <!-- *ngIf="val.key != 'Completed'" -->
+                          <a matTooltip="Edit"  *ngIf="val.key != 'Completed'" class="btn btn-icon btn-sm mr-1 mt-1" (click)="edit(item.value,index)">
+                            <i class="flaticon-edit-1 text-success"></i>
+                          </a>
+                        </td>
+                    </ng-container>
+                </ng-template>
+
+                <ng-template #third>
+                  <ng-container  *ngIf ="val.key == CONSTANT.ID; else fourth">
+                    <td (click) = "details(item.value,index,val.key)"><a [matTooltip]="val.key" class="btn btn-link-success font-weight-bold">
+                      {{ val.value }}</a>
+                    </td>
+                  </ng-container>
+                </ng-template>
+
+                <ng-template #fourth>
+                  <ng-container  *ngIf ="val.key == CONSTANT.PHONE; else fifth">
+                    <td (click) = "details(item.value,index,val.key)"><a [matTooltip]="val.key" class="btn btn-link-success font-weight-bold">
+                      {{ val.value }}</a>
+                    </td>
+                  </ng-container>
+                </ng-template>
+
+                <ng-template #fifth>
+                  <ng-container  *ngIf ="val.key == CONSTANT.IMAGEURL; else sixth">
+                    <!-- <td (click) = "details(item.value)"><a matTooltip="Customer Details" class="btn btn-link-success font-weight-bold">
+                      {{ val.value }}</a>
+                    </td> -->
+
+                    <div class="cursor-pointer">
+                      <span>
+        
+                        <img (click)="showImage(val.value )" style="width: 50px; height: 50px; margin: 6px;" class=" align-self-center"
+                        [src]="val.value ? val.value.includes('.pdf')?'./assets/media/svg/files/pdf.svg': './assets/media/svg/files/jpg.svg' : './assets/media/users/blank.png'">
+                      
+                        <!-- The Modal -->
+                        <div id="reviewModel" class="modal" [ngClass]="{'display-block' : expandImage, 'display-none' : !expandImage}" appNoRightClick>
+                      
+                          <!-- The Close Button -->
+                          <span class="close" (click)="expandImage = false">&times;</span>
+                      
+                          <!-- Modal Content (The Image) -->
+                          <img class="modal-content" [src]="modelImage" *ngIf="!modelImage?.includes('.pdf')">
+                          <pdf-viewer *ngIf="modelImage?.includes('.pdf')" src="{{modelImage}}"></pdf-viewer>
+
+                        </div>
+                      </span>
+                    </div>
+
+                  </ng-container>
+                </ng-template>
+
+                <ng-template  #sixth>
+                  <ng-container *ngIf ="val.key == CONSTANT.SELECTE_POPUP; else seventh">
+                    <td>
+                    <select class="form-control" style="width: 160px;" name="yarnPurchaseStatus" 
+                    (change)="onStatusSelection($event,index)"
+                    >
+                    <option *ngFor="let itr of val?.value?.STATUS_ORDERS"  [value]="itr?.name" [disabled]="itr?.isDisabled" [selected]="itr?.name == val?.value?.status">{{itr?.name?.replaceAll('_',' ')}}</option>                     
+                   </select>
+                   </td>
+                  </ng-container>
+                </ng-template>
+
+                <ng-template #seventh>
+                  <ng-container *ngIf="val.key == CONSTANT.APPROVE_OR_REJECT && userType.role !== 'READADMIN';else eigth">
+                      <td>
+                         <ng-container *ngIf="val?.value?.status =='Pending'">
+                          <app-approve-or-reject-button style="height: 36px;" [approvalList]="[val.value]" [processType]="val.value.processType"></app-approve-or-reject-button>
+                         </ng-container>
+
+                      </td>
+                  </ng-container>
+              </ng-template>
+
+                <ng-template #eigth>
+                  <ng-container *ngIf="val.key == CONSTANT.PAYMENT && userType.role !== 'READADMIN';else nine">
+                    <td> 
+                      <button class="btn btn-icon btn-sm ml-1"
+                          (click)="showPaymentDetailes(index)"
+                          >
+                          <i class="flaticon-list-3 text-dark"></i>
+                      </button>
+                      <ng-container *ngIf="( val?.value?.status?.toUpperCase() === 'PENDING' && val?.value?.orderStatus !== 'Cancel' && val?.value?.orderStatus !== 'New') && rolesService.checkAccess(userType.role, {type: 'actions', component: 'ReelerDetailsComponent', action: 'payment'})">
+                          <button class="btn btn-icon btn-sm"
+                          (click)="payNow(index)"
+                          >
+                          <i class="fas fa-money-check-alt text-success"></i>
+                      </button>
+                      </ng-container>    
+                    </td>
+                  </ng-container>
+              </ng-template>
+
+              <ng-template #nine>
+                <ng-container *ngIf="val.key == CONSTANT.DELETE && userType.role !== 'READADMIN';else ten">
+                    <td>
+                      <a matTooltip="Delete Batch" class="btn btn-icon btn-sm" (click)="delete(index)">
+                        <i class="flaticon-delete text-danger"></i>
+                      </a>
+                    </td>
+                </ng-container>
+            </ng-template>
+            
+            <ng-template #ten>
+              <ng-container *ngIf="val.key == CONSTANT.EDIT_DELETE && userType.role !== 'READADMIN';else eleven">
+                  <td>
+
+                    <a matTooltip="Edit" class="btn btn-icon btn-sm mr-1 mt-1" (click)="edit(item.value,index)">
+                      <i class="flaticon-edit-1 text-success"></i>
+                    </a>
+
+                    <a matTooltip="Delete" class="btn btn-icon btn-sm" (click)="delete(index)">
+                      <i class="flaticon-delete text-danger"></i>
+                    </a>
+                  </td>
+              </ng-container>
+            </ng-template>
+
+            <ng-template #eleven>
+              <ng-container *ngIf="val.key == CONSTANT.RADIO_BUTTON && userType.role !== 'READADMIN';else twelve">
+                  <td>
+                    <div>
+                      <span class="switch-green switch switch-icon switch-sm">
+                        <label>
+                          <input type="checkbox" [checked]="val.value?.value" [readonly]="val?.value?.readonly" [disabled]="val?.value?.isEnabled" (change)="switchIconToggle(index)" name="select" />
+                          <span></span>
+                        </label>
+                      </span>
+                    </div>
+                  </td>
+              </ng-container>
+            </ng-template>
+
+            <ng-template #twelve>
+              <ng-container *ngIf="val.key == CONSTANT.BLACKLIST && userType.role !== 'READADMIN';else thirteen">
+                <td class="selection-cell" *ngIf="userType.roles.includes('ADMINISTRATOR')">
+                   <div class="switch switch-icon switch-sm">  
+                    <label class="checkbox checkbox-single">
+                     <input type="checkbox" [checked]="val.value" (click)="blackList(index)"/>
+                    <span></span>
+                   </label>
+                  </div>
+                 </td>
+              </ng-container>
+          </ng-template>
+            <ng-template #thirteen>
+              <ng-container *ngIf="val.key == CONSTANT.QR && userType.role !== 'READADMIN';else fourteen">
+                 <td class="selection-cell">
+                  <a matTooltip="Edit" class="btn btn-icon btn-sm mr-1 mt-1" (click)="edit(item.value,index)">
+                    <i class="flaticon-edit-1 text-success"></i>
+                  </a>
+
+                  <a matTooltip="Delete" class="btn btn-icon btn-sm" (click)="delete(index)">
+                    <i class="flaticon-delete text-danger"></i>
+                  </a>
+                  <button class="btn btn-sm ml-1 btn-success"
+                  (click)="generateQRCode(index)"
+                  >
+                  QR Code
+                </button>
+                 </td>
+              </ng-container>
+          </ng-template>
+
+
+                <ng-template  #fourteen>
+                  <ng-container *ngIf ="val.key == 'id' || val.key == 'centerId'; else fifteen">
+
+                  </ng-container>
+                </ng-template>
+
+                <ng-template  #fifteen>
+                  <ng-container *ngIf ="val.key == CONSTANT.INVOICE && userType.role !== 'READADMIN';else sixteen">
+                    <td>
+                      <a class="btn btn-icon btn-sm" *ngIf="val.value" href="{{ val.value }}" target="_blank">
+                        <i class="flaticon-file-2 text-warning"></i>
+                      </a>
+                    </td>
+                  </ng-container>
+                </ng-template>
+
+                <ng-template  #sixteen>
+                  <ng-container *ngIf ="val.key == CONSTANT.HTML_CONTENT; else seventeen">
+                    <td>
+                      <span [innerHtml]="val.value | safeHtml"></span>
+                    </td>
+                  </ng-container>
+                </ng-template>
+
+                <ng-template  #seventeen>
+                  <ng-container *ngIf ="val.key == CONSTANT.ASSIGN_CREDIT_AMOUNT && (userType.roles.includes('MudraManager') || userType.roles.includes('ADMINISTRATOR')); else eighteen">
+                    <td>
+                      <a matTooltip="Edit"  class="btn btn-icon btn-sm mr-1 mt-1" (click)="edit(item.value,index)">
+                        <i class="flaticon-edit-1 text-success"></i>
+                      </a>
+                      <!-- <span matTooltip="{{val.value?.creditLimit?'Update credit amount':'Assign credit amount'}}">
+                        <app-mudra-add-credit-information
+                        [customerType]="val.value?.customerType" 
+                        [customerId]="val.value?.customerId"
+                        [customerName]="val.value?.customerName"
+                        [tableDesign]="true"
+                        [creditLimit]="val.value?.creditLimit"
+                        [mudraId]="val.value?.mudraId"
+                        (listenAndRefresh)="listenAndRefresh()"
+                        ></app-mudra-add-credit-information>
+                      </span> -->
+                    </td>
+                  </ng-container>
+                </ng-template>
+
+                <ng-template #eighteen>
+                  <ng-container  *ngIf ="val.key == CONSTANT.DETAILS1; else nineteen">
+                    <td (click) = "details(item.value,index,val.key)"><a [matTooltip]="val.key" class="btn btn-link-success font-weight-bold">
+                      {{ val.value }}</a>
+                    </td>
+                  </ng-container>
+                </ng-template>
+
+
+                <ng-template  #nineteen>
+                  <ng-container *ngIf ="val.key == CONSTANT.COCOON_PURCHASE_PAYMENT; else twenty">
+                    <td>
+                      <app-payment-cocoon-purchase-khata  [customerId]="val.value.reelerId" [isListingPage]="true" [orderDetails]="val.value" (listenAndRefresh)="listenAndRefreshPaymentFunction()" ></app-payment-cocoon-purchase-khata>
+                    </td>
+                  </ng-container>
+                </ng-template>
+                <ng-template  #twenty>
+                  <ng-container *ngIf ="val.key == CONSTANT.RETAILER_DEPOSIT; else twentyone">
+                    <td>
+                      <a matTooltip="Edit"  class="btn btn-icon btn-sm mr-1 mt-1" (click)="edit(item.value,index)">
+                        <i class="flaticon-edit-1 text-success"></i>
+                      </a>
+                      <app-retailer-deposits  [customerId]="val.value.id" [isListingPage]="true" [orderDetails]="val.value" (listenAndRefresh)="listenAndRefreshPaymentFunction()" ></app-retailer-deposits>
+                    </td>
+                  </ng-container>
+                </ng-template>
+                <ng-template  #twentyone>
+                  <ng-container *ngIf ="val.key == CONSTANT.RETAILER_DEPOSIT_APPROVE; else twentytwo">
+                    <td>
+                      <ng-container *ngIf="(val.value.settlementStatus === 'NEW' || (val.value.settlementStatus === 'APPROVED' && val.value.balance > 0))">
+                        <app-retailer-deposits  [customerId]="val.value.id" [isListingPage]="true" [isFinanceApproval]="true" [orderDetails]="val.value" (listenAndRefresh)="listenAndRefreshPaymentFunction()" ></app-retailer-deposits>
+                      </ng-container>
+                    </td>
+                  </ng-container>
+                </ng-template>
+
+                <ng-template #twentytwo>
+                  <ng-container  *ngIf ="val.key == CONSTANT.DETAILS2; else twentythree">
+                    <td (click) = "details(item.value,index,val.key)"><a [matTooltip]="val.key" class="btn btn-link-success font-weight-bold">
+                      {{ val.value }}</a>
+                    </td>
+                  </ng-container>
+                </ng-template>
+
+                <ng-template #twentythree>
+                  <ng-container  *ngIf ="val.key == CONSTANT.SELECT_ROW; else twentyFour">
+                    <td class="selection-cell d-flex">
+                      <label class="checkbox checkbox-single mt-2">
+                        <input type="checkbox" [checked]="val.value.selected" (change)="onSelectCheckBoxRows(index)"/>
+                        <span *ngIf="val.value.isDisplay"></span>&nbsp;&nbsp;<ng-container *ngIf="!val.value.selected&&!val.value.isDisplay">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</ng-container>
+                      </label>
+                      <b [matTooltip]="val.key"  (click) = "details(item.value,index,val.key)" class="btn btn-link-success font-weight-bold mt-3">
+                        {{ val.value.code }}</b>
+                    </td>
+                  </ng-container>
+                </ng-template>
+                
+                <ng-template  #twentyFour>
+                  <ng-container *ngIf ="val.key == CONSTANT.PAYMENT_GENERIC; else twentyFive">
+                    <td>
+                      <ng-container>
+                      <!-- <a matTooltip="Edit"  class="btn btn-icon btn-sm mr-1 mt-1" (click)="edit(item.value,index)">
+                        <i class="flaticon-edit-1 text-success"></i>
+                      </a> -->
+                        <app-generic-payment [paymentInfo]="val.value" (refresh)="listenAndRefreshPaymentFunction()"></app-generic-payment>
+                      </ng-container>
+                    </td>
+                  </ng-container>
+                </ng-template>
+
+                <ng-template #twentyFive>
+                  <ng-container  *ngIf ="val.key == CONSTANT.COTTON_PAYMENT; else twentySix">
+                    <td>
+                      <!-- <a matTooltip="Edit"  class="btn btn-icon btn-sm mr-1 mt-1" (click)="edit(item.value,index)">
+                        <i class="flaticon-edit-1 text-success"></i>
+                      </a> -->
+                      <app-cotton-orderpayment [details]="val.value"></app-cotton-orderpayment>
+                      <!-- <app-retailer-deposits  [customerId]="val.value.id" [isListingPage]="true" [orderDetails]="val.value" (listenAndRefresh)="listenAndRefreshPaymentFunction()" ></app-retailer-deposits> -->
+                    </td>
+                  </ng-container>
+                </ng-template>
+
+                <ng-template #twentySix>
+                  <ng-container  *ngIf ="val.key == CONSTANT.COTTON_SALES; else twentySeven">
+                    <td>
+                      <a matTooltip="View Invoice" class="btn btn-icon btn-sm" *ngIf="val.value" href="{{ val.value }}" target="_blank">
+                        <i class="flaticon-file-2 text-warning"></i>
+                      </a>
+                    </td>
+                  </ng-container>
+                </ng-template>
+
+                <ng-template #twentySeven>
+                  <ng-container  *ngIf ="val.key == CONSTANT.BANK_ACCOUNT; else twentyEight">
+                    <td>
+                      <a
+                      class="text-muted font-weight-bold cursor-pointer"
+                      >
+                    <i  matTooltip="View " (click)="edit(val.value,index)"  class="flaticon-visible  cursor-pointe icon-2x  text-success icon-lg"></i>
+                    </a>
+                    </td>
+                  </ng-container>
+                </ng-template>
+                
+                <ng-template #twentyEight>
+                  <ng-container  *ngIf ="val.key == CONSTANT.MANDATE_BANK_ACCOUNT_LIST; else twentyNine">
+                    <td>
+                    <app-initialize-payment
+                      (refresh)="listenAndRefreshPaymentFunction()"                 
+                      [mandateId]="val.value.mandateId"
+                      [customer_id]="val.value.customerId" 
+                      [bank_id]="val.value.bankId" 
+                      [event]="val.value.status.event"
+                      ></app-initialize-payment>
+                    </td>
+                  </ng-container>
+                </ng-template>
+
+
+                <ng-template #twentyNine>
+                  <ng-container  *ngIf ="val.key == CONSTANT.MANDATE_STATE_LIST; else thirty">
+                    <td>
+                      <app-mandate-cancel
+                      [customerId]="val.value.customerId"
+                      [bankId]="val.value.bankId"
+                      [umrn]="val.value.status.umrn"
+                      [mandateId]="val.value.mandateId"
+                      (refresh)="listenAndRefreshPaymentFunction()"
+                      [isCancelled]="val.value.status.event != 'apimndt.destaccept'"
+                      >
+                      </app-mandate-cancel>
+                    </td>
+                  </ng-container>
+                </ng-template>
+
+                <ng-template #thirty>
+                  <ng-container *ngIf="val.key == CONSTANT.PAYMENTSTATUS;else thirtyone">
+                    <td>
+                      <div class="label label-pill label-inline" 
+                      [ngClass]="{
+                      'label-warning' : val.value == 'PENDING',
+                      'label-primary': val.value == 'PAID'
+                      }"
+                      >{{val.value}}</div>
+                    </td>
+                  </ng-container>
+                </ng-template>
+
+                <ng-template #thirtyone>
+                  <ng-container  *ngIf ="val.key == CONSTANT.REVERSAL; else thirtyTwo">
+                    <td>
+                      <a
+                      class="text-muted font-weight-bold cursor-pointer"
+                      >
+                    <i *ngIf="val.value=='deposit'" matTooltip="Reversal " (click)="reversalFromMudra(index)" class="fas fa-undo text-danger cursor-pointer ml-3 mt-1" ></i>
+                    </a>
+                    </td>
+                  </ng-container>
+                </ng-template>
+                <ng-template #thirtyTwo>
+                  <ng-container *ngIf="val.key == CONSTANT.EDIT_HIDE_ACTION && userType.role !== 'READADMIN';else thirtyThree">
+                      <td>
+                        <!-- *ngIf="val.key != 'Completed'" -->
+                        <a matTooltip="Edit"  *ngIf="val.key != 'Completed'&& !val.value.isHide" class="btn btn-icon btn-sm mr-1 mt-1" (click)="edit(item.value,index)">
+                          <i class="flaticon-edit-1 text-success"></i>
+                        </a>
+                      </td>
+                  </ng-container>
+              </ng-template>
+
+
+              <ng-template  #thirtyThree>
+                <ng-container *ngIf ="val.key == CONSTANT.BALE_PURCHASE_PAYMENT_GENERIC; else thirtyFour">
+                  <td>
+                    <ng-container>
+                    <!-- <a matTooltip="Edit"  class="btn btn-icon btn-sm mr-1 mt-1" (click)="edit(item.value,index)">
+                      <i class="flaticon-edit-1 text-success"></i>
+                    </a> -->
+                      <app-generic-payment [paymentInfo]="val.value" (refresh)="listenAndRefreshPaymentFunction()"></app-generic-payment>
+                    </ng-container>
+                  </td>
+                </ng-container>
+              </ng-template>
+
+
+              <ng-template  #thirtyFour>
+                <ng-container *ngIf ="val.key == CONSTANT.STATUS_SELECT_BOX; else thirtyFive">
+                  <td>
+                  <select class="form-control" style="width: 160px;" name="yarnPurchaseStatus" 
+                  (change)="onStatusSelection($event,index)"
+                  >
+                  <option *ngFor="let itr of val?.value?.INVENTORY_STATUS"  [value]="itr?.name" [disabled]="itr?.isDisabled" [selected]="itr?.name == val?.value?.status">{{itr?.name?.replaceAll('_',' ')}}</option>                     
+                 </select>
+                 </td>
+                </ng-container>
+              </ng-template>
+
+              <ng-template  #thirtyFive>
+                <ng-container *ngIf ="val.key == CONSTANT.MONTHTARGET; else thirtySix">
+                  <td>
+                    <!-- <a matTooltip="Edit"  class="btn btn-icon btn-sm mr-1 mt-1" (click)="edit(item.value,index)">
+                      <i class="flaticon-edit-1 text-warning"></i>
+                    </a> -->
+                    <ng-container >
+                      <a *ngIf="val.value.status=='NEW' || val.value.status=='IN_CLEARANCE'" matTooltip="Received" class="btn btn-icon btn-sm mr-1 mt-1" (click)="payNow(index)">
+                        <i class="flaticon2-correct text-success"></i>
+                      </a>
+                      <a *ngIf="val.value.status=='NEW'" matTooltip="In-Clearance" class="btn btn-icon btn-sm mr-1 mt-1" (click)="edit(item.value,index)">
+                        <i class="flaticon2-checking text-warning"></i>
+                      </a>
+                      <a *ngIf="val.value.status=='NEW' || val.value.status=='IN_CLEARANCE'" matTooltip="Decline" class="btn btn-icon btn-sm mt-1" (click)="details(item.value,index,val.key)">
+                        <i class="flaticon-cancel text-danger"></i>
+                      </a>
+                    </ng-container>
+                    
+                    
+                  </td>
+                </ng-container>
+              </ng-template>
+              <ng-template  #thirtySix>
+                <ng-container *ngIf ="val.key == CONSTANT.TASK_LIST; else thirtySeven">
+                  <td>
+                   <!-- <app-fetch-buttton-dynamically [processState]="val.value?.processState" [entityId]="val.value?.externalId"  [entityType]="'YarnOrderReturn'" [processTaskInformation]="[val.value]"></app-fetch-buttton-dynamically> -->
+                   <app-camunda-button [business]="val.value.business" [entityType]="val.value.entityType" *ngIf="val.value.business=='RESHAMUDRA'" [externalId]="val.value.externalId" [taskInputVariables]="val.value.taskInputVariables"></app-camunda-button>
+                   <app-fetch-buttton-dynamically *ngIf="val.value.business=='B2B'"  [processState]="val.value?.processState" [entityId]="val.value?.externalId"  [entityType]="'YarnOrderReturn'" [processTaskInformation]="[val.value]"></app-fetch-buttton-dynamically>
+                  </td>
+                </ng-container>
+              </ng-template>
+              <ng-template #thirtySeven>
+                <ng-container *ngIf="val.key == CONSTANT.ACTIVATE && userType.role !== 'READADMIN';else final">
+                    <td>
+                      <div>
+                        <span class="switch-green switch switch-icon switch-sm">
+                          <label>
+                            <input type="checkbox" [checked]="val.value" [readonly]="val?.value?.readonly" [disabled]="val?.value?.isEnabled" (change)="switchIconToggle(index)" name="select" />
+                            <span></span>
+                          </label>
+                        </span>
+                      </div>
+                    </td>
+                </ng-container>
+              </ng-template>
+
+                <ng-template #final>
+                  <td>
+                    {{val.value}}
+                  </td>
+                </ng-template>
+
+              </ng-container>
+
+          </tr>
+        </tbody>
+        <!-- @Table Body ends here -->
+
+      </table>
+    </div>
+    <div class="row ml-2" *ngIf="hidePagination">
+      <div class="mr-2">
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item">
+              <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChangeSelect(0)" href="javascript:void(0);">
+                <span aria-hidden="true">&laquo;&laquo;</span>
+                <span class="sr-only">First</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChangeSelect(paginationData.currentPage - 1)" href="javascript:void(0);">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" *ngIf="paginationData?.currentPage !== 0 && paginationData?.currentPage !== 1" (click)="onPageChangeSelect(paginationData?.currentPage - 2)" href="javascript:void(0);">{{ paginationData?.currentPage -1 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" *ngIf="paginationData?.currentPage !== 0" (click)="onPageChangeSelect(paginationData?.currentPage - 1)" href="javascript:void(0);">{{ paginationData?.currentPage}}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link active" href="javascript:void(0);">{{ paginationData?.currentPage + 1 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1" (click)="onPageChangeSelect(paginationData?.currentPage + 1)" href="javascript:void(0);">{{ paginationData?.currentPage + 2 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1 && paginationData?.currentPage !== paginationData.pages.length - 2" (click)="onPageChangeSelect(paginationData?.currentPage + 2)" href="javascript:void(0);">{{ paginationData?.currentPage + 3 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}" (click)="onPageChangeSelect(paginationData.currentPage + 1)" href="javascript:void(0);">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}" (click)="onPageChangeSelect(paginationData.pages.length - 1)" href="javascript:void(0);">
+                <span aria-hidden="true">&raquo;&raquo;</span>
+                <span class="sr-only">Last</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div class="mr-2">
+        <select class="custom-select" style="height: calc(1.2em + 1rem + 2px); padding: 0.35rem 2rem 0.35rem 1rem;" [ngModelOptions]="{standalone: true}" [(ngModel)]="paginationData.pageSize" (change)="onPageSizeChange()">
+          <option [ngValue]="10" selected>10 per page</option>
+          <option [ngValue]="20">20 per page</option>
+          <option [ngValue]="50">50 per page</option>
+          <option [ngValue]="100">100 per page</option>
+        </select>
+      </div>
+      <div class="pt-2">
+        <small class="text-muted">(Total: {{paginationData.total}})</small>
+      </div>
+    </div>
+  </div>
+</div>

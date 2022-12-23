@@ -1,0 +1,44 @@
+        <div class="square square-lg" [formGroup]="seedsPriceSheetForm">
+            <div class="card card-custom gutter-b" formArray="warehouse">
+                <div class="section_with__border "
+                    *ngFor="let item of seedsPriceSheetForm.get('warehouse')['controls'];let wareHouseIndex = index;"
+                    [formGroup]="item">
+                    <p style="text-align:right;">Last Updated:{{item?.value?.lastModifiedDate | date: 'M/d/yy, h:mm a'}}</p>
+                    <h4 class="section_with__border--title">{{item?.value?.warehouseName}} <span class="text-align-end"></span>
+                    </h4>
+                    <div class="col-12">
+                        <div class="row" formArray="conditions">
+                            <ng-container
+                                *ngFor="let condition of seedsPriceSheetForm.get('warehouse')['controls'][wareHouseIndex].get('conditions')['controls']; let conditionIndex = index;"
+                                [formGroup]="condition">
+                                <div class="col-lg-4">
+                                    <div class="row">
+                                        <h6 class="mb-5 col-lg-12">{{ conditionIndex == 0 ?'Grade A':conditionIndex==1?'Grade B':'Grade C'}}</h6>
+                                        <h6 class="mb-2  col-lg-6">min</h6>
+                                        <h6 class="mb-2 col-lg-6">max</h6>
+                                    <ng-container formArray="value">
+                                        <ng-container
+                                            *ngFor="let values of seedsPriceSheetForm.get('warehouse')['controls'][wareHouseIndex].get('conditions')['controls'][conditionIndex].get('value')['controls'];let valueIndex = index;"
+                                            [formGroup]="$any(seedsPriceSheetForm.get('warehouse')['controls'][wareHouseIndex].get('conditions')['controls'][conditionIndex].get('value'))">
+                                            <div class="col-lg-6">
+                                                <input  [class.is-invalid]="values.invalid" type="number" class="form-control form-control-lg" placeholder=""
+                                                    [formControlName]="valueIndex" [ngClass]="{'form-control-solid':isEdit}" [readOnly]="isEdit">
+                                                    <small *ngIf="values.invalid" class="text-danger">Entered Value is Greater Than Max Price</small>
+                                            </div>
+                                        </ng-container>
+                                    </ng-container>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                    <div class="d-flex  w-0 mr-4 justify-content-end">
+                        <button type="button" class="btn btn-sm btn-secondary mt-2" (click)="edit()">Edit</button>
+                        <button type="button" class="btn btn-success mt-2" [disabled]="seedsPriceSheetForm.invalid"
+                            (click)="createSeedsPriceSheet(item.value)">Save</button>
+                    </div>
+                </div>
+                </div>
+                
+                </div>
+                

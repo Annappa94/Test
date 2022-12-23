@@ -1,0 +1,245 @@
+<div class="card card-custom gutter-b">
+    <div class="section_with__border mt-5">
+        <!-- <div>
+              <button  type="button" class="btn btn-success btn-md float-right"
+                >Create SO</button>
+            </div> -->
+        <div class="row justify-content-between">
+            <div class="card-title">
+                <div class="d-flex align-items-center">
+                    <h6 class="ml-3 mr-2">Estimated Inventory</h6>
+                    <div class="col-lg-12 mt-2">
+                        <select class="form-control form-control-lg  app-disable" (change)="onChangeWareHouse($event)"
+                            name="Center" placeholder="To Center">
+                            <option value="">All</option>
+                            <option *ngFor="let item of warehouseList" [value]="item.id">{{item.name}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+             <div class="col-md-4  text-right" >
+                <mat-form-field appearance="fill" class="createso">
+                    <mat-label> CREATE SO</mat-label>
+                    <mat-select disableRipple>
+                        <mat-option [routerLink]="'/resha-farms/cotton-seeds-order'">Seeds SO</mat-option>
+                        <mat-option >Kwadi SO</mat-option>
+                        <mat-option >Roll Dust SO</mat-option>
+                        <mat-option >Lint Dust</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div> 
+        </div>
+
+        <div class="color">
+            <div class="row">
+                <div class="col-sm col-sm-2 col-sm-1 col-4">
+                    <div class="card card-stretch gutter-b whiteSmoke">
+                        <div class="card-body cursor-pointer">
+                            <span class="card-title font-weight-bolder text-success font-size-h2 mb-0 d-block"></span>
+                            <span class="font-weight-bold  font-size-sm">
+                                <h6>Bales<br><span class="font-weight-bold text-success font-size-sm">
+                                        <h3>{{inventoryDetailes?.baleQuantity}}</h3>
+
+                                    </span></h6>
+                                <h6><span class="text-success">{{inventoryDetailes?.lint}}kg</span> </h6>
+                            </span>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm col-sm-2 col-sm-2 col-4">
+                    <div class="card card-stretch gutter-b whiteSmoke">
+                        <div class="card-body cursor-pointer">
+                            <span class="card-title font-weight-bolder text-success font-size-h2 mb-0 d-block"></span>
+                            <span class="font-weight-bold font-size-sm">
+                                <h6>Seeds<br><span class="font-weight-bold text-success font-size-sm">
+                                        <h4>{{inventoryDetailes?.seeds}}Kg</h4>
+
+                                    </span></h6>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="vl"></div> -->
+
+                <div class="col-sm col-sm-2 col-sm-2 col-4">
+                    <div class="card card-stretch gutter-b whiteSmoke">
+                        <div class="card-body cursor-pointer">
+                            <span class="card-title font-weight-bolder text-success font-size-h2 mb-0 d-block"></span>
+                            <span class="font-weight-bold font-size-sm">
+                                <h6>Kawdi<br><span class="font-weight-bold text-success font-size-sm">
+                                        <h4>{{inventoryDetailes?.kawdi}}Kg</h4>
+                                    </span></h6>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-sm col-sm-2 col-sm-2 col-4">
+                    <div class="card card-stretch gutter-b whiteSmoke">
+                        <div class="card-body cursor-pointer">
+                            <span class="card-title font-weight-bolder text-success font-size-h2 mb-0 d-block"></span>
+                            <span class="font-weight-bold  font-size-sm">
+                                <h6>Roll Dust<br><span class="font-weight-bold text-success font-size-sm">
+                                        <h4>{{inventoryDetailes?.rollDust}}Kg</h4>
+                                    </span></h6>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm col-sm-2 col-sm-2 col-4">
+                    <div class="card card-stretch gutter-b whiteSmoke">
+                        <div class="card-body cursor-pointer">
+                            <span class="card-title font-weight-bolder text-success font-size-h2 mb-0 d-block"></span>
+
+                            <span class="font-weight-bold font-size-sm">
+                                <h6>Lint Dust<br><span class="font-weight-bold text-success font-size-sm">
+                                        <h4>{{inventoryDetailes?.lintDust}}Kg</h4>
+                                    </span></h6>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section_with__border mt-3">
+        <div class="card card-custom gutter-b">
+            <div class="card-title">
+                <div class="d-flex align-items-center">
+                    <h6 class="ml-3 mr-2">Available <br>Inventory</h6>
+                    <div class="col-lg-4 mt-2">
+                        <select class="form-control form-control-lg app-disable" (change)="onChangeAvalibaleInventory($event)"
+                            name="Center" placeholder="To Center">
+                            <option value="">All</option>
+                            <option *ngFor="let item of warehouseList" [value]="item.id">{{item.name}}</option>
+                        </select>
+                        <p></p>
+                    </div>
+                    
+                    <div class="text-right">
+                        <button class="btn btn-primary btn-lg  mb-3"
+                    (click)="CbProductionPopup(cbproductionpopupcontent);" [disabled]="!selectedWareHouseId">Create
+                    Lot</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="card-toolbar float-right mr-4">
+
+            <button class="btn btn-success btn-md float-right" type="submit">Dispatch</button>
+        </div> -->
+
+        <div class="row">
+            <div class="col-sm col-sm-2 col-sm-2 col-4">
+                <div class="card  gutter-b whiteSmoke text-center">
+                    <div class="card-body cursor-pointer">
+                        <span class="card-title font-weight-bolder text-success font-size-h2 mb-0 d-block"></span>
+                        <span class="font-weight-bold font-size-sm">
+                            <h4>Total-Bales</h4> <span class="font-weight-bold text-success font-size-sm">
+                                <h3>{{warehouseDetaisList?.baleQuantity}}</h3>
+                            </span>
+                            <h6>{{warehouseDetaisList?.baleWeight}}Kgs</h6>
+                        </span>
+                    </div>
+                </div>   
+            </div> 
+            <div class="col-sm col-sm-3 col-sm col-4 text-center">
+                <div class="card  gutter-b whiteSmoke">
+                    <div class="card-body cursor-pointer">
+                        <span class="card-title font-weight-bolder text-success font-size-h2 mb-0 d-block"></span>
+                        <span class="font-weight-bold font-size-sm">
+                            <h4>Available-Bales</h4> <span class="font-weight-bold text-success font-size-sm">
+                                <h3>{{warehouseDetaisList?.availableQuantity}}</h3>
+                            </span>
+                            <h6>{{warehouseDetaisList?.availableWeight}}Kgs</h6>
+                        </span>
+                    </div>
+                </div>   
+            </div>
+            
+        </div> 
+
+    </div>
+
+
+    <div class="example-preview">
+        <div>
+            <form [formGroup]="ManualCottonBaleInventoryForm">
+                <ng-template #cbproductionpopupcontent let-c="close" let-d="dismiss">
+                
+                    <div class="modalbodyback">
+                        <div class="warehousename">
+                            <h4 class="text-center"><b>Warehouse Name:</b><small>{{selectedwarehousename}}</small></h4>
+                        </div>
+                        
+                        <div class="modal-header text-center modalheaderbackground">
+                            <h4 class="modal-title w-100">Available quantity</h4>
+                        </div>
+                        <div class="modal-body moadlcontentbackground">
+                            <div class="form-group row">
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <label for="availablebales" class="col-sm-2">
+                                                <span class="h6 bg-white  pt-1 pl-2 pr-2"><b>Bales</b></span>
+                                            </label>
+                                            <input disabled class="form-control mt-n3" id="availablebales" formControlName="availableQuantity" placeholder="0">
+                                            
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <label for="availablekgs" class="col-sm-2">
+                                                <span class="h6  bg-white  pt-1 pl-2 pr-2"><b>Kgs</b></span>
+                                            </label>
+                                            <input disabled class="form-control mt-n3" id="availablekgs" placeholder="0" formControlName="availableQuantityInKg">
+                                        </div>
+                                    </div>
+    
+                                </div>
+                            </div>
+                        </div>
+                    </div><br><br>
+    
+    
+                    <div>
+                        <div class="modal-header text-center modalheaderbackground">
+                            <h4 class="modal-title w-100">Required quantity</h4>
+                        </div>
+                        <div class="modal-body moadlcontentbackground">
+                            <div class="form-group row">
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <label for="requiredbales" class="col-sm-2">
+                                                <span class="h6 bg-white  pt-1 pl-2 pr-2"><b>Bales</b></span>
+                                            </label>
+                                            <input type="number" class="form-control mt-n3" id="requiredbales" formControlName="requiredQuantity" [class.is-invalid]="isControlInvalidForRequiredQuantity('requiredQuantity')" [class.is-valid]="isControlValidForRequiredQuantity('requiredQuantity')">
+                                            <div class="valid-feedback" *ngIf="isControlValidForRequiredQuantity('requiredQuantity')">Required Quantity Was Entered</div>
+                                            <div class="invalid-feedback" *ngIf="controlHasErrorForRequiredQuantity('required', 'requiredQuantity')">Please Enter Your Required Quantity</div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <label for="requiredkgs" class="col-sm-2">
+                                                <span class="h6  bg-white  pt-1 pl-2 pr-2"><b>Kgs</b></span>
+                                            </label>
+                                            <input type="number" class="form-control mt-n3" id="requiredkgs" formControlName="requiredQuantityInKg" [class.is-invalid]="isControlInvalidForRequiredQuantity('requiredQuantityInKg')" [class.is-valid]="isControlValidForRequiredQuantity('requiredQuantityInKg')">
+                                            <div class="valid-feedback" *ngIf="isControlValidForRequiredQuantity('requiredQuantityInKg')">Required Kgs Was Entered</div>
+                                            <div class="invalid-feedback" *ngIf="controlHasErrorForRequiredQuantity('required', 'requiredQuantityInKg')">Please Enter Your Required Kgs</div>
+                                        </div>
+                                    </div>
+    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm"
+                            (click)="closeAvailabilitypopup()">Cancel</button>
+                        <button type="button" class="btn btn-primary btn-sm" [disabled]="ManualCottonBaleInventoryForm.invalid" (click)="createManualcottonbaleProduction()">Save</button>
+                    </div>
+                </ng-template>
+            </form>
+        </div>
+       
+    </div>

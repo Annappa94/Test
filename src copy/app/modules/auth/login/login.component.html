@@ -1,0 +1,87 @@
+<div class="login-form login-signin">
+  <ng-container *ngIf="!otpReceived; else otpReceivedTemplate">
+    <form
+    class="form"
+    [formGroup]="loginForm"
+    novalidate="novalidate"
+    id="kt_login_signin_form"
+    (ngSubmit)="generateOtp()"
+  >
+  
+    <div class="pb-10 pt-lg-0 pt-5">
+      <div class="mb-10">
+        <span>
+          <img src="./assets/media/logos/logo-light.png" alt="logo">
+        </span>
+      </div>
+      <div class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg mb-2">
+        Login to ReshaMandi
+      </div>
+      <div class="font-weight-bolder font-size-h6 font-size-h6-lg" style="color: #7ed321;">
+        Operations Command Center (OCC)
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label class="font-size-h6 font-weight-bolder text-dark">Enter your registered phone number</label>
+
+      <input type="number" autofocus #ngPhoneInput class="form-control py-7 form-control-lg" placeholder="e.g 8764796281"
+          autocomplete="off" formControlName="phone"
+          [ngClass]="{ 'is-invalid': (loginForm.invalid && loginForm.value.phone) }">
+
+        <span *ngIf="loginForm.invalid && loginForm.value.phone" align="end" class="font-weight-bold" [ngStyle]="{color: '#f9455b'}">
+          Number Incorrect
+        </span>
+        <span *ngIf="loginForm.valid && invalidNumber == loginForm.value.phone" align="end" class="font-weight-bold" [ngStyle]="{color: '#f9455b'}">
+          NUMBER NOT REGISTERED WITH RESHAMANDI
+        </span>
+    </div>
+
+    <div class="pb-lg-0 pb-5">
+      <button
+        type="submit"
+        id="kt_login_signin_submit"
+        class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3"
+        [disabled]="loginForm.invalid"
+      >
+        Generate OTP
+      </button>
+
+      <ng-container *ngIf="isLoading$ | async">
+        <span class="spinner spinner-primary ml-5"></span>
+      </ng-container>
+    </div>
+  </form>
+  </ng-container>
+  <ng-template #otpReceivedTemplate>
+    <div class="pb-10 pt-lg-0 pt-5">
+      <div class="mb-10">
+        <span>
+          <img src="./assets/media/logos/logo-light.png" alt="logo">
+        </span>
+      </div>
+      <div class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg mb-2">
+        Login to ReshaMandi
+      </div>
+      <div class="font-weight-bolder font-size-h6 font-size-h6-lg" style="color: #7ed321;">
+        Operations Command Center (OCC)
+      </div>
+    </div>
+      <div class="form-group">
+        <label class="font-size-h6 font-weight-bolder text-dark">Please Enter The OTP Sent To {{ loginForm.value.phone
+          }}</label>
+  
+        <input type="number" #ngOtpInput (keyup.enter)="verifyOtp()" autocomplete="off" autofocus class="form-control form-control-lg" name="otp" placeholder="Enter OTP" [(ngModel)]="otp">
+      </div>
+  
+      <div class="d-flex justify-content-end">
+        <span class="font-weight-bold cursor-pointer" (click)="resendOtp()">
+          RESEND OTP
+        </span>
+      </div>
+
+    <div>
+      <button type="submit" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-3 my-3 mr-3" (click)="verifyOtp()" [disabled]="(otp < 999)">LOGIN</button>
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,90 @@
+.page-item {
+    .active{
+        pointer-events: none;
+        color: #f9fdf6;
+        background-color: #7ed321;
+    }
+    .disabled{
+        opacity: 0.5;
+        cursor: default;
+        pointer-events: none;
+        &:hover{
+            background-color: #f9fdf6 !important;
+        }
+    }
+}
+.rupee_symbol {
+    font-family: monospace;
+}
+
+.cursor{
+    cursor: pointer;
+}
+
+.section_with__border {
+    border: 2px solid #EBEDF3;
+    margin: 16px;
+    border-radius: 0.42rem;
+    position: relative;
+    padding: 10px;
+   .section_with__border--title {
+        background: #F4F6F9;
+        position: absolute;
+        top: -20px;
+        left: 23px;
+        color: #7ED321;
+        font-size: 15px;
+        padding: 10px;
+    }
+}
+
+.approval_reject_actions {
+    justify-content: space-between;
+    display: flex;
+    i {
+        
+        border-radius: 50%;
+        // padding: 8px;
+        color: #fff;
+        height: 30px;
+        width: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+    .approval_action {
+        background-color: #e7ffcc;
+        &:hover {
+            background-color: #7ED321;
+        }
+    }
+    .rejected_action {
+        background-color: #febfbe;
+        &:hover {
+            background-color: #FF7F7F;
+        }
+    }
+}
+
+//center mngmnt price sheet
+.center_price_sheet--header {
+    background-color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+
+}
+
+.overlay_layout {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgb(0 0 0 / 38%);
+    z-index: 1024;
+}

@@ -1,0 +1,313 @@
+<div class="bg-white rounded mb-4 d-flex align-items-center py-2 sticky-header justify-content-between" >
+    <ul id="breadcrumbs">
+        <li><span style="cursor: pointer;" class="hover-item" (click)="goBack()">All Bale Sale Orders</span></li>
+        <li><span>{{id}}</span></li>
+    </ul>
+    <div>
+        <app-back-button></app-back-button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-4 mt-4">
+        <div class="card card-custom gutter-b">
+            <div class="card-body pt-4">
+                <div class="d-flex justify-content-between align-items-baseline mt-4">
+                    <div class="font-size-h5 mb-3 font-weight-bolder text-success">
+                        {{data?.code}}
+                    </div>
+                </div>
+
+                <p class="mt-4">
+                    <span class="text-success font-weight-bold pr-1">Bale Details</span>
+                </p>
+                <div class="mb-7">
+
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Created by:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.createdBy}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Created Date:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.createdDate}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Credit Days:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.creditDays}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Last Modified By:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.lastModifiedBy}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Last Modified Date:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.lastModifiedDate}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Representative:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.rmRepresentativeName}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Representative Phone:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.rmRepresentativePhone}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Order Status:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.orderStatus}}</span>  
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Total Weight(Kg):</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.totalWeight}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Gross Total Amount(Rs):</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.totalAmount}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Total Discount Amount(Rs):</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.totalDiscountAmount}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2"> Pre-tax Total Price(Rs):</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.totalPreTaxPrice}}</span>
+                    </div>
+
+
+                   
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Cgst:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.cgst}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Sgst:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.sgst}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Igst:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.igst}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Net Amount(Rs):</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.netAmount}}</span>
+                    </div>
+                    
+                   
+                    <!-- <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Ware House Id:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.warehouseId}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Ware House Name:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.warehouseName}}</span>
+                    </div> -->
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Hamali Charges(Rs):</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.hamaliDeduction}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">WeighBridge Charges(Rs):</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.weighBridgeCharges}}</span>
+                    </div>
+
+                   
+
+                    
+
+                    <!-- <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Total Discount Percentage:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.totalDiscountInPercentage}}</span>
+                    </div> -->
+
+                   
+                   
+
+                    <!-- <div *ngIf="data?.hamaliDeduction" class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Hamali Deduction:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.hamaliDeduction}}</span>
+                    </div>
+
+                    <div *ngIf="data?.weighBridgeCharges" class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Weigh Bridge Charges:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.weighBridgeCharges}}</span>
+                    </div> -->
+
+                    <div *ngIf="data?.creditDays" class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Credit Days:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.creditDays}}</span>
+                    </div>
+
+                    <!-- <div *ngIf="data?.rmRepresentativeName" class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Representive :</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.rmRepresentativeName}}</span>
+                    </div> -->
+
+                    <div *ngIf="data?.hamaliDeduction" class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Hamali Deduction:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.hamaliDeduction}}</span>
+                    </div>
+
+                    <div *ngIf="data?.weighBridgeCharges" class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Weigh Bridge Charges:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.weighBridgeCharges}}</span>
+                    </div>
+
+                    <div *ngIf="data?.creditDays" class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Credit Days:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.creditDays}}</span>
+                    </div>
+
+                    <div *ngIf="data?.rmRepresentativeName" class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Representive :</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.rmRepresentativeName}}</span>
+                    </div>
+
+                </div>
+                
+
+               
+                <p class="mt-7 mb-2">
+                    <span class="text-success-75 font-weight-bolder pr-1">Address</span>
+                </p>
+                <p>
+                    <span class="text-muted font-weight-bolder mr-2">
+                        {{data?.shippingAddress?.address}} {{data?.shippingAddress?.village}}
+                        {{data?.shippingAddress?.taluk}} {{data?.shippingAddress?.city}}
+                    </span><br /><br />
+                    <span class="text-muted font-weight-bolder mr-2 pt-2">{{data?.shippingAddress?.district ?
+                        data?.shippingAddress?.district + ' District, ' : ''}} {{data?.shippingAddress?.state}},
+                        {{data?.shippingAddress?.pincode}}</span>
+                </p>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-5 mt-4">
+        <div class="card p-6">
+            <div class="justify-content-between align-items-center" *ngIf="saleOrderImage">
+                <span class="text-muted font-weight-bold mr-2">Weighbridge Slip:</span>
+                <img [src]="saleOrderImage" width="100%" height="300"/>
+            </div>
+        </div>
+        <div class="card card-custom mt-4">
+            <div class="card-body pt-4">
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <div class="font-size-h5 mb-3 font-weight-bold text-success">
+                        Bale Lots
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-borderless table-vertical-center">
+                        <thead>
+                            <tr>
+                                <th class="p-0 min-w-70px text">Lot</th>
+                                <th class="p-0 min-w-70px">Cotton Type</th>
+                                <th class="p-0 min-w-70px">Gross Total Amount</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngIf="data?.cottonBaleSalesOrderItems?.length !== 0; else emptyTemplate">
+                                <tr *ngFor="let item of data?.cottonBaleSalesOrderItems">
+
+
+                                    <td class="pl-0">
+                                        <span class="text-success font-weight-bold d-block font-size-md" *ngIf="item.cottonBaleListingId" (click)="routeToLotDetailsPage(item.cottonBaleListingId)">{{item?.cottonBaleListingId}}</span>
+                                    </td>
+
+
+                                    <td class="pl-0">
+                                        <span class="text-dark-75 font-weight-bold d-block font-size-md" *ngIf="item.cottonType">{{item?.cottonType}}</span>
+                                    </td>
+                                   
+                                    
+                                    
+                                    <td class="pl-0">
+                                        <span class="text-dark-75 font-weight-bold d-block font-size-md" *ngIf="item.totalAmount">Rs.{{item?.grossAmount}}</span>
+                                        <span class="text-muted font-weight-bold">{{item?.actualSellingWeight}}Kgs@{{(item?.sellingPricePerCandy/355.6).toFixed(2)}}Rs/kg <br>
+                                            <span *ngIf="item.discountAmount"> and discount Rs. {{item?.discountAmount}}</span></span>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                            <ng-template #emptyTemplate>
+                                <p class="p-5">Yet to be sold.</p>
+                              </ng-template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 mt-4">
+        <div class="card card-custom ">
+            <div class="card-body pt-4">
+                <div class="d-flex justify-content-between align-items-baseline mt-4">
+                    <div class="font-size-h5 font-weight-bold text-success">Payments</div>
+                    <button matTooltip="Pay Now" class="btn btn-sm btn-icon float-right">
+                        <app-generic-payment [paymentInfo]="data" (refresh)="refresh()"></app-generic-payment>
+
+                    </button>
+                </div>
+
+                <div class="mt-4">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Net Amount:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.netAmount}}</span>
+                    </div>
+                    <!-- <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Total Amount:</span>
+                        <span class="text-dark-75 font-weight-bold">{{data?.totalAmount}}</span>
+                    </div> -->
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Due Amount:</span>
+                        <span class="text-danger">{{data?.dueAmount}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Payment Status:</span>
+                        <span [ngClass]="{'text-danger' : data?.paymentStatus=='PENDING'}" >{{data?.paymentStatus}}</span>
+                    </div>
+                </div>
+
+                <div class="example example-basic mt-6" *ngIf="BalseSalePaymentDetails?.length">
+                    <div class="">
+                        <div class="timeline timeline-2">
+                            <div class="timeline-bar"></div>
+    
+                            <!-- REPEAT for NO OF PAYMENTS-->
+                            <div class="timeline-item" *ngFor="let item of BalseSalePaymentDetails">
+                                <span class="timeline-badge bg-success"></span>
+                                <div class="timeline-content d-flex align-items-center justify-content-between">
+                                    <span class="mr-3 font-weight-bold text-dark-50 font-size-sm d-flex flex-column">Rs. {{item?.amount.toLocaleString('en-IN')}}
+                                        <span class="label label-inline label-outline-success">
+                                            {{item.referenceNumber}}</span>
+                                       </span>
+                                    <span class="text-muted font-italic text-right font-size-xs">{{item.paymentOn}}</span>
+                                </div>
+                            </div>
+    
+                        </div>
+                        <!--end::Timeline-->
+                    </div>
+                </div>
+                
+            </div>
+            
+        </div>
+    </div>
+
+    
+</div>
+

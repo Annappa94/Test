@@ -1,0 +1,17 @@
+<ng-container>
+    <div class="row flex-column mx-0">
+      <div class="d-flex">
+        <div *ngFor="let item of taskInputVariables | keyvalue : originalOrder" (click)="markAS(item.value,item.key)">
+          <button class="btn m-3" [ngClass]="item.value=='reject'?'btn-danger':'btn-primary'">
+            {{item.key?.replaceAll('_',' ')|titlecase}}
+          </button>
+        </div> 
+      </div>
+    </div>
+</ng-container>
+
+<!-- [ngClass]="{
+  'btn-warning':item.value == 'notapproved',
+  'btn-primary':item.value=='approved'||item.value=='resubmit',
+  'btn-danger':item.value=='reject'
+} -->

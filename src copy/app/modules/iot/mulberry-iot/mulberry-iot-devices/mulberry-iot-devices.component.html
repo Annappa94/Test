@@ -1,0 +1,17 @@
+<app-paginated-table
+ [tableHeaders]="tableHeaders"
+ (infoFromTable)="tableInfo($event)"
+ [rowDataList]="deviceList"
+ [totalRecords]="totalRecords"
+ [titleOfTable]="'Mulberry Device list'"
+ (onPageChange)="onPageChange($event)"
+ [searchClass]="'col-lg-11'"
+ [searchHint]="'By Id,Farmer,Agronomist'">
+  <div class="card-toolbar New">
+    <div>
+      <button matTooltip="Sync Now" type="button" class="btn btn-sm btn-success mr-2" (click)="syncDeviceData()">
+        <i class="fas flaticon-refresh"></i>
+      </button>    
+    </div>
+  </div>
+</app-paginated-table>

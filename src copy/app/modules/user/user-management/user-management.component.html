@@ -1,0 +1,215 @@
+<div class="card card-custom gutter-b">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">OCC Users</h3>
+    </div>
+    <div class="card-toolbar">
+      <button *ngIf="userType.role !== 'READADMIN'" type="button" class="btn btn-sm btn-success" (click)="createNew();">+ New User</button>
+    </div>
+  </div>
+  <div class="card-body pt-0">
+    <div class="form form-label-right">
+      <div class="form-group row">
+        <div class="col-lg-8">
+          <input type="text" class="form-control" (keyup)="onSearch()" [(ngModel)]="searchText" placeholder="Search" value="" />
+          <small class="form-text text-muted"><b>Search</b> in all fields</small>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="row">
+            <div class="col-lg-12">
+              <select class="form-control" name="status" (change)="onChangeRole($event)" placeholder="Filter by Role">
+                <option value="all" [selected]="true">All</option>
+                <option value="Agronomist">Agronomist</option>
+                <option value="COperationsAgent">Cocoon Operations Agent</option>
+                <option value="COperationsManager">Cocoon Operations Manager</option>
+
+                <option value="COCOON_PROCUREMENT_EXEC">Cocoon Procurement Executive</option>
+                <option value="COCOON_PROCUREMENT_HEAD">Cocoon Procurement Head</option>
+                <option value="COCOON_PROCUREMENT_MANAGER">Cocoon Procurement Manager</option>
+                <option value="COCOON_SALES_EXEC">Cocoon Sales Executive</option>
+                <option value="COCOON_SALES_HEAD">Cocoon Sales Head</option>
+                <option value="COCOON_SALES_MANAGER">Cocoon Sales Manager</option>
+
+                <option value="YOperationsAgent">Yarn Operations Agent</option>
+                <option value="YOperationsManager">Yarn Operations Manager</option>
+                <option value="FinanceManager">Finance Manager</option>
+                <option value="FinanceHead">Finance Head</option>
+                <option value="CCenterAgent">Call Center Agent</option>
+                <option value="CCenterManager">Call Center Manager</option>
+                <option value="FarmInputAgent">Farm Input Agent</option>
+                <option value="FarmInputManager">Farm Input Manager</option>
+                <option value="RetailSalesAgent">Retail Sales Agent</option>
+                <option value="RetailSalesManager">Retail Sales Manager</option>
+                <option value="RetailSourcingAgent">Retail Sourcing Agent</option>
+                <option value="RetailSourcingManager">Retail Sourcing Manager</option>
+                <option value="LogisticsManager">Logistics Manager</option>
+                <option value="CottonAgent">Cotton Agent</option>
+                <option value="CottonManager">Cotton Manager</option>
+                <option value="PupaeAgent">Pupae Agent</option>
+                <option value="PupaeManager">Pupae Manager</option>
+                <option value="HRManager">HR Manager</option>
+                <option value="MudraAgent">Mudra Agent</option>
+                <option value="MudraManager">Mudra Manager</option>
+                <option value="READADMIN">Admin (Only View)</option>
+                <option value="ADMINISTRATOR">Administrator (has superpowers!)</option>
+                <option value="ItemMaster">Item Master</option>
+                <option value="RetailMerchandisingManager">Retail Merchandising Manager</option>
+                <option value="CVerticalAdmin">Vertical Admin-Cocoon</option>
+                <option value="Merchandiser">Merchandiser</option>
+                <option value="BusinessHead">Business Head</option>
+                <option value="YARN_BUSINESS_MANAGER">YARN BUSINESS MANAGER</option>
+                <option value="INWARD_WAREHOUSE_MANAGER">INWARD WAREHOUSE MANAGER</option>
+                <option value="YARN_SOURCING_EXECUTIVE">YARN SOURCING EXECUTIVE</option>
+                <option value="YARN_SOURCING_MANAGER">YARN SOURCING MANAGER</option>
+                <option value="QC_AGENT">QC AGENT</option>
+                <option value="QC_MANAGER">QC MANAGER</option>
+                <option value="YARN_PACKAGING_MANAGER">YARN PACKAGING MANAGER</option>
+                <option value="YARN_SALES_MANAGER">YARN SALES MANAGER</option>
+                <option value="YARN_SALES_REPRESENTATIVE">YARN SALES REPRESENTATIVE</option>
+                <option value="YARN_DISPATCH_MANAGER">YARN DISPATCH MANAGER</option>
+                <option value="CollectionAdmin">COLLECTION ADMIN</option>
+                <option value="CollectionManager">COLLECTION MANAGER</option>
+                <option value="CollectionAgent">COLLECTION AGENT</option>
+              </select><small class="form-text text-muted"><b>Filter</b> by Role</small>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="table-responsive angular-bootstrap-table">
+      <table class="table table-head-custom table-vertical-center overflow-hidden">
+        <thead>
+
+          <th name="name" ngDefaultControl [(ngModel)]="tableHeader.name" (click)="onSort('name')">
+            <i *ngIf="tableHeader.name === 1 && activeSort === 'name'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.name === 0 && activeSort === 'name'" class="fas fa-long-arrow-alt-down"></i>
+            Name
+          </th>
+
+          <th name="phone" ngDefaultControl [(ngModel)]="tableHeader.phone" (click)="onSort('phone')">
+            <i *ngIf="tableHeader.phone === 1 && activeSort === 'phone'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.phone === 0 && activeSort === 'phone'" class="fas fa-long-arrow-alt-down"></i>
+            Phone
+          </th>
+
+          <th name="email" ngDefaultControl [(ngModel)]="tableHeader.email" (click)="onSort('email')">
+            <i *ngIf="tableHeader.email === 1 && activeSort === 'email'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.email === 0 && activeSort === 'email'" class="fas fa-long-arrow-alt-down"></i>
+            Email
+          </th>
+
+          <th name="displayRole" ngDefaultControl [(ngModel)]="tableHeader.displayRole" (click)="onSort('displayRole')">
+            <i *ngIf="tableHeader.displayRole === 1 && activeSort === 'displayRole'"
+              class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.displayRole === 0 && activeSort === 'displayRole'"
+              class="fas fa-long-arrow-alt-down"></i>
+            Role
+          </th>
+
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of filteredUsersList">
+            <td>{{ item.name |titlecase }}</td>
+            <td>{{ item.phone }}</td>
+            <td>{{ item.email ? item.email : '-' }}</td>
+            <td>{{ item.displayRole }}</td>
+            <td>
+              <ng-container *ngIf="userType.role !== 'READADMIN'">
+
+                <a matTooltip="Edit" class="btn btn-icon btn-sm mr-1 mt-1" (click)="edit(item)">
+                  <i class="flaticon-edit-1 text-success"></i>
+                </a>
+                <a matTooltip="Delete" class="btn btn-icon btn-sm mr-1 mt-1" (click)="open(content,item)">
+                  <i class="flaticon-delete text-danger"></i>
+                </a>
+              </ng-container>
+              
+
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row">
+      <div class="mr-2">
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item">
+              <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(0)" href="javascript:void(0);">
+                <span aria-hidden="true">&laquo;&laquo;</span>
+                <span class="sr-only">First</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(paginationData.currentPage - 1)" href="javascript:void(0);">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" *ngIf="paginationData?.currentPage !== 0 && paginationData?.currentPage !== 1" (click)="onPageChange(paginationData?.currentPage - 2)" href="javascript:void(0);">{{ paginationData?.currentPage -1 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" *ngIf="paginationData?.currentPage !== 0" (click)="onPageChange(paginationData?.currentPage - 1)" href="javascript:void(0);">{{ paginationData?.currentPage}}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link active" href="javascript:void(0);">{{ paginationData?.currentPage + 1 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1" (click)="onPageChange(paginationData?.currentPage + 1)" href="javascript:void(0);">{{ paginationData?.currentPage + 2 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1 && paginationData?.currentPage !== paginationData.pages.length - 2" (click)="onPageChange(paginationData?.currentPage + 2)" href="javascript:void(0);">{{ paginationData?.currentPage + 3 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}" (click)="onPageChange(paginationData.currentPage + 1)" href="javascript:void(0);">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}" (click)="onPageChange(paginationData.pages.length - 1)" href="javascript:void(0);">
+                <span aria-hidden="true">&raquo;&raquo;</span>
+                <span class="sr-only">Last</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div class="mr-2">
+        <select class="custom-select" style="height: calc(1.2em + 1rem + 2px); padding: 0.35rem 2rem 0.35rem 1rem;"
+          [(ngModel)]="paginationData.pageSize" (change)="onPageSizeChange()">
+          <option [ngValue]="20">20 per page</option>
+          <option [ngValue]="50">50 per page</option>
+          <option [ngValue]="100">100 per page</option>
+        </select>
+      </div>
+      <div class="pt-2">
+        <small class="text-muted">(Total: {{searchText !== '' ? searchedUsers.length : usersData.length}})</small>
+      </div> 
+    </div>
+
+  </div>
+</div>
+<div class="example-preview">
+  <div>
+    <ng-template #content let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title">Delete {{user.name}}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are You Sure You Want To Delete <strong>{{user.name}}</strong>?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="delete()">Yes</button>
+      </div>
+    </ng-template>
+  </div>
+</div>

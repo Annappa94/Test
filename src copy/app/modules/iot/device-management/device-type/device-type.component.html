@@ -1,0 +1,37 @@
+<app-paginated-table [titleOfTable]="'Device type list'"
+ [tableHeaders]="tableHeaders"
+ (infoFromTable)="tableInfo($event)"
+ [rowDataList]="deviceDataList"
+ [totalRecords]="totalRecords"
+ [titleOfTable]="'Device type list'"
+ (onPageChange)="onPageChange($event)"
+ [searchClass]="'col-lg-7'"
+ [searchHint]="'By Id,Device Name,Vendor,manufacturer'">
+  <div class="card-toolbar New">
+    <div>
+    <button type="button" class="btn btn-sm btn-success mr-2" routerLink="/resha-farms/device-management/device-type-crud"> + New type</button>
+    </div>
+  </div>
+  <!-- <div class="col-lg-2 mt-2">
+    <ng-container [formGroup]="filterForm">
+      <select class="form-control form-control-lg" name="productType" formControlName="productType"  >
+        <option value="(IOT,INPUT,MACHINERY)">All</option>
+        <option value="IOT">IOT</option>
+        <option value="INPUT">INPUT</option>
+        <option value="MACHINERY">MACHINERY</option>
+    </select>
+      
+      <small class="form-text text-muted"><b>Filter</b> by Product Type</small>
+   </ng-container>
+   </div> -->
+   <!-- <div class="col-lg-2 mt-2">
+    <ng-container [formGroup]="filterForm">
+      <select class="form-control form-control-lg" name="businessVertical" formControlName="businessVertical"  >
+        <option value="(RESHA_FARMS)">All</option>
+        <option value="RESHA_FARMS">RM FARMS</option>
+    </select>
+      
+      <small class="form-text text-muted"><b>Filter</b> by Business Vertical</small>
+   </ng-container>
+   </div> -->
+</app-paginated-table>

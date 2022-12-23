@@ -1,0 +1,180 @@
+<div class="card card-custom">
+  <div class="card-header pl-0">
+    <div class="card-title">
+      <h3 class="card-label">{{id ? "Update FollowUp Details" : "Create New FollowUp" }} 
+      </h3>
+    </div>
+    <div class="card-toolbar">
+      <!-- Nothing right now-->
+    </div>
+  </div>
+  <div class="card-body pt-0">
+
+    <div class="form form-label-right">
+      <div class="form-group row pt-1" [formGroup]="followUpCreateForm">
+        <div [formGroup]="followUpCreateForm" class="w-100">
+          <div class="row">
+
+          <div class="col-lg-4 mt-2" *ngIf="hasCustomer && selectedCustomer">
+            <label>Customer<span class="text-danger">*</span></label>
+            <div class="form-control form-control-lg form-control-solid">
+              {{selectedCustomer.name}} - {{selectedCustomer.phone}}
+            </div>
+          </div>
+
+            <div class="col-lg-4 mt-2 selectWrapper" *ngIf="!hasCustomer">
+              <label class="w-100 d-flex justify-content-between"> <span>Customer<span class="text-danger"> *</span> </span><a class="text-primary cursor-pointer" (click)="open()">&nbsp;&nbsp;+ New Customer</a></label>
+              <ng-select class="form-control form-control-lg form-control-solid select-custom" 
+              placeholder="Please enter the mobile number"
+                formControlName="customerObj" 
+                (change)="customerChanged($event)"
+                  (search)='getData($event)'>
+                <ng-option *ngFor="let item of selectedCustomerList" [value]="item">{{ item.name }} - {{ item.phone }} <span class="text-success">[{{item.type}}]</span></ng-option>
+              </ng-select>
+            </div>
+
+            <div class="col-lg-4 mt-2">
+              <label>Assigned To Center<span class="text-danger">*</span></label>
+              <select class="form-control form-control-lg" formControlName="centerId" name="Center"
+                placeholder="To Center" (change)="centerChanged($event)">
+                <option *ngFor="let item of centerList" [value]="item.id">{{item.centerName}}</option>
+              </select>
+            </div>
+
+            <div class="col-lg-4 mt-2 selectWrapper">
+              <label class="form-label">Assigned To User<span class="text-danger">*</span></label>
+              <ng-select class="form-control form-control-lg form-control-solid select-custom" formControlName="assignedToPhone"
+                  (change)="assignedToChanged($event)">
+                <ng-option *ngFor="let item of usersList" [value]="item.phone">{{ item.name }} - {{ item.phone }}</ng-option>
+              </ng-select>
+            </div>
+
+          </div>
+
+          <div class="row">
+            <div class="col-lg-4 mt-2">
+              <label class="form-label">Follow Up Type<span class="text-danger">*</span></label>
+              <!-- <input type="text" class="form-control form-control-lg" name="type" placeholder="type" autocomplete="off"
+                formControlName="type" /> -->
+              <select class="form-control form-control-lg" formControlName="type">
+                  <option value="PURCHASE_FROM_RM">Purchase from RM</option>
+                  <option value="SALE_TO_RM">Sale to RM </option>
+                  <option value="APP_FOLLOWUP">App Followup</option>
+                  <option value="APP_QUERIES">App  Queries</option>
+                  <option value="APP_PAYMENT_ISSUES">Payment Issues</option>
+                  <option value="APP_ISSUES">App Issues</option>
+                  <option value="APP_DOWNLOADS">App Downloads</option>
+                  <option value="App_Followup_ReshaMudra">App ReshaMudra</option>
+              </select>
+            </div>
+
+            <div class="col-lg-4 mt-2">
+              <label>Sub Type<span *ngIf="this.selectedType == 'FARMER'" class="text-danger"> *</span></label>
+              <select class="form-control form-control-lg" formControlName="subType"
+                  name="subType"
+                  [ngClass]="{'app-disable form-control-solid': this.selectedType != 'FARMER'}"
+                  placeholder="subType">
+                  <option value="Chawki">Chawki</option>
+                  <option value="Mulberry">Mulberry</option>
+                  <option value="Inputs">inputs</option>
+                  <option value="IoT">IoT</option>
+                  <option value="Cocoon">Cocoon</option>
+              </select>
+          </div>
+
+            <div class="col-lg-4 mt-2">
+              <label class="form-label">Status<span class="text-danger">*</span></label>
+              <select class="form-control form-control-lg" formControlName="status">
+                <option value="Active">Active</option>
+                <option value="Waiting">Waiting</option>
+                <option value="Rejected">Rejected</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </div>
+            
+
+          </div>
+          <div class="row">
+            <div class="col-lg-4 mt-2" style="z-index: 2000 !important;">
+              <label for="name">Follow Up Date<span class="text-danger">*</span></label>
+              <mat-form-field class="w-100 cursor-pointer" appearance="fill" (click)="dp3.open()">
+                <input formControlName="followUpDate" class="cursor-pointer" matInput [matDatepicker]="dp3"  [min]="minDate"
+                (click)="dp3.open()" readonly>
+                <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+                <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+            </mat-form-field>
+          </div>
+            <div class="col-lg-4 mt-2" *ngIf="description">
+              <label class="form-label">Description<span class="text-danger">*</span></label>
+              <textarea class="w-100 form-control" [readonly]="edit" placeholder="Description" formControlName="note"></textarea>
+              <div *ngIf="followUpCreateForm.get('note').value?.length>2000" style="color: red;">Character length is too long </div>
+            </div>
+            <div *ngIf="edit" class="col-lg-4 mt-2">
+              <label class="form-label">Add new note</label>
+              <textarea class="w-100 form-control" placeholder="New Note" formControlName="newNote"></textarea>
+              <div *ngIf="followUpCreateForm.get('newNote').value?.length>2000" style="color: red;">Character length is too long </div>
+            </div>
+            <div class="col-lg-4 mt-2">
+              <label>Upload Image</label><br>
+              <div class="image-input image-input-outline mt-1" id="kt_profile_avatar">
+                <img class="image-input-wrapper"
+                  [src]="filePreviewImage || './assets/media/users/default.jpg'" />
+                <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                  data-action="change" data-toggle="tooltip" title="" data-original-title="Change avatar">
+                  <i class="fa fa-pen icon-sm text-muted"></i>
+                  <input type="file" name="profile_avatar" accept=".png, .jpg, .jpeg"
+                    (change)="onRegCertificateUpload($event);" />
+                  <input type="hidden" name="profile_avatar_remove" />
+                </label>
+                <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                  data-action="cancel" data-toggle="tooltip" title="" data-original-title="Cancel avatar">
+                  <i class="ki ki-bold-close icon-xs text-muted"></i>
+                </span>
+                <span *ngIf="filePreviewImage"
+                  class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                  (click)="removeRegCetificate()" data-action="remove" data-toggle="tooltip" title=""
+                  data-original-title="Remove avatar">
+                  <i class="ki ki-bold-close icon-xs text-muted"></i>
+                </span>
+            </div>
+
+          </div>
+          <app-note-logs *ngIf="edit && notesList.length > 0" [notesList]="notesList"></app-note-logs>
+        </div>
+      </div>
+      
+    </div>
+
+  </div>
+  <div class="card-footer pb-0 text-right">
+    <button type="button" class="btn btn-sm btn-secondary mr-2" (click)="onCancel()">Cancel</button>
+    <button type="button" class="btn btn-sm btn-success" (click)="saveFollowUpDetails(followUpCreateForm.value)"
+      [disabled]="!followUpCreateForm.value.customerObj || followUpCreateForm.invalid || (this.selectedType == 'FARMER' && !followUpCreateForm.value.subType)">Save</button>
+  </div>
+</div>
+
+
+<div class="update-name">
+  <div>
+      <ng-template #updateNameHTML let-c="close" let-d="dismiss">
+          <div class="modal-header">
+              <h4 class="modal-title">Update Name</h4>
+          </div>
+          <div class="modal-body">
+              <div class="col-lg-12">
+                  <div class="row">
+                      <div class="col-lg-12 mt-2">
+                          <label class="form-label">Name<span class="text-danger">*</span></label>
+                          <input type="text" class="form-control form-control-lg" name="name" placeholder="Name"
+                            autocomplete="off" [formControl]="updateNameForm" [class.is-invalid]="updateNameForm.invalid&&(updateNameForm.dirty || updateNameForm.touched)"  [class.is-valid]="updateNameForm.valid"/>
+                        </div>
+                  </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-sm btn-secondary" (click)="close()">Cancel</button>
+              <button type="button" class="btn btn-sm btn-success" [disabled]="updateNameForm.invalid" (click)="updateNameAPI(updateNameForm.value)">Save</button>
+          </div>
+      </ng-template>
+  </div>
+</div>

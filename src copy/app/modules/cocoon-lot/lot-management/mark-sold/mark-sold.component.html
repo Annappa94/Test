@@ -1,0 +1,411 @@
+<div class="card card-custom gutter-b col-lg-12" [formGroup]="markSoldForm">
+  <div class="card-body">
+    <div class="row">
+    <div class="col-lg-4 mt-2 selectWrapper" *ngIf="!edit">
+      <h4 class="mb-4 text-success">Sold to Reeler</h4>
+      <ng-select class="form-control form-control-lg form-control-solid" [(ngModel)]="selectedReeler"
+        [ngModelOptions]="{standalone: true}"
+        placeholder="Please enter the name or mobile number"
+        (change)="onReelerSelection()"
+        (clear)="resetForm()"
+        (search)='getReelerList($event)' [disabled]="SaleType == 'C2Y'">
+        <ng-option *ngFor="let item of reelersData" [value]="item.id">{{ item?.name }} - {{ item?.phone }} - {{item?.centerName}}</ng-option>
+      </ng-select>
+       
+    </div>
+
+    <div class="col-lg-4 mt-2" *ngIf="edit">
+      <h4 class="mb-4 text-success">Sold to Reeler</h4>
+      <div class="form-control form-control-lg form-control-solid">
+        {{globalService?.tempOrderData?.reeler}} - {{globalService?.tempOrderData?.reelerPhone}}
+      </div>
+    </div>
+    <p class="text-danger col-lg-8" *ngIf="isBlackListed">{{disabledText}}</p>
+    
+    <div class="col-lg-4 mt-2 selectWrapper">
+      <h4 class="mb-4 text-success">Sale Order Type</h4>
+      <select class="form-control form-control-lg form-control-solid disabled" formControlName="salesOrderType"
+        placeholder="Please Select the Sale Order type" disabled>
+        <option  [value]="'REGULAR'">Regular</option>
+        <option  [value]="'C2Y'">C2Y</option>
+      </select>
+       
+    </div>
+    <div class="col-lg-4 mt-2 selectWrapper"  *ngIf="!edit">
+      <h4 class="mb-4 text-success">Sales From Location</h4>
+      <input type="text" class="form-control form-control-lg form-control-solid" formControlName="currentlocationofCocoonLot"
+        placeholder="Please Select the Sale Order type" disabled> 
+    </div>
+    <div class="col-lg-4 mt-2" *ngIf="edit">
+      <h4 class="mb-4 text-success">Sales From Location</h4>
+      <div class="form-control form-control-lg form-control-solid">
+        {{globalService?.tempOrderData?.soldFromLocation}}
+      </div>
+    </div>
+
+    </div>
+
+    <h4 class="ml-4 mt-8 mb-4 text-success">Lots Sold</h4>
+    <div class="col-lg-12 col-sm-12" style="overflow-x: auto;">
+    <p *ngIf="markingAsSold" style="color: red;">The Lots highlighted in orange are marked sold with wastage.</p>
+
+      <div class="d-flex">
+        <div class="lot-code-width">Lot Code</div>
+        <!-- <div class="item-width">UOM</div>
+        <div class="item-width">Buy Price</div> -->
+        <div class="item-width">Type</div>
+        <div class="item-width">Grade</div>
+        <div class="item-width">Unit <small>(kg/pcs)</small> </div>
+        <div class="item-width">Sell Unit <small>(kg/pcs)</small> </div>
+        <div class="item-width">Wastage <small>(Kg)</small></div>
+        <div class="item-width">Sell Price</div>
+        <!-- <div class="item-width">Discount <small>(per kg)</small></div> -->
+        <div class="item-width">Selling Total</div>
+      </div>
+      <div formArrayName="lotsToSell">
+        <div class="d-flex my-2 p-1" *ngFor="let item of markSoldForm.get('lotsToSell')['controls']; let i=index;"
+          [formGroupName]="i" [ngClass]="{'border border-warning rounded': item.value.markSold}">
+          <div class="lot-code-width">
+            <input type="text" class="form-control form-control-lg form-control-solid" readonly
+              formControlName="lotCode" />
+          </div>
+          
+          <!-- <div class="item-width">
+            <input type="text" class="form-control form-control-lg form-control-solid" readonly
+              formControlName="uom" />
+          </div>
+          <div class="item-width">
+            <input type="text" class="form-control form-control-lg form-control-solid" readonly
+              formControlName="buyingPrice" />
+          </div> -->
+          <div class="item-width">
+            <input type="text" class="form-control form-control-lg form-control-solid" readonly
+              formControlName="displayCocoonType" />
+          </div>
+          <div class="item-width">
+            <input type="text" class="form-control form-control-lg form-control-solid" readonly
+              formControlName="rmGrade" />
+          </div>
+          <div class="item-width">
+            <input type="text" class="form-control form-control-lg form-control-solid" readonly
+              formControlName="weight" />
+          </div>
+         
+          <div class="item-width">
+            <input (keyup)="onValueChangesOfWeight('calc')" [ngClass]="{'app-disable': isBlackListed}" type="number" class="form-control form-control-lg" formControlName="sellingWeight" [class.is-invalid]="validateErros(i)"/>
+            <p style="color: red;" *ngIf="validateErros(i)">Unit should not be<br>in decimal</p>
+          </div>
+          <div class="item-width">
+            <input type="text" class="form-control form-control-lg form-control-solid" readonly
+              formControlName="wastage" />
+          </div>
+          <div class="item-width">
+            <input type="number" (keyup)="onValueChangesOfWeight('calc')" class="form-control form-control-lg" formControlName="sellingPrice"/>
+            <p style="color: red;" *ngIf="item.value.sellingPrice < item.value.minSellingPrice">Price less than {{item.value.minSellingPrice}} </p>
+          </div>
+
+          <!-- <div class="item-width">
+            <input (keyup)="onValueChangesOfWeight('calc')" type="number" class="form-control form-control-lg"
+            formControlName="discountAmount" [ngClass]="{'form-control-solid' : !(item.value.sellingPrice >= item.value.minSellingPrice)}"
+            [readonly]="!(item.value.sellingPrice >= item.value.minSellingPrice)"
+            [class.is-invalid]="item.value.discountAmount < 0"/>
+            <p style="color: red;" *ngIf="item.value.discountAmount > (item.value.sellingPrice - item.value.buyingPrice)">Discount greater than {{item.value.sellingPrice - item.value.buyingPrice}} </p>
+          </div> -->
+
+          <!-- <div class="item-width">
+            <input (keyup)="onValueChangesOfWeight('calc')" type="number" class="form-control form-control-lg"
+            formControlName="discountAmount" [ngClass]="{'form-control-solid' : item.value.sellingPrice > item.value.minSellingPrice}"
+            [readonly]="item.value.sellingPrice > item.value.minSellingPrice"
+            [class.is-invalid]="item.value.discountAmount < 0"/>
+            <p style="color: red;" *ngIf="item.value.discountAmount > item.value.sellingTotal">Discount greater than {{item.value.sellingTotal}} </p>
+          </div> -->
+
+
+          <div class="item-width">
+            <input type="text" class="form-control form-control-lg form-control-solid" readonly
+              formControlName="sellingTotal" />
+          </div>
+
+          
+          <button matTooltip="Remove" type="button" *ngIf="markSoldForm.get('lotsToSell')['controls'].length>1" class="btn mt-5 btn-icon btn-danger btn-xs" (click)="deleteRecord(contentDelete,i,item.value.lotCode)">
+            <i class="flaticon-cancel"></i>
+           </button>
+        </div>
+      </div>
+    </div>
+    <div class="card-toolbar">
+      <div class="float-right my-3">
+        <button type="button" class="btn btn-sm btn-success mr-2" (click)="getEstimate(confirmAsSold)">Estimate sales order</button>
+      </div>
+    </div>
+
+
+    <div class="ml-1">
+      <h4 class="ml-4 mb-4 mt-8 text-success">Payment</h4>
+      <div class="row ml-0">
+
+        <div class="col-lg-3 mt-3">
+          <label class="form-label">Gross Total</label>
+          <div class="form-control form-control-lg form-control-solid">
+            {{netAmount}}
+          </div>
+        </div>
+
+        <!-- <div class="col-lg-3 mt-3">
+          <label class="form-label">Discount in Rs</label>
+          <input type="number" (keyup)="onValueChangesOfWeight('calc')" class="form-control form-control-lg form-control-solid" name="Total Payment"
+          readonly
+            placeholder="In rupees" autocomplete="off" formControlName="discount" />
+        </div> -->
+
+        <div class="col-lg-3 mt-3">
+          <label class="form-label">Net Payment</label>
+          <input type="number" class="form-control form-control-lg form-control-solid" readonly name="Total Payment"
+            placeholder="Total Payment" autocomplete="off" formControlName="totalPayment" />
+        </div>
+
+        <div class="col-lg-3 mt-3">
+          <label>Credit Days<span class="text-danger">*</span></label>
+          <select class="form-control form-control-lg" formControlName="creditDays" placeholder="Select Type">
+              <option *ngFor="let item of COCOON_SALES_ORDER" [value]="item">{{ item }}</option>
+          </select>
+        </div> 
+
+        <div class="col-lg-3 mt-3 selectWrapper" *ngIf="!edit">
+          <label class="form-label">Sales Representive <small>(Sold by)</small><span class="text-danger"> *</span></label>
+          <ng-select class="form-control form-control-lg form-control-solid select-custom" formControlName="representive">
+            <ng-option *ngFor="let item of usersList" [value]="item">{{ item.name }} - {{ item.phone }} <span *ngIf="item.role">- {{item.role}}</span></ng-option>
+          </ng-select>
+        </div>
+        <div class="col-lg-3 mt-3" *ngIf="edit">
+          <label class="form-label">Representive</label>
+          <div class="form-control form-control-lg form-control-solid">
+            {{markSoldForm.get('representive').value.name}} - {{markSoldForm.get('representive').value.phone}}
+          </div>
+        </div>
+
+    </div>
+
+    <div class="col-lg-12 mt-6">
+      <ngb-accordion #acc11="ngbAccordion">
+        <ngb-panel id="toggle-11">
+          <ng-template ngbPanelTitle>
+            <span class="card-header--title text-success">Last Mile Logistics</span>
+          </ng-template>
+          <ng-template ngbPanelContent>
+            <div class="row">
+              <div class="col-lg-4 mt-2">
+                <label class="form-label">Driver Name</label>
+                <input type="text" class="form-control form-control-lg" [ngClass]="{'app-disable': isBlackListed}" name="Driver Name"
+                  placeholder="Driver Name" autocomplete="off" formControlName="driverName" />
+              </div>
+              <div class="col-lg-4 mt-2">
+                <label class="form-label">Driver Number</label>
+                <input type="text" class="form-control form-control-lg" [ngClass]="{'app-disable': isBlackListed}" name="driverNumber"
+                  placeholder="Driver Number" autocomplete="off" formControlName="driverNumber" />
+              </div>
+              <div class="col-lg-4 mt-2">
+                <label class="form-label">Vehicle Number</label>
+                <input type="text" class="form-control form-control-lg" [ngClass]="{'app-disable': isBlackListed}" name="vehicleNumber"
+                  placeholder="Vehicle Number" autocomplete="off" formControlName="vehicleNumber" />
+              </div>
+              <div class="col-lg-4 mt-2">
+                <label class="form-label">Total Logistics Cost</label>
+                <input (keyup)="onValueChangesOfLogisticsCost()" type="number" [ngClass]="{'app-disable': isBlackListed}" class="form-control form-control-lg" name="totalCost"
+                  placeholder="Total Logistics Cost" autocomplete="off" formControlName="totalCost" />
+              </div>
+              <div class="col-lg-4 mt-2">
+                <label class="form-label">Number of bags</label>
+                <input type="number" class="form-control form-control-lg" [ngClass]="{'app-disable': isBlackListed}" name="noOfBags"
+                  placeholder="Number of bags" autocomplete="off" formControlName="noOfBags" />
+              </div>
+
+              <div class="col-lg-4 mt-2">
+                <div class="row">
+                  <div class="col-lg-8">
+                    <label class="form-label">E-Way Number</label>
+                    <input type="text" class="form-control form-control-lg" name="ewayBillNo"
+                      autocomplete="off" formControlName="ewayBillNo" />
+                  </div>
+                  <div class="col-lg-4 pr-0">
+                    <div class="image-input image-input-outline m-2 mt-6"
+                        id="kt_profile_avatar">
+                        <img class="image-input-wrapper"
+                            [src]="preImgUrl || './assets/media/users/blank.png'"  style="width: 50px;height:50px;"/>
+                        <label
+                            class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                            data-action="change" data-toggle="tooltip" title=""
+                            data-original-title="Change avatar">
+                            <i class="fa fa-pen icon-sm text-muted"></i>
+                            <input type="file" name="profile_avatar"
+                                (change)="onImageUpload($event);" />
+                            <input type="hidden" name="profile_avatar_remove" />
+                        </label>
+                        <span
+                            class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                            data-action="cancel" data-toggle="tooltip" title=""
+                            data-original-title="Cancel avatar">
+                            <i class="ki ki-bold-close icon-xs text-muted"></i>
+                        </span>
+                    </div>
+                </div> 
+                </div>
+              </div>
+
+            </div>
+          </ng-template>
+        </ngb-panel>
+      </ngb-accordion>
+    </div>
+
+    <div class="col-lg-12 mt-6">
+      <address-pincode-form [layouttype]="'page'" #address></address-pincode-form>
+    </div>
+
+    
+    <div class="ml-1">
+      <div class="row ml-0">
+        <div class="col-6 mt-3">
+          <label class="form-label">Delivery Notes</label>
+          <textarea type="textarea" class="form-control form-control-lg" name="deliveryNotes"
+          placeholder="Delivery Notes" autocomplete="off" formControlName="deliveryNotes" maxlength="200"></textarea>
+        </div>  
+
+        <div class="col-12 mt-3 mb-3">
+          <label class="form-label">Terms And Conditions</label>
+          <app-text-editor (innerHtmldata)="dataFromTextEditor($event)" [data]="termsAndConditions" [dataEdit]="dataEdit"></app-text-editor>
+        </div>
+
+    </div>
+    <div class="card-toolbar ml-3 mt-8">
+      <button class="btn btn-secondary btn-sm mr-2" (click)="goBack()">Cancel</button>    
+      <button *ngIf="!edit" [disabled]="(markSoldForm.invalid) || disableSaveButton || (selectedReeler === undefined) || isBlackListed || !selectedReeler || user.role == 'READADMIN'" class="btn btn-sm btn-success" (click)="open(content, markSoldForm.value)">Mark Sold / Create Order</button>
+      <button *ngIf="edit" [disabled]="markSoldForm.invalid || disableSaveButton || user.role == 'READADMIN'" class="btn btn-sm btn-success" (click)="open(content, markSoldForm.value)">Mark Sold / Create Order</button>
+          
+    </div>
+  </div>
+</div>
+<div class="example-preview">
+  <div>
+      <ng-template #content let-c="close" let-d="dismiss">
+          <div class="modal-header">
+              <h4 class="modal-title">You are marking lots sold! Please confirm.</h4>
+              <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <p>Payment Details:</p>
+              <p *ngFor="let item of paymentForLots.lotsToSell">Lot Id: <strong>{{item.lotCode}}</strong> for Rs. <strong>{{item?.sellingPrice?.toFixed(2)}}/{{item?.uom.substring(0,item.uom.length - 1)}}</strong></p>
+              <p>Total Price: Rs.<strong>{{markSoldForm.get('totalPayment').value}}</strong></p>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="c('Close click')">Cancel</button>
+              <button type="button" class="btn btn-primary" (click)="payNow()">Mark Sold / Create Order</button>
+          </div>
+      </ng-template>
+  </div>
+</div>
+
+<div class="example-preview">
+  <div>
+      <ng-template #contentDelete let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <p>Are you sure that you want to remove <strong>{{code}}</strong> code?</p>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="c('Close click');">No</button>
+              <button type="button" class="btn btn-primary" (click)="ConfirmDeleteRecord()">Yes</button>
+          </div>
+      </ng-template>
+  </div>
+</div>
+
+<div class="example-preview">
+  <div>
+      <ng-template #confirmAsSold let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <h4 class="modal-title text-danger">Please check if the below lots are ready to be marked as sold.</h4>
+          </div>
+
+          <div class="modal-body" [formGroup]="markSoldForm">
+            <p>Lot Details:</p>
+            <div formArrayName="lotsToSell">
+              <div class="d-flex">
+                <div class="col-lg-4">
+                  Code
+                </div>
+                <div class="col-lg-4">
+                  Wastage?
+                </div>
+                <div class="col-lg-4">
+                  Mark as sold
+                </div>
+              </div>
+              <div class="d-flex mt-2 align-items-center" *ngFor="let item of markSoldForm.get('lotsToSell')['controls']; let i=index;" [formGroupName]="i">
+                
+                <ng-container *ngIf="item.value.showMarkSold">
+                  <div class="col-lg-4">
+                    <a target="_blank" class="cursor-pointer" [routerLink]="['/resha-farms/cocoon-lot/details', item.value.id]" target="_blank">
+                      <input type="text" class="form-control form-control-lg form-control-solid cursor-pointer" readonly name="lotCode"
+                        placeholder="Code" autocomplete="off" formControlName="lotCode" />
+                    </a>
+                  </div>
+                  <div class="col-lg-4">
+                    <input type="number" class="form-control form-control-lg"
+                      [ngClass]="{'form-control-solid': (!item.value.markSold) || (item.value.wastage == 0)}" [readonly]="(!item.value.markSold) || (item.value.wastage == 0)" name="wastage"
+                      placeholder="wastage" autocomplete="off" formControlName="wastage" />
+                  </div>
+                  <div class="col-lg-4" *ngIf="item.value.wastage > 0">
+                    <div>
+                      <span class="switch switch-icon switch-sm">
+                        <label>
+                          <input type="checkbox" [disabled]="!item.value.wastage"
+                          formControlName="markSold" name="select" />
+                          <span></span>
+                        </label>
+                      </span>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="noWastage()">No wastage</button>
+              <button type="button" class="btn btn-primary" (click)="checkIfWastage();">Confirm</button>
+          </div>
+      </ng-template>
+  </div>
+</div>
+
+
+
+<div class="update-name">
+  <div>
+      <ng-template #updateNameHTML let-c="close" let-d="dismiss">
+          <div class="modal-header">
+              <h4 class="modal-title">Update Reeler Name</h4>
+          </div>
+          <div class="modal-body">
+              <div class="col-lg-12">
+                  <div class="row">
+                      <div class="col-lg-12 mt-2">
+                          <label class="form-label">Name<span class="text-danger">*</span></label>
+                          <input type="text" class="form-control form-control-lg" name="name" placeholder="Name"
+                            autocomplete="off" [formControl]="updateNameForm" [class.is-invalid]="updateNameForm.invalid&&(updateNameForm.dirty || updateNameForm.touched)"  [class.is-valid]="updateNameForm.valid"/>
+                        </div>
+                  </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-sm btn-secondary" (click)="close()">Cancel</button>
+              <button type="button" class="btn btn-sm btn-success" [disabled]="updateNameForm.invalid" (click)="updateNameAPI(updateNameForm.value)">Save</button>
+          </div>
+      </ng-template>
+  </div>
+</div>

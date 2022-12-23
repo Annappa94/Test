@@ -1,0 +1,88 @@
+.vl {
+    border-left: 6px solid 	#000000;
+    height: 100px;
+  }
+  .dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  .dropdown-content a:hover {background-color: #f1f1f1;}
+  
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+  
+  .dropdown:hover .dropbtn {
+    background-color: #3e8e41;
+  }
+  
+ .whiteSmoke{
+   background-color: whitesmoke;
+   
+ }
+ .createso
+ {
+   background-color: #3e8e41;
+ }
+
+
+ .modalheaderbackground{
+  background-color: #F0F0F0;
+  border-top: solid 2px #C8C8C8;
+  border-radius: 0%;
+  
+ }
+ .moadlcontentbackground{
+   border-bottom: solid 2px #C8C8C8;
+   border-radius: 0%;
+ }
+ .warehousename{
+   margin-top: 30px;
+   margin-bottom: 30px;
+ }
+ .flex-container {
+  display: flex;
+}
+
+.flex-child {
+  flex: 1;
+  margin-right: 5px;
+  text-align: center;
+
+}  
+
+.flex-child:first-child {
+  margin-right: 5px;
+  text-align: center;
+
+} 
+
+
+ 

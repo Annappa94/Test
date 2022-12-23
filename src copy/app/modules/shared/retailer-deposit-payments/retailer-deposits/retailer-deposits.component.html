@@ -1,0 +1,90 @@
+<ng-container *ngIf="!isListingPage">
+    <button matTooltip="Pay Deposit" class="btn float-right btn-primary"
+            (click)="payNow(payment, orderDetails)"> 
+             Deposit
+    </button>
+</ng-container>
+
+<ng-container *ngIf="isListingPage">
+<span matTooltip="Pay Deposit" class="btn btn-icon btn-sm mr-1 mt-1"
+      (click)="payNow(payment, orderDetails)">
+  <i class="fas fa-money-check-alt text-success"></i>
+</span>
+</ng-container>
+
+<div class="payment-confirmation-preview">
+    <div>
+        <form [formGroup]="retailerPaymentForm">
+            <ng-template #payment let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Deposit Payment</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Customer Id : <strong>{{customerId}}</strong></p>
+                    <p>Customer Name : <strong>{{retailerName}}</strong></p>
+                    <p>Customer Phone : <strong>{{retailerPhone}}</strong></p>
+                    <p>{{!isFinanceApproval?'Total Due Amount':'Received Amount'}} : <strong>Rs. <span class="text-danger h2">{{highlightText?.[0]}}</span><span *ngIf="highlightText?.[1]">.{{highlightText?.[1]}}</span></strong></p>
+                    <!-- <div> 
+
+                        <label class="form-label">Payment Mode:<span class="text-danger">*</span></label>
+                        <select class="form-control form-control-lg" formControlName="paymentMode" name="paymentMode"
+                        placeholder="Select Payment Mode">
+                        <option *ngFor="let item of ['SINGLE']" [value]="item">{{item}}</option>
+                        </select>
+                      </div> -->
+                    <div class="form form-label-right">
+                        <div class="form-group row">
+  
+                            <div class="col-lg-6 mt-2">
+                                <label class="form-label">Amount<span class="text-danger">*</span></label>
+                                <input type="number" [readonly]="isFinanceApproval" class="form-control form-control-lg"
+                                [ngClass]="isFinanceApproval?'form-control-solid':''" name="amount"
+                                  placeholder="amount" autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('amount')"
+                                  [class.is-valid]="isControlValidForReeler('amount')" formControlName="amount" />
+                                <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'amount')">
+                                    Amount is required
+                                </div>
+                                <div style="color: #F64E60;" *ngIf="retailerPaymentForm.value.amount > dueDetails?.data">
+                                    Amount is greater than {{dueDetails?.data}}
+                                </div>
+                            </div>
+  
+                            <div class="col-lg-6 mt-2">
+                                <label class="form-label">Reference Number<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-lg" name="referenceNumber"
+                                [readonly]="isFinanceApproval"
+                                  [ngClass]="isFinanceApproval?'form-control-solid':''"
+                                  placeholder="Reference Number" autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('referenceNumber')"
+                                  [class.is-valid]="isControlValidForReeler('referenceNumber')" formControlName="referenceNumber" />
+                                <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'referenceNumber')">
+                                    Reference Number is required
+                                </div>
+                                
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+  
+                <div class="modal-footer">
+                    
+                    <button type="button" *ngIf="!rejecting" class="btn btn-sm btn-secondary" (click)="onCancel()">Cancel</button>
+                    <button type="button" *ngIf="!isFinanceApproval" class="btn btn-sm btn-success" (click)="retailerPayment()" [disabled]="retailerPaymentForm.invalid || this.retailerPaymentForm?.value?.amount > dueDetails.data">Pay Now</button>
+                    <button type="button" *ngIf="isFinanceApproval && !rejecting && !settleRejected" class="btn btn-sm btn-warning" (click)="rejectFinance()">Reject</button>
+                    <button type="button" *ngIf="isFinanceApproval && !rejecting && !settleRejected" class="btn btn-sm btn-success" (click)="approveFinance()">Approve</button>
+                    <button type="button" *ngIf="settleRejected" class="btn btn-sm btn-success" (click)="approveFinance()">Net Off Balance</button>
+                    <div class="col-lg-12 mt-2" *ngIf="rejecting">
+                        <label class="form-label">Reject Reason<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-lg"
+                                  placeholder="Reject reason" autocomplete="off" [(ngModel)]="rejectReason" [ngModelOptions]="{standalone: true}"/>
+                    </div>
+
+                    <button type="button" *ngIf="rejecting" class="btn btn-sm btn-secondary mt-2" (click)="onCancel()">Cancel</button>
+
+                    <button type="button" *ngIf="rejecting" class="btn btn-sm btn-warning mt-2" [disabled]="rejectReason===''" (click)="rejectFinanceFinal()">Reject</button>
+
+                </div>
+            </ng-template>
+        </form>
+    </div>
+  </div>

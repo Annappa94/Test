@@ -1,0 +1,236 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+      <div class="card-title">
+        <h3 class="card-label">Tussar Sales</h3>
+      </div>
+    </div>
+    <div class="card-body pt-0">
+      <div class="form form-label-right">
+        <div class="form-group row">
+          <div class="col-lg-7">
+            <input [(ngModel)]="searchText" (keyup.enter)="onSearch();" (keyup)="onSearchKey($event)" type="text" class="form-control" placeholder="Search"/>
+            <small class="form-text text-muted"><b>Search</b> By Name and Phone.</small>
+          </div>
+          <div class="col-lg-1">
+            <button type="button" class="btn btn-sm btn-success mt-1" [disabled]="!enableSearch" (click)="onSearch();">Search</button>
+          </div>
+  
+          <div class="col-lg-4">
+  
+            <select class="form-control" name="status" (change)="onChangeOfStatusFilter($event)"
+              placeholder="Filter by status">
+              <option value="(Paid,Pending)" [selected]= "selectedStatus == '(Paid,Pending)'">All</option>
+              <option value="(Paid)" [selected]= "selectedStatus == '(Paid)'">Paid</option>
+              <option value="(Pending)" [selected]= "selectedStatus == '(Pending)'">Pending Payment</option>
+            </select><small class="form-text text-muted"><b>Filter</b>by status</small>
+          </div>
+        </div>
+  
+      </div>
+      <div class="table-responsive angular-bootstrap-table">
+        <table id="excel-table" class="table table-head-custom table-vertical-center overflow-hidden">
+          <thead>
+            <th name="code" ngDefaultControl [(ngModel)]="tableHeader.id" (click)="onSort('id')">
+              <i *ngIf="tableHeader.id === 1 && activeSort === 'id'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.id === 0 && activeSort === 'id'"
+                class="fas fa-long-arrow-alt-down"></i>
+                RM Code
+            </th>
+  
+            <th name="reeler" ngDefaultControl [(ngModel)]="tableHeader.reeler.name" (click)="onSort('reeler.name')">
+              <i *ngIf="tableHeader.reeler.name === 1 && activeSort === 'reeler.name'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.reeler.name === 0 && activeSort === 'reeler.name'"
+                class="fas fa-long-arrow-alt-down"></i>
+                Reeler
+            </th>
+  
+            <th name="reelerPhone" ngDefaultControl [(ngModel)]="tableHeader.reeler.phone" (click)="onSort('reeler.phone')">
+              <i *ngIf="tableHeader.reeler.phone === 1 && activeSort === 'reeler.phone'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.reeler.phone === 0 && activeSort === 'reeler.phone'"
+                class="fas fa-long-arrow-alt-down"></i>
+                Phone
+            </th>
+  
+            <th name="totalPieces" ngDefaultControl [(ngModel)]="tableHeader.totalPieces" (click)="onSort('totalPieces')">
+              <i *ngIf="tableHeader.totalPieces === 1 && activeSort === 'totalPieces'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.totalPieces === 0 && activeSort === 'totalPieces'"
+                class="fas fa-long-arrow-alt-down"></i>
+                Unit<small>(pcs)</small>
+            </th>
+            <th name="Amount" ngDefaultControl [(ngModel)]="tableHeader.totalAmount" (click)="onSort('totalAmount')">
+              <i *ngIf="tableHeader.totalAmount === 1 && activeSort === 'totalAmount'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.totalAmount === 0 && activeSort === 'totalAmount'"
+                class="fas fa-long-arrow-alt-down"></i>
+                Amount<small>(Rs.)</small>
+            </th>
+            <th name="Due" ngDefaultControl [(ngModel)]="tableHeader.dueAmount" (click)="onSort('dueAmount')">
+              <i *ngIf="tableHeader.dueAmount === 1 && activeSort === 'dueAmount'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.dueAmount === 0 && activeSort === 'dueAmount'"
+                class="fas fa-long-arrow-alt-down"></i>
+                Due<small>(Rs.)</small>
+            </th>
+            <th name="Status" ngDefaultControl [(ngModel)]="tableHeader.orderPaymentStatus" (click)="onSort('orderPaymentStatus')">
+              <i *ngIf="tableHeader.orderPaymentStatus === 1 && activeSort === 'orderPaymentStatus'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.orderPaymentStatus === 0 && activeSort === 'orderPaymentStatus'"
+                class="fas fa-long-arrow-alt-down"></i>
+                Status
+            </th>
+            <th name="Date" ngDefaultControl [(ngModel)]="tableHeader.createdDate" (click)="onSort('createdDate')">
+              <i *ngIf="tableHeader.createdDate === 1 && activeSort === 'createdDate'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.createdDate === 0 && activeSort === 'createdDate'"
+                class="fas fa-long-arrow-alt-down"></i>
+                Date
+            </th>
+            <th>Actions</th>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of filteredTussarOrdersList">
+              <td><a matTooltip="Order Details" class="btn btn-link-success font-weight-bold" (click)="OrderDetail(item)">
+                {{ item.code }}</a></td>
+              <td>{{ item.reeler | titlecase }}</td>
+              <td>{{ item.reelerPhone }}</td>
+              <td>{{ item.totalPieces }} <br>
+                <small>({{item.sellingPricePerPc}}/PC)</small>
+              </td>
+              <td>{{ item.totalAmount }}</td>
+              <td>{{ item.dueAmount }}</td>
+              <td><span class="label label-primary label-pill label-inline" 
+                [ngClass]="{'label-primary' : item.orderPaymentStatus == 'Paid',
+                 'label-warning' : item.orderPaymentStatus !== 'Paid'
+                  }">
+                  {{ item.orderPaymentStatus }}</span></td>
+              <td>{{ item.createdDate }}</td>
+              <td>
+                <a matTooltip="Edit" class="btn btn-icon btn-sm" *ngIf="item.totalAmount == item.dueAmount && user.role !== 'READADMIN'" (click)="editOrder(item)">
+                  <i class="flaticon-edit-1 text-success"></i>
+                </a>
+                <a matTooltip="View Invoice" class="btn btn-icon btn-sm" *ngIf="item.invoiceURL && user.role !== 'READADMIN'" href="{{ item.invoiceURL }}" target="_blank">
+                  <i class="flaticon-file-2 text-warning"></i>
+                </a>
+                <a matTooltip="Details" *ngIf="user.role !== 'READADMIN'" class="btn btn-icon btn-sm mr-1 mt-1" (click)="showPaymentDetails(item, details)">
+                  <i class="flaticon-list-3 text-dark"></i>
+                </a>
+                <!-- <a matTooltip="Add Payment" class="btn btn-icon btn-sm mr-1 mt-1" 
+                    *ngIf="item.orderPaymentStatus.toUpperCase() === 'PENDING' && rolesService.checkAccess(user.role, {type: 'actions', component: 'CocoonOrdersComponent', action: 'payment'})"
+                      (click)="payNow(payment, item)">
+                  <i class="fas fa-money-check-alt text-success"></i>
+                </a> -->
+                <a style="display: inline-flex">
+                  <app-payment-tussar-purchases-khata  [customerId]="item.reelerId" [isListingPage]="true" [orderDetails]="item" (listenAndRefresh)="listenAndRefreshPage()" ></app-payment-tussar-purchases-khata>
+                </a>
+  
+                <!-- <a *ngIf="rolesService.checkAccess(user.role, {type: 'actions', component: 'CocoonListComponent', action: 'delete'}) && (item?.orderPaymentStatus?.toUpperCase() !== 'PAID')" title="Delete" class="btn btn-icon btn-sm" (click)="open(content,item)">
+                  <i class="flaticon-delete text-danger"></i>
+                </a> -->
+  
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row">
+        <div class="mr-2">
+          <nav aria-label="Page navigation example">
+            <ul class="pagination">
+              <li class="page-item">
+                <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(0)" href="javascript:void(0);">
+                  <span aria-hidden="true">&laquo;&laquo;</span>
+                  <span class="sr-only">First</span>
+                </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(paginationData.currentPage - 1)" href="javascript:void(0);">
+                  <span aria-hidden="true">&laquo;</span>
+                  <span class="sr-only">Previous</span>
+                </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" *ngIf="paginationData?.currentPage !== 0 && paginationData?.currentPage !== 1" (click)="onPageChange(paginationData?.currentPage - 2)" href="javascript:void(0);">{{ paginationData?.currentPage -1 }}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" *ngIf="paginationData?.currentPage !== 0" (click)="onPageChange(paginationData?.currentPage - 1)" href="javascript:void(0);">{{ paginationData?.currentPage}}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link active" href="javascript:void(0);">{{ paginationData?.currentPage + 1 }}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1" (click)="onPageChange(paginationData?.currentPage + 1)" href="javascript:void(0);">{{ paginationData?.currentPage + 2 }}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1 && paginationData?.currentPage !== paginationData.pages.length - 2" (click)="onPageChange(paginationData?.currentPage + 2)" href="javascript:void(0);">{{ paginationData?.currentPage + 3 }}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}" (click)="onPageChange(paginationData.currentPage + 1)" href="javascript:void(0);">
+                  <span aria-hidden="true">&raquo;</span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}" (click)="onPageChange(paginationData.pages.length - 1)" href="javascript:void(0);">
+                  <span aria-hidden="true">&raquo;&raquo;</span>
+                  <span class="sr-only">Last</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <div class="mr-2">
+          <select class="custom-select" style="height: calc(1.2em + 1rem + 2px); padding: 0.35rem 2rem 0.35rem 1rem;"
+            [(ngModel)]="paginationData.pageSize" (change)="onPageSizeChange()">
+            <option [ngValue]="10">10 per page</option>
+            <option [ngValue]="50">50 per page</option>
+            <option [ngValue]="100">100 per page</option>
+          </select>
+        </div>
+        <div class="pt-2">
+          <small class="text-muted">(Total: {{totalElements}})</small>
+        </div>      
+      </div>
+    </div>
+  </div>
+  
+  <div class="details-confirmation-preview">
+    <div>
+            <ng-template #details let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Details</h4>
+                </div>
+                <div class="modal-body">
+                  <ng-container *ngIf="reelerKhataList?.length">
+                    <div *ngFor="let item of reelerKhataList">
+                      <p>Amount : <strong>Rs. {{item.amount.toLocaleString('en-IN')}}</strong></p>
+                      <p>Reference Number : <strong> {{item.referenceNumber}}</strong></p>
+                      <p>Date : <strong>{{item.lastModifiedDate}} </strong></p>
+                      <hr>
+                  </div>
+                  </ng-container>
+  
+                  <ng-container *ngIf="!reelerKhataList?.length">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <strong> No Payments For This Cocoon Order</strong>
+                    </div>
+                  </ng-container>
+  
+                    
+                </div>
+  
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-success" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+    </div>
+  </div>
+  
+  <div class="delete-confirmation-preview">
+    <div>
+        <ng-template #content let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Delete Cocoon Order {{deletedOrder.code}}</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+                <button type="button" class="btn btn-sm btn-success" (click)="delete()">Yes</button>
+            </div>
+        </ng-template>
+    </div>
+  </div>

@@ -1,0 +1,460 @@
+<div class="card card-custom gutter-b">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">Chawki Orders</h3>
+    </div>
+    <div class="card-toolbar">
+      <div>
+        <button *ngIf="user.role !== 'READADMIN'" type="button" class="btn btn-sm btn-success mr-2" (click)="createNewOrder();">+ Generate Order</button>
+      </div>
+    </div>
+  </div>
+  <div class="card-body pt-0">
+    <div class="form form-label-right">
+      <div class="form-group row">
+
+        <div class="col-lg-6">
+          <input type="text" class="form-control" (keyup.enter)="onSearch();"  (keyup)="!this.searchText&&getAllChawkiOrders();paginationData.currentPage=0" [(ngModel)]="searchText" placeholder="Search" value="" />
+          <small class="form-text text-muted"><b>Search</b>in all fields</small>
+        </div>
+
+        <!-- <div class="col-lg-2">
+          <div class="row">
+            <div class="col-lg-12">
+              <select class="form-control" name="status" (change)="onChangeOrderStatus($event.target.value)" placeholder="Filter by status">
+                  <option value="(New,Processing,Shipped,Delivered,NotConnected,Completed,Cancelled)" 
+                    [selected]="true">All</option>
+                  <option value="New">New</option>
+                  <option value="Processing">Processing</option>
+                  <option value="Shipped">Shipped</option>
+                  <option value="Delivered">Delivered</option>
+                  <option value="Delivered">Delivered</option>
+                  <option value="NotConnected">Not Connected</option>
+                  <option value="Cancelled">Cancelled</option>
+                  <option value="Completed">Completed</option>
+              </select><small class="form-text text-muted"><b>Filter</b> by Order status</small>
+            </div>
+          </div>
+        </div> -->
+        <div class="col-lg-2">
+          <div class="row">
+            <div class="col-lg-12">
+              <select class="form-control" name="status" (change)="onChangeStatus($event.target.value)" placeholder="Filter by Farmer payment status">
+                <option value="(Pending,Paid)" [selected]="true">All</option>
+                <option value="Pending">Pending</option>
+                <option value="Paid">Paid</option>
+              </select><small class="form-text text-muted"><b>Filter</b> by Farmer payment status</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-2">
+          <div class="row">
+            <div class="col-lg-12">
+              <select class="form-control" name="status" (change)="onChangeChawkiPayoutStatus($event.target.value)" placeholder="Filter by chawki payout status">
+                <option value="(Pending,Paid)" [selected]="true">All</option>
+                <option value="Pending">Pending</option>
+                <option value="Paid">Paid</option>
+              </select><small class="form-text text-muted"><b>Filter</b> by chawki payout status</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="table-responsive angular-bootstrap-table">
+      <table id="excel-table" class="table table-head-custom table-vertical-center ">
+        <thead>
+          <th name="id" ngDefaultControl [(ngModel)]="tableHeader.id" (click)="onSort('id')">
+            <i *ngIf="tableHeader.id === 1 && activeSort === 'id'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.id === 0 && activeSort === 'id'"
+              class="fas fa-long-arrow-alt-down"></i>
+              RM Code
+          </th>
+          <!-- <th name="cartId" ngDefaultControl [(ngModel)]="tableHeader.cartId" (click)="onSort('cartId')">
+            <i *ngIf="tableHeader.cartId === 1 && activeSort === 'cartId'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.cartId === 0 && activeSort === 'cartId'"
+              class="fas fa-long-arrow-alt-down"></i>
+              Cart ID
+          </th> -->
+
+          <th name="farmerPhone" ngDefaultControl [(ngModel)]="tableHeader['farmer.name']" (click)="onSort('farmer.name')">
+            <i *ngIf="tableHeader['farmer.name'] === 1 && activeSort === 'farmer.name'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader['farmer.name'] === 0 && activeSort === 'farmer.name'"
+              class="fas fa-long-arrow-alt-down"></i>
+              FarmerPhone
+          </th>
+
+          <th name="chawkiName" ngDefaultControl [(ngModel)]="tableHeader['chawki.name']" (click)="onSort('chawki.name')">
+            <i *ngIf="tableHeader['chawki.name'] === 1 && activeSort === 'chawki.name'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader['chawki.name'] === 0 && activeSort === 'chawki.name'"
+              class="fas fa-long-arrow-alt-down"></i>
+              Chawki
+          </th>
+
+          <th name="pricePerDFL" ngDefaultControl [(ngModel)]="tableHeader.pricePerDFL" (click)="onSort('pricePerDFL')">
+            <i *ngIf="tableHeader.pricePerDFL === 1 && activeSort === 'pricePerDFL'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.pricePerDFL === 0 && activeSort === 'pricePerDFL'"
+              class="fas fa-long-arrow-alt-down"></i>
+              price<small>(DFL)</small>
+          </th>
+          <th name="totalDFLs" ngDefaultControl [(ngModel)]="tableHeader.totalDFLs" (click)="onSort('totalDFLs')">
+            <i *ngIf="tableHeader.totalDFLs === 1 && activeSort === 'totalDFLs'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.totalDFLs === 0 && activeSort === 'totalDFLs'"
+              class="fas fa-long-arrow-alt-down"></i>
+              Total DFL
+          </th>
+          <th name="totalDiscount" ngDefaultControl [(ngModel)]="tableHeader.totalDiscount" (click)="onSort('totalDiscount')">
+            <i *ngIf="tableHeader.totalDiscount === 1 && activeSort === 'totalDiscount'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.totalDiscount === 0 && activeSort === 'totalDiscount'"
+              class="fas fa-long-arrow-alt-down"></i>
+              Discount
+          </th>
+          
+          <th name="totalAmount" ngDefaultControl [(ngModel)]="tableHeader.totalAmount" (click)="onSort('totalAmount')">
+            <i *ngIf="tableHeader.totalAmount === 1 && activeSort === 'totalAmount'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.totalAmount === 0 && activeSort === 'totalAmount'"
+              class="fas fa-long-arrow-alt-down"></i>
+              Payable Amount<small>(Rs.)</small>
+          </th>
+
+          <th name="chawkiType" ngDefaultControl [(ngModel)]="tableHeader.chawkiType" (click)="onSort('chawkiType')">
+            <i *ngIf="tableHeader.chawkiType === 1 && activeSort === 'chawkiType'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.chawkiType === 0 && activeSort === 'chawkiType'"
+              class="fas fa-long-arrow-alt-down"></i>
+              Chawki Type
+          </th>
+          
+          <!-- <th name="inputOrderStatus" ngDefaultControl [(ngModel)]="tableHeader.inputOrderStatus" (click)="onSort('inputOrderStatus')">
+            <i *ngIf="tableHeader.inputOrderStatus === 1 && activeSort === 'inputOrderStatus'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.inputOrderStatus === 0 && activeSort === 'inputOrderStatus'"
+              class="fas fa-long-arrow-alt-down"></i>
+              Status
+          </th> -->
+          
+          <th name="paymentStatus" ngDefaultControl [(ngModel)]="tableHeader.paymentStatus" (click)="onSort('paymentStatus')">
+            <i *ngIf="tableHeader.paymentStatus === 1 && activeSort === 'paymentStatus'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.paymentStatus === 0 && activeSort === 'paymentStatus'"
+              class="fas fa-long-arrow-alt-down"></i>
+              Order Payment Status
+          </th>
+
+          <th name="chawkiPayoutStatus" ngDefaultControl [(ngModel)]="tableHeader.chawkiPayoutStatus" (click)="onSort('chawkiPayoutStatus')">
+            <i *ngIf="tableHeader.chawkiPayoutStatus === 1 && activeSort === 'chawkiPayoutStatus'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.chawkiPayoutStatus === 0 && activeSort === 'chawkiPayoutStatus'"
+              class="fas fa-long-arrow-alt-down"></i>
+              Chawki Payment Status
+          </th>
+
+          <th name="createdDate" ngDefaultControl [(ngModel)]="tableHeader.createdDate" (click)="onSort('createdDate')">
+            <i *ngIf="tableHeader.createdDate === 1 && activeSort === 'createdDate'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.createdDate === 0 && activeSort === 'createdDate'"
+              class="fas fa-long-arrow-alt-down"></i>
+              Date
+          </th>
+          
+          
+          <th>Actions</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of filteredChawkiOrdersList">
+            <td><a matTooltip="Order Details" class="btn btn-link-success font-weight-bold" (click)="OrderDetail(item)">
+              {{ item.code }}</a></td>            
+            <!-- <td>{{ item.cartId?item.cartId:'-' }}</td> -->
+            <td><a matTooltip="Farmer Details" class="btn btn-link-success font-weight-bold" (click)="farmerDetail(item)">
+              {{ item.farmerPhone }}</a></td>
+            <td><a matTooltip="Chawki Details" class="btn btn-link-success font-weight-bold" (click)="chawkiDetail(item)">
+              {{ item.chawkiName | titlecase }}</a></td>
+
+            <td>{{ item.displayPricePerDFL }}</td>
+            <td>{{ item.displayTotalDFLs }}</td>
+            <td>{{ item.totalDiscount }}</td>
+            <td>{{ item.displayNetAmount }}</td>
+            <td>{{ item.chawkiType | titlecase }}</td>
+            <!-- <td style="width: 11em;">
+                <select [disabled] = "user.role == 'READADMIN'"  class="form-control" name="status" (change)="openPopUp(followUpPopup,$event, item)">
+                  <option value="New" [selected]="item?.status.toUpperCase() === 'NEW'">New</option>
+                  <option value="Processing" [selected]="item?.status.toUpperCase() === 'PROCESSING'">Processing</option>
+                  <option value="Shipped" [selected]="item?.status.toUpperCase() === 'SHIPPED'">Shipped</option>
+                  <option value="Delivered" [selected]="item?.status.toUpperCase() === 'DELIVERED'">Delivered</option>
+                  <option value="NotConnected" [selected]="item?.status.toUpperCase() === 'NOTCONNECTED'">Not Connected</option>
+                  <option value="Cancelled" [selected]="item?.status.toUpperCase() === 'CANCELLED'">Cancelled</option>
+                  <option value="Completed" [selected]="item?.status.toUpperCase() === 'COMPLETED'">Completed</option>
+                </select>
+          </td> -->
+
+            <td><span class="label label-primary label-pill label-inline" [ngClass]="{'label-primary' : item.paymentStatus == 'paid',
+                           'label-warning' : item.paymentStatus !== 'paid'
+                            }">
+                {{ item.paymentStatus | titlecase }}</span></td>
+            
+            <td><span class="label label-primary label-pill label-inline" [ngClass]="{'label-primary' : item.chawkiPayoutStatus == 'paid',
+                               'label-warning' : item.chawkiPayoutStatus !== 'paid'
+                                }">
+                {{ item.chawkiPayoutStatus | titlecase }}</span></td>
+            <td>{{item.createdDate}}</td>
+            <!-- <td>
+              <a matTooltip="View Invoice" class="btn btn-icon btn-sm" *ngIf="item.invoiceURL && user.role !== 'READADMIN'" href="{{ item.invoiceURL }}" target="_blank">
+                <i class="flaticon-file-2 text-warning"></i>
+              </a>
+
+              <a matTooltip="Add Farmer Payment" class="btn btn-icon btn-sm mr-1 mt-1" 
+                  *ngIf="item.paymentStatus.toUpperCase() === 'PENDING' && item?.status.toUpperCase() != 'CANCELLED' &&
+                       rolesService.checkAccess(user.role, {type: 'actions', component: 'CocoonOrdersComponent', action: 'payment'})"
+                    (click)="markSoldConfirmation(markPaid, item)">
+                <i class="fas fa-money-check-alt text-success"></i>
+              </a>
+
+              <a matTooltip="Add CRC Payout" class="btn btn-icon btn-sm mr-1 mt-1" 
+                  *ngIf="item?.chawkiPayoutStatus?.toUpperCase() === 'PENDING' && item?.status.toUpperCase() != 'CANCELLED' && item.paymentStatus.toUpperCase() === 'PAID' &&
+                  rolesService.checkAccess(user.role, {type: 'actions', component: 'CocoonOrdersComponent', action: 'payment'})"
+                    (click)="chawkiPayoutConfirmation(chawkiPayout, item)">
+                <i class="fas fa-credit-card text-success"></i>
+              </a>
+           
+              <a matTooltip="Upload  Image" class="btn btn-icon btn-sm mr-1 mt-1"
+                (click)="chawkiImage(image, item)">
+                <i class="fas fa-upload" style="color: #8ae5ab" aria-hidden="true"></i>
+          </a>
+
+            </td> -->
+
+            <div ngbDropdown class="d-inline-block">
+              <button class="btn btn-hover-text-primary p-0 ml-4 dropdown menu-item menu-item-submenu menu-item-rel"
+                id="approovalActionsdropdown" ngbDropdownToggle style="height:72px">
+                <i class="fas fa-ellipsis-v icon-lg text-muted"></i>
+              </button>
+              <div class="palns_activation_actions" style="max-width: 150px;top:-28px !important" ngbDropdownMenu
+                aria-labelledby="approovalActionsdropdown">
+                <a matTooltip *ngIf="item.invoiceURL && user.role !== 'READADMIN'" href="{{ item.invoiceURL }}"  target="_blank">
+                  <p class="pl-4 cursor dropdow_list">View invoice</p>
+                </a>
+                <a matTooltip *ngIf="item.paymentStatus.toUpperCase() === 'PENDING' && item?.status.toUpperCase() != 'CANCELLED' &&
+                rolesService.checkAccess(user.role, {type: 'actions', component: 'CocoonOrdersComponent', action: 'payment'})"
+                 (click)="markSoldConfirmation(markPaid, item)">
+                  <p class="pl-4 cursor dropdow_list">Add Farmer payment</p>
+                </a>
+              <a matTooltip
+              *ngIf="item?.chawkiPayoutStatus?.toUpperCase() === 'PENDING' && item?.status.toUpperCase() != 'CANCELLED' && item.paymentStatus.toUpperCase() === 'PAID' &&
+              rolesService.checkAccess(user.role, {type: 'actions', component: 'CocoonOrdersComponent', action: 'payment'})"
+                (click)="chawkiPayoutConfirmation(chawkiPayout, item)">
+                <p class="pl-4 cursor dropdow_list">Add CRC Payment</p>
+              </a>
+                <a matTooltip (click)="chawkiImage(image, item)" *ngIf="!item?.crcBillUrl">
+                  <p class="pl-4 cursor dropdow_list">Upload CRC BILL</p>
+                </a>
+              </div>
+            </div>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="row">
+      <div class="mr-2">
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item">
+              <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(0)" href="javascript:void(0);">
+                <span aria-hidden="true">&laquo;&laquo;</span>
+                <span class="sr-only">First</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(paginationData.currentPage - 1)" href="javascript:void(0);">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" *ngIf="paginationData?.currentPage !== 0 && paginationData?.currentPage !== 1" (click)="onPageChange(paginationData?.currentPage - 2)" href="javascript:void(0);">{{ paginationData?.currentPage -1 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" *ngIf="paginationData?.currentPage !== 0" (click)="onPageChange(paginationData?.currentPage - 1)" href="javascript:void(0);">{{ paginationData?.currentPage}}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link active" href="javascript:void(0);">{{ paginationData?.currentPage + 1 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1" (click)="onPageChange(paginationData?.currentPage + 1)" href="javascript:void(0);">{{ paginationData?.currentPage + 2 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1 && paginationData?.currentPage !== paginationData.pages.length - 2" (click)="onPageChange(paginationData?.currentPage + 2)" href="javascript:void(0);">{{ paginationData?.currentPage + 3 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}" (click)="onPageChange(paginationData.currentPage + 1)" href="javascript:void(0);">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}" (click)="onPageChange(paginationData.pages.length - 1)" href="javascript:void(0);">
+                <span aria-hidden="true">&raquo;&raquo;</span>
+                <span class="sr-only">Last</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div class="mr-2">
+        <select class="custom-select" style="height: calc(1.2em + 1rem + 2px); padding: 0.35rem 2rem 0.35rem 1rem;"
+          [(ngModel)]="paginationData.pageSize" (change)="onPageSizeChange()">
+          <option [ngValue]="10">10 per page</option>
+          <option [ngValue]="50">50 per page</option>
+          <option [ngValue]="100">100 per page</option>
+        </select>
+      </div>
+      <div class="pt-2">
+        <small class="text-muted">(Total: {{paginationData.total}})</small>
+      </div> 
+    </div>
+  </div>
+</div>
+
+<div class="details-confirmation-preview">
+  <div>
+    <ng-template #markPaid let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          Mark Paid!
+        </h4>
+      </div>
+      
+      <div class="modal-body">
+        <p>You are marking payment for this Chawki Order.</p>
+        <p>You Recieved <strong>Rs. <span class="text-danger h2">{{highlightText[0]}}</span><span *ngIf="highlightText[1]">.{{highlightText[1]}}</span></strong> for chawki name <strong>{{markSoldItem?.chawkiName}} </strong>of Total DFL <strong>{{markSoldItem?.displayTotalDFLs}}</strong> at price per/DFL <strong>{{markSoldItem?.pricePerDFL}}</strong> from farmer:</p>
+        <p *ngIf="markSoldItem.farmerName">Name: <strong>{{markSoldItem?.farmerName}}</strong></p>
+        <p *ngIf="markSoldItem.farmerPhone">Phone: <strong>{{markSoldItem?.farmerPhone}}</strong></p>
+        <div class="col-12 my-2">
+          <label class="form-label">Reference Number<span class="text-danger">*</span></label>
+          <input type="text" class="form-control form-control-lg" name="referenceNumber"
+            placeholder="Reference Number" autocomplete="off" [(ngModel)]="markSoldItem.referenceNumber" />
+        </div> 
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click');">Cancel</button>
+        <button type="button" [disabled]="!markSoldItem.referenceNumber" class="btn btn-sm btn-success" (click)="markAsSold()">Confirm</button>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<div class="example-preview">
+  <div>
+      <ng-template #followUpPopup let-c="close" let-d="dismiss">
+          <div class="modal-header">
+              <h4 class="modal-title">Mark Order {{followUpStatus | titlecase}}</h4>
+              <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <p>Are you sure you want to mark the order {{followUpStatus | lowercase}}?</p>
+              <div class="row" *ngIf="followUpStatus=='Completed'">
+                <div class="col-lg-6">Please upload CRC bill<span class="text-danger">*</span> :</div>
+                <div class="col-lg-2 mt-4 pr-0">
+                  <div class="image-input image-input-outline m-2"
+                      id="kt_profile_avatar">
+                      <img class="image-input-wrapper"
+                          [src]=" imageUpload || './assets/media/svg/files/jpg.svg'" />
+                      <label
+                          class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                          data-action="change" data-toggle="tooltip" title=""
+                          data-original-title="Change avatar">
+                          <i class="fa fa-pen icon-sm text-muted"></i>
+                          <input type="file" name="profile_avatar"
+                              accept=".png, .jpg, .jpeg, .pdf"
+                              (change)="onImageUpload($event);" />
+                          <input type="hidden" name="profile_avatar_remove" />
+                      </label>
+                      <span
+                          class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                          data-action="cancel" data-toggle="tooltip" title=""
+                          data-original-title="Cancel avatar">
+                          <i class="ki ki-bold-close icon-xs text-muted"></i>
+                      </span>
+                  </div>
+              </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+              <button type="button" class="btn btn-primary" [disabled]="followUpStatus=='Completed' && !imageUpload" (click)="markProcessing()">Mark {{followUpStatus | lowercase}}</button>
+          </div>
+      </ng-template>
+  </div>
+</div>
+
+<div class="details-confirmation-preview">
+  <div>
+    <ng-template #chawkiPayout let-c="close" let-d="dismiss" [formGroup]="paymentForm">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          Mark Paid!
+        </h4>
+      </div>
+      
+      <div class="modal-body pb-0" >
+        <p>You are marking payment sent to Chawki!</p>
+        <p>Reshamandi paid Rs. <span class="text-danger h2">{{highlightText}}</span> for order id <strong>{{markSoldItem?.code}} </strong>of <strong>{{markSoldItem?.totalDFLs}}</strong> DFL's.</p>
+      </div>
+
+      <div class="row p-4">
+          <div class="col-6">
+            <label class="form-label">Amount<span class="text-danger">*</span></label>
+            <input type="text" class="form-control form-control-lg" name="amount"
+              placeholder="Reference Number" autocomplete="off" [class.is-invalid]="isControlInvalidForChawki('amount')"
+              [class.is-valid]="isControlValidForChawki('amount')" formControlName="amount" disabled/>
+            <div class="invalid-feedback" *ngIf="controlHasErrorForChawki('required', 'amount')">
+                Amount is required
+            </div> 
+            <p class="text-danger" *ngIf="paymentForm.get('amount').value > markSoldItem.totalPayableAmount">
+              Amount can not exceed {{markSoldItem.totalAmount}}
+            </p>
+        </div> 
+  
+          <div class="col-6">
+              <label class="form-label">Reference Number<span class="text-danger">*</span></label>
+              <input type="text" class="form-control form-control-lg" name="referenceNumber"
+                placeholder="Reference Number" autocomplete="off" [class.is-invalid]="isControlInvalidForChawki('referenceNumber')"
+                [class.is-valid]="isControlValidForChawki('referenceNumber')" formControlName="referenceNumber" />
+              <div class="invalid-feedback" *ngIf="controlHasErrorForChawki('required', 'referenceNumber')">Reference Number is required</div> 
+          </div> 
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click'); paymentForm.reset();">Cancel</button>
+        <button type="button" class="btn btn-sm btn-success" [disabled]="paymentForm.invalid || (paymentForm.get('amount').value > markSoldItem.totalPayableAmount)" (click)="makeChawkiPayout()">Confirm</button>
+      </div>
+      <!--image pop up-->
+    </ng-template>
+    <ng-template #image let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title">
+      Upload CRC BILL
+      <div class="col-lg-4 mt-4">
+        <div class="image-input image-input-outline m-2 mt-6" id="kt_profile_avatar">
+          <!-- <img class="image-input-wrapper cursor-pointer" /> -->
+          <img class="image-input-wrapper"
+          [src]=" imageUpload || './assets/media/svg/files/jpg.svg'" />
+          <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+            data-action="change" data-toggle="tooltip" title="" data-original-title="Change avatar">
+            <i class="fa fa-pen icon-sm text-muted"></i>
+            <input type="file" name="profile_avatar"
+            accept=".png, .jpg, .jpeg, .pdf"
+            (change)="onCrcImageUpload($event);" />
+        <input type="hidden" name="profile_avatar_remove" />
+          </label>
+        </div>
+      </div>
+        </h4>
+      </div>
+      <!-- <div class="modal-body pb-0" >
+      </div> -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+        <button type="button" class="btn btn-sm btn-success" (click)="onImageConfirm()">Confirm</button>
+      </div>
+    </ng-template>
+  </div>
+</div>

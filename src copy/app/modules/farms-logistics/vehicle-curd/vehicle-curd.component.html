@@ -1,0 +1,136 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+      <div class="card-title">
+        <h3 class="card-label">Update Vehicle Details</h3>
+      </div>
+      <div class="card-toolbar">
+        <!-- Nothing right now-->
+      </div>
+    </div>
+    <div class="card-body pt-0">
+
+      <!-- Farmer FORM -->
+      <div class="form form-label-right">
+        <div class="form-group row" style="padding-top: 0px;">
+          <div class="col-lg-12">
+
+              <div class="row" [formGroup]="createVehicleForm">
+                <div class="col-lg-12 mt-2">
+                  <label class="form-label">Vehicle Type<span class="text-danger">*</span></label>
+                  <input type="text" class="form-control form-control-lg" name="vehicleType" placeholder="vehicle Type"
+                    autocomplete="off" [class.is-invalid]="isVehicleFormControlInvalid('vehicleType')"
+                    [class.is-valid]="isVehicleFormControlValid('vehicleType')"
+                    formControlName="vehicleType" />
+                  <div class="invalid-feedback" *ngIf="VehicleFormcontrolHasError('required', 'vehicleType')">Vehicle Type is required</div>
+                </div>
+
+                <div class="col-lg-12 mt-2">
+                  <label class="form-label">Vehicle Number<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control form-control-lg" name="vehicleNumber"
+                      placeholder="Vehicle Number" autocomplete="off" [class.is-invalid]="isVehicleFormControlInvalid('vehicleNumber')"
+                      [class.is-valid]="isVehicleFormControlValid('vehicleNumber')" formControlName="vehicleNumber" />
+                    <div class="invalid-feedback" *ngIf="VehicleFormcontrolHasError('required', 'vehicleNumber')">Vehicle number is
+                      required</div>
+                </div>
+
+                <div class="col-lg-12 mt-6">
+                  <ngb-accordion #acc11="ngbAccordion">
+                    <ngb-panel id="toggle-bank">
+                      <ng-template ngbPanelTitle>
+                        <span class="ard-header--title text-success">Vehicle RC Details</span>
+                      </ng-template>
+                      <ng-template ngbPanelContent>
+                        <!-- <div class="col-lg-12 mt-2">
+                          <label class="form-label">Registration Document Name</label>
+                            <input type="text" class="form-control form-control-lg" name="rcDocUrl"
+                              placeholder="Document Name" autocomplete="off"
+                               formControlName="documentName" />
+                        </div> -->
+                        <div class="col-lg-12 mt-2">
+                          <label class="form-label">Registration Document Number</label>
+                            <input type="text" class="form-control form-control-lg" name="rcNumber"
+                              placeholder="Document Number" autocomplete="off" [class.is-invalid]="isVehicleFormControlInvalid('rcNumber')"
+                              [class.is-valid]="isVehicleFormControlValid('rcNumber')" formControlName="rcNumber" />
+                            <div class="invalid-feedback" *ngIf="VehicleFormcontrolHasError('required', 'rcNumber')">RC number is
+                              required</div>
+                        </div>
+                        <div class="col-lg-12 mt-2">
+                          <label class="form-label">Issuer</label>
+                            <input type="text" class="form-control form-control-lg" name="rcProvider"
+                              placeholder="Reciept Provider" autocomplete="off" [class.is-invalid]="isVehicleFormControlInvalid('rcProvider')"
+                              [class.is-valid]="isVehicleFormControlValid('rcProvider')" formControlName="rcProvider" />
+                            <div class="invalid-feedback" *ngIf="VehicleFormcontrolHasError('required', 'rcProvider')">RC number is
+                              required</div>
+                        </div>
+
+                      </ng-template>
+                    </ngb-panel>
+                  </ngb-accordion>
+                </div>
+
+                <div class="col-lg-12 mt-6">
+                  <ngb-accordion #acc11="ngbAccordion">
+                    <ngb-panel id="toggle-bank">
+                      <ng-template ngbPanelTitle>
+                        <span class="ard-header--title text-success">Insurance Details</span>
+                      </ng-template>
+                      <ng-template ngbPanelContent>
+                        <!-- <div class="col-lg-12 mt-2">
+                          <label class="form-label">Document Name</label>
+                            <input type="text" class="form-control form-control-lg" name="insurancename"
+                              placeholder="Insurance Id" autocomplete="off" [class.is-invalid]="isVehicleFormControlInvalid('insurancename')"
+                              [class.is-valid]="isVehicleFormControlValid('insurancename')" formControlName="insurancename" />
+                            <div class="invalid-feedback" *ngIf="VehicleFormcontrolHasError('required', 'insurancename')">Document Name
+                              required</div>
+                        </div> -->
+                        <div class="col-lg-12 mt-2">
+                          <label class="form-label">InsuranceId</label>
+                            <input type="text" class="form-control form-control-lg" name="rcNumber"
+                              placeholder="Insurance Id" autocomplete="off" [class.is-invalid]="isVehicleFormControlInvalid('insuranceId')"
+                              [class.is-valid]="isVehicleFormControlValid('insuranceId')" formControlName="insuranceId" />
+                            <div class="invalid-feedback" *ngIf="VehicleFormcontrolHasError('required', 'insuranceId')">InsuranceId is
+                              required</div>
+                        </div>
+                        <div class="col-lg-12 mt-2">
+                          <label class="form-label">Insurance Provider</label>
+                            <input type="text" class="form-control form-control-lg" name="insuranceProvider"
+                              placeholder="Insurance Provider" autocomplete="off" [class.is-invalid]="isVehicleFormControlInvalid('insuranceProvider')"
+                               formControlName="insuranceProvider" />
+                        </div>
+
+                      </ng-template>
+                    </ngb-panel>
+                  </ngb-accordion>
+                </div>
+
+            
+              </div>
+          </div>
+        </div>
+        <div class="card-toolbar">
+          <button type="button" class="btn btn-sm btn-secondary mr-2" (click)="goBack()">Back</button>
+
+          <button type="submit" class="btn btn-sm btn-success" (click)="saveVehicleData(createVehicleForm.value)">Save</button>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+
+  <div class="symbol symbol-50 symbol-light mr-1 cursor-pointer" *ngIf="modelImageUrl" appNoRightClick>
+
+    <!-- The Modal -->
+    <div id="reviewModel" class="modal" [ngClass]="{'display-block' : expandImage, 'display-none' : !expandImage}">
+
+      <!-- The Close Button -->
+      <span class="close" (click)="expandImage = false">&times;</span>
+
+      <!-- Modal Content (The Image) -->
+      <img class="modal-content" *ngIf="!modelImageUrl?.includes('.pdf')" [src]="modelImageUrl">
+      <!-- <pdf-viewer *ngIf="modelImageUrl?.includes('.pdf')" src="{{modelImageUrl}}"></pdf-viewer> -->
+    </div>
+    <!-- </span> -->
+  </div>

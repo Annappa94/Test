@@ -1,0 +1,1081 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">Cocoon Lot Detailssa</h3>
+        </div>
+        <div class="card-toolbar">
+
+        </div>
+    </div>
+
+    <!-- LOT FORM -->
+    <div class="card-body">
+        <div class="form form-label-right">
+            <div class="form-group row">
+                <div class="col-lg-12">
+                    <!-- <div class="row ml-1">
+                        <button type="button" *ngIf="selectedFarmer&&!iskycVerified" class="btn btn-sm btn-bg-warning font-weight-bold text-white"
+                                            (click)="navigateToKyc()">Advice: Please complete your KYC.</button>
+                        <div *ngIf="selectedFarmer&&iskycVerified" class="text-success mb-2">KYC Verified. <i class="flaticon2-correct text-success"></i> Click <u class="text-warning cursor-pointer" (click)="navigateToKyc();">here</u> to edit.</div>
+                    </div> -->
+                    <div class="row" [formGroup]="lotCreateForm">
+                        <div class="col-lg-3 mb-4" *ngIf="edit">
+                            <label class="form-label">Lot Code</label>
+                            <input type="text" class="form-control form-control-lg form-control-solid" name="code"
+                                placeholder="Lot Code" autocomplete="off" readonly formControlName="code" />
+                        </div>
+                        <div class="col-lg-8 mt-4" *ngIf="edit"></div>
+
+                        <div class="col-lg-3 mt-4" *ngIf="edit">
+                            <label>Select Farmer<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg form-control-solid"
+                                [ngClass]="{'app-disable': edit}" formControlName="farmer" name="farmer"
+                                placeholder="Select Farmer">
+                                <option *ngFor="let item of farmerList" [value]="item.id">{{ item.name }}
+                                    - {{ item.phone }}</option>
+                            </select>
+
+                        </div>
+                        <div *ngIf="!edit" class="col-lg-3 mt-4 selectWrapper">
+                            <!-- <label class="w-100 d-flex justify-content-between"><span>Select Farmer <span
+                                        class="text-danger">*</span></span><span><a class="text-primary cursor-pointer"
+                                        (click)="open(content)">+ New Farmer</a></span></label> -->
+                                <label class="w-100 d-flex justify-content-between"><span>Select Farmer <span
+                            class="text-danger">*</span></span><span><a class="text-primary cursor-pointer"
+                            (click)="redirectToFarmerCrud()">+ New Farmer</a></span></label>
+                            <ng-select class="" [(ngModel)]="selectedFarmer" (change)="onFarmerSelection(farmerCSBverification,farmerKhata)"
+                                [ngModelOptions]="{standalone: true}"
+                                placeholder="Please enter the mobile number" (search)='getFarmersList($event)'>
+                                <ng-option *ngFor="let item of farmerList" [value]="item.id">{{ item.name
+                                    }} - {{ item.phone }}</ng-option>
+                            </ng-select>
+                            <div class="text-success pt-2" *ngIf="farmerLotCount > 0"> This farmer has transacted
+                                {{farmerLotCount}} times with us.</div>
+                            <div class="text-success pt-2" *ngIf="farmerHasIotDevice"> This farmer has IOT Device.</div>
+                            <div class="text-success pt-2" *ngIf="farmerRes?.eligibleForTransactions == true"> This farmer has already verified</div>
+                            <div class="text-warning pt-2" *ngIf="farmerRes?.eligibleForTransactions == false && selectedFarmer != ''"> This farmer has not yet verified</div>
+
+                        </div>
+
+                        <div class="col-lg-3 mt-4" *ngIf="edit">
+                            <label>Select Center<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg form-control-solid"
+                                [ngClass]="{'app-disable': edit}" formControlName="center"
+                                name="Center" placeholder="Select Center">
+                                <option *ngFor="let item of centerList" [value]="item.id">{{item.centerName}}</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-3 mt-4" *ngIf="!edit">
+                            <label>Select Center<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg" (change)="mapCenterData()"
+                                formControlName="center"
+                                name="Center" placeholder="Select Center">
+                                <option *ngFor="let item of centerList" [value]="item.id">{{item.centerName}}</option>
+                            </select>
+                        </div>
+
+
+                        <div class="col-lg-3 mt-4">
+                            <label>Select Type<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg" formControlName="type" name="type"
+                                placeholder="Select Type" (change)="onCocoonTypeChange()"
+                                [class.is-invalid]="isControlInvalidForLot('type')">
+                                <!-- <option value="SEEDCOCOON">Bivoltine Seed</option> -->
+                                <option value="CBGOLD">CB Gold</option>
+                                <option value="BIVOLTINE">Bivoltine Hybrid</option>
+                                <option value="TUSSAR">Tussar</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-3 mt-4" *ngIf="!edit">
+                            <label for="name" *ngIf="uom=='KGS'">Chawki Date</label>
+                            <label for="name" *ngIf="uom=='PCS'">Next Crop Date</label>
+                            <mat-form-field class="w-100 cursor-pointer" appearance="fill" (click)="dp3.open()">
+                                <input formControlName="chaakiDate" class="cursor-pointer" matInput [matDatepicker]="dp3" 
+                                (click)="dp3.open()" readonly [min]="minDate" >
+                                <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+                                <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-lg-3 mt-6">
+                            <label class="form-label" *ngIf="uom=='KGS'">Received weight <small>(kgs)</small><span class="text-danger">*</span></label>
+                            <label class="form-label" *ngIf="uom=='PCS'">Received Units <small>(pieces)</small><span class="text-danger">*</span></label>
+                            <input (keyup)="onValueChanges()" type="number"
+                                class="form-control form-control-lg" name="receivedWeight"
+                                placeholder="Weight" autocomplete="off"
+                                [readonly]="edit"
+                                [ngClass]="{'form-control-solid': edit}"
+                                [class.is-invalid]="isControlInvalidForLot('receivedWeight')"
+                                [class.is-valid]="isControlValidForLot('receivedWeight')" formControlName="receivedWeight" />
+                            <div class="valid-feedback" *ngIf="isControlValidForLot('receivedWeight')">Weight was entered
+                                correct
+                            </div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForLot('required', 'lotWeight')">Weight
+                                is
+                                required</div>
+                        </div>
+
+                        <div class="col-lg-3 mt-6" *ngIf="uom=='KGS'">
+                            <label class="form-label">Number of bags</label>
+                            <input type="number" class="form-control form-control-lg" name="Number of bags"
+                                    (keyup)="onValueChanges()"
+                                placeholder="Number of bags" autocomplete="off" formControlName="noOfBags" />
+                        </div>
+
+                        <div class="col-lg-3 mt-6" *ngIf="uom=='KGS'">
+                            <div class="d-flex flex-column">
+                                <div>
+                                    <label class="form-label">Bag Weight <small>(in grams)</small></label>
+                                    <input type="number" class="form-control form-control-lg" name="bags weight"
+                                    [ngClass]="{'form-control-solid': !lotCreateForm.get('centerBagWeightDeductionOverride').value}"
+                                    [readonly]="!lotCreateForm.get('centerBagWeightDeductionOverride').value" (keyup)="onValueChanges()"
+                                    placeholder="Bag Weight" autocomplete="off" [min]="minimumCentreBagWeight" formControlName="centerPerBagWeightDeduction" />
+                                    <div class="text-danger pt-2" *ngIf="lotCreateForm.get('centerPerBagWeightDeduction').value < minimumCentreBagWeight">Bag weight can not be less than {{minimumCentreBagWeight}} grams</div>
+                                </div>
+                                
+                                <div class="d-flex align-items-baseline mt-2" *ngIf="lotCreateForm.get('center').value">
+                                    <label class="checkbox checkbox-single">
+                                        <input type="checkbox" formControlName="centerBagWeightDeductionOverride"
+                                        (change)="atFarmerLocation($event.target.checked)"/>
+                                        <span></span>
+                                    </label>
+                                    <strong class="ml-2 text-warning">Procurement at Farmer location</strong>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="col-lg-3 mt-6" *ngIf="uom=='KGS'">
+                            <label class="form-label">Total Bag Weight <small>(kg)</small></label>
+                            <input type="number" class="form-control form-control-lg form-control-solid" name="Total bag weight"
+                                    readonly
+                                placeholder="Total bag weight" autocomplete="off" formControlName="centerTotalBagWeightDeduction" />
+                        </div>
+
+                        <div class="col-lg-3 mt-6" *ngIf="uom=='KGS'">
+                            <label class="form-label">Center Weight loss <small>(in kg)</small></label>
+                            <input type="number"
+                                class="form-control form-control-lg form-control-solid" name="centerTotalCocoonWeightLoss"
+                                placeholder="Weight" autocomplete="off"
+                                readonly formControlName="centerTotalCocoonWeightLoss" />
+                        <div *ngIf="lotCreateForm.get('centerCocoonWeightLoss').value" class="text-warning mt-1"> {{lotCreateForm.get('centerCocoonWeightLoss').value}} kgs per 100kg</div>
+                        </div>
+
+                        <div class="col-lg-3 mt-6" *ngIf="uom=='KGS'">
+                            <label class="form-label font-weight-bolder text-dark">Actual Procured Weight <small>(kgs)</small>
+                                <small *ngIf="lotCreateForm.get('receivedWeight').value && lotCreateForm.get('centerTotalBagWeightDeduction').value && lotCreateForm.get('centerTotalCocoonWeightLoss').value">
+                                    ( {{lotCreateForm.get('receivedWeight').value}} - {{lotCreateForm.get('centerTotalBagWeightDeduction').value}} - {{lotCreateForm.get('centerTotalCocoonWeightLoss').value}} )
+                                </small> 
+                            </label>
+                            <!-- <label class="form-label font-weight-bolder text-dark" *ngIf="uom=='PCS'">Actual Procured Units <small>(pieces)</small>
+                                <small *ngIf="lotCreateForm.get('receivedWeight').value && lotCreateForm.get('centerTotalBagWeightDeduction').value && lotCreateForm.get('centerTotalCocoonWeightLoss').value">
+                                    ( {{lotCreateForm.get('receivedWeight').value}} - {{lotCreateForm.get('centerTotalBagWeightDeduction').value}} - {{lotCreateForm.get('centerTotalCocoonWeightLoss').value}} )
+                                </small> 
+                            </label> -->
+                            <input type="number"
+                                class="form-control form-control-lg form-control-solid" name="lotWeight"
+                                placeholder="Weight" autocomplete="off"
+                                readonly formControlName="lotWeight" />
+                        </div>
+
+                        <div class="col-lg-3 mt-6">
+                            <label class="form-label font-weight-bolder text-dark" *ngIf="uom=='KGS'">Rate <small>(per/kg)</small><span class="text-danger">*</span></label>
+                            <label class="form-label font-weight-bolder text-dark" *ngIf="uom=='PCS'">Rate <small>(per/piece)</small><span class="text-danger">*</span></label>
+                            <input (keyup)="onValueChanges()" type="number"
+                                class="form-control form-control-lg " name="receivedWeightPricePerKg"
+                                placeholder="Rate/Kg" autocomplete="off"
+                                [class.is-invalid]="isControlInvalidForLot('receivedWeightPricePerKg') || invalidRate"
+                                [class.is-valid]="isControlValidForLot('receivedWeightPricePerKg')" formControlName="receivedWeightPricePerKg" />
+                            <div class="text-danger pt-2" *ngIf="invalidRate">Please enter the rate between {{reshamandiRateByType.minRate}} and {{reshamandiRateByType.maxRate}}
+                            </div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForLot('required', 'receivedWeightPricePerKg')">Rate
+                                is
+                                required</div>
+                        </div>
+
+                        <div class="col-lg-3 mt-6">
+                            <label class="form-label font-weight-bolder text-dark">Gross Total Amount <small>(Actual weight * Rate )</small></label>
+                            <input type="number"
+                                class="form-control form-control-lg form-control-solid" name="actualGrossAmount"
+                                placeholder="Weight" autocomplete="off"
+                                readonly formControlName="actualGrossAmount" />
+                        </div>
+
+                        <div class="col-lg-3 mt-6" *ngIf="uom=='KGS'">
+                            <label class="form-label">Center Logistics Cost <small>(per/kg)</small></label>
+                            <input type="number"
+                                class="form-control form-control-lg form-control-solid" name="centerCocoonLogisticCostPerKg"
+                                placeholder="Weight" autocomplete="off"
+                                readonly formControlName="centerCocoonLogisticCostPerKg" />
+                        </div>
+
+                        <div class="col-lg-3 mt-6" *ngIf="uom=='KGS'">
+                            <label class="form-label">Logistics Cost <small>(Center Logistics cost * Actual weight)</small></label>
+                            <input type="number"
+                                class="form-control form-control-lg form-control-solid" name="centerTotalLogisticsCost"
+                                placeholder="Weight" autocomplete="off"
+                                readonly formControlName="centerTotalLogisticsCost" />
+                        </div>
+
+                        <div class="col-lg-4 mt-6">
+                            <div class="row">
+                                <div class="col-8">
+                                    <label class="form-label">Coupon Code</label>
+                                    <input type="text" class="form-control form-control-lg" name="couponCode"
+                                        placeholder="Redeem Coupon" autocomplete="off" formControlName="couponCode" />
+                                </div>
+                                <div class="col-4 d-flex align-items-end mb-2 px-0">
+                                    <button type="submit" class="btn btn-sm btn-success font-weight-bold"
+                                        [disabled]="this.lotCreateForm.get('couponAmt').value > 0"
+                                        (click)="redeemCode(lotCreateForm.value)">Redeem</button>
+                                    <button type="submit"
+                                        class="btn btn-sm btn-bg-danger ml-2 font-weight-bold text-white"
+                                        (click)="cancelCouponRedeem()">Clear</button>
+                                </div>
+                                <div class="text-success pl-3" *ngIf="couponValid">{{couponMsg}}</div>
+                                <div class="text-danger pl-3" *ngIf="!couponValid">{{couponMsg}}</div>
+                            </div>
+                            <ng-container *ngIf="couponList?.length">
+                                <div class="row mx-0 mt-2">
+                                    <span
+                                        class="label label-outline-info label-pill label-inline mr-2 cursor-pointer mt-2"
+                                        *ngFor="let coupon of couponList" (click)="couponClicked(coupon)">
+                                        {{coupon}}
+                                    </span>
+                                </div>
+                            </ng-container>
+
+                        </div>
+
+                        <div class="col-lg-3 mt-6">
+                            <label class="form-label font-weight-bolder text-dark">Net Payable Amount</label>
+                            <input type="number" class="form-control form-control-lg form-control-solid" name="totalPrice" readonly
+                                placeholder="Total" autocomplete="off" formControlName="totalPrice" />
+                        </div>
+                        
+                        <div class="col-lg-3 mt-6">
+                            <label>Payment type<span class="text-danger">*</span></label>
+                            
+                            <select class="form-control form-control-lg" 
+                                formControlName="paymentAfterDays" name="paymentAfterDays" placeholder="Payment type">
+                                <option value="1">Today</option>
+                                <option value="3">After 3 Days</option>
+                                <option value="7">After 7 Days</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-3 mt-6">
+                            <label class="form-label">Renditta<small *ngIf="uom=='KGS'"> (5-7)</small><small *ngIf="uom=='PCS'"> (900-1200)</small><span
+                                    class="text-danger">*</span></label>
+                            <input type="number" class="form-control form-control-lg" name="grade"
+                                placeholder="Renditta" autocomplete="off"
+                                [class.is-invalid]="isControlInvalidForLot('grade')"
+                                [class.is-valid]="isControlValidForLot('grade')" formControlName="grade" />
+                            <div class="valid-feedback" *ngIf="isControlValidForLot('grade')">Renditta was entered
+                                correct
+                            </div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForLot('required', 'grade')">Renditta
+                                is
+                                required</div>
+                        </div>
+
+                        <div class="col-lg-3 mt-6">
+                            <label>Select Grade<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg" formControlName="rmGrade" name="rmGrade"
+                                placeholder="RM Grade" [class.is-invalid]="isControlInvalidForLot('rmGrade')" (change)="onValueChanges()">
+                                <option value="">Select</option>
+                                <option *ngIf="uom=='KGS'" value="A_PLUS">Reshamandi A+</option>
+                                <option *ngIf="uom=='KGS'" value="A">Reshamandi A</option>
+                                <option *ngIf="uom=='KGS'" value="B_PLUS">Reshamandi B+</option>
+                                <option *ngIf="uom=='KGS'" value="B">Reshamandi B</option>
+                                <option *ngIf="uom=='KGS'" value="C">Reshamandi C</option>
+                                <option *ngIf="uom=='KGS'" value="JHILLI">Jhilli Cocoon</option>
+                                <option value="DOUBLECOCOON">Double Cocoon</option>
+                                <option *ngIf="uom=='PCS'" value="CUTCOCOON">Cut Cocoon</option>
+                                <option *ngIf="uom=='PCS'" value="CHOPA">Chopa Cocoon</option>
+                                <option *ngIf="uom=='PCS'" value="FRESH">Fresh Cocoon</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-3 mt-6">
+                            <label class="form-label">Lot Sold By </label>
+                            <input type="text"
+                                class="form-control form-control-lg" name="lotSoldBy"
+                                placeholder="Farmer representative" autocomplete="off"
+                                formControlName="lotSoldBy" />
+                        </div>
+
+                        <div class="col-lg-3 mt-6 selectWrapper" *ngIf="!edit">
+                            <label class="form-label">Representive <small>(Purchase by)</small><span class="text-danger"> *</span></label>
+                            <ng-select class="form-control form-control-lg form-control-solid select-custom"
+                              formControlName="representive">
+                              <ng-option *ngFor="let item of usersList" [value]="item">{{ item.name }} - {{ item.phone }} <span
+                                  *ngIf="item.role">- {{item.role}}</span></ng-option>
+                            </ng-select>
+                        </div>
+
+                        <div class="col-lg-3 mt-6" *ngIf="edit">
+                            <label class="form-label">Representive</label>
+                            <div class="form-control form-control-lg form-control-solid">
+                              {{lotCreateForm.get('representive').value.name}} - {{lotCreateForm.get('representive').value.phone}}
+                            </div>
+                        </div>
+                        
+
+                        <div class="col-12 px-0">
+                            <div class="row mx-0">
+                                <!-- <div class="col-lg-3 mt-6">
+                                    <label>Select Grade<span class="text-danger">*</span></label>
+                                    <select class="form-control form-control-lg" formControlName="rmGrade" name="rmGrade"
+                                        placeholder="RM Grade" [class.is-invalid]="isControlInvalidForLot('rmGrade')">
+                                        <option value="A">Reshamandi A</option>
+                                        <option value="B">Reshamandi B</option>
+                                        <option value="C">Reshamandi C</option>
+                                        <option value="JHILLI">Cocoon Jhilli</option>
+                                        <option value="DOUBLECOCOON">Double Cocoon</option>
+                                    </select>
+                                </div> -->
+                                <!-- <div class="col-lg-8 mt-6">
+                                    <p class="text-warning font-weight-bolder">
+                                       1. Collect 16 cocoons randomly from the lot, cut it vertically in half in such a way that entire pupa is visible and place it on the sheet
+                                    </p>
+                                    <p class="text-warning font-weight-bolder">
+                                        2. Select camera frame aspect ratios 1:1 so that image will be captured in the square format.
+                                    </p>
+                                    <p class="text-warning font-weight-bolder">
+                                        3. Click the picture in such a manner that nothing outside of sheet should be captured in the image and entire cocoon is captured in the image.
+                                    </p>
+                                </div> -->
+                            </div>
+
+                        </div>
+
+                        <div class="col-12 px-0">
+                            <div class="row mx-0">
+                                <div class="col-lg-3 mt-6">
+                                    <label>Upload Cut Cocoon Image <span class="text-danger" *ngIf="removeAddStar">*</span></label><br>
+                                    <div class="image-input image-input-outline m-2" id="kt_profile_avatar">
+                                        <img class="image-input-wrapper"
+                                            [src]="previewImage || './assets/media/users/blank.png'" />
+                                        <label
+                                            class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                            data-action="change" data-toggle="tooltip" title=""
+                                            data-original-title="Change avatar">
+                                            <i class="fa fa-pen icon-sm text-muted"></i>
+                                            <input type="file" name="profile_avatar" accept=".png, .jpg, .jpeg, .pdf"
+                                                (change)="onCocoonImageUpload($event);" />
+                                            <input type="hidden" name="profile_avatar_remove" />
+                                        </label>
+                                        <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                            data-action="cancel" data-toggle="tooltip" title=""
+                                            data-original-title="Cancel avatar">
+                                            <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                        </span>
+                                        <span *ngIf="previewImage"
+                                            class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                            (click)="remove()" data-action="remove" data-toggle="tooltip" title=""
+                                            data-original-title="Remove avatar">
+                                            <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-8 mt-6">
+                                    <div class="row mx-0 flex-column">
+                                        <div class="col-lg-6 px-0">
+                                            <label class="form-label">System Grade</label>
+                                    <input type="text" class="form-control form-control-lg form-control-solid"
+                                        name="systemPredictedGrade" readonly placeholder="System Grade" autocomplete="off"
+                                        formControlName="systemPredictedGrade" />
+                                        </div> 
+                                        <div class="col-lg-8 px-0 my-2 border border-warning p-5 rounded">
+                                            <p class="text-warning font-weight-bolder">
+                                                Points to Note!
+                                            </p>
+                                            <p class="text-warning font-weight-bolder">
+                                                1. Vertically cut 16 cocoons from the lot so that the entire pupa is visible
+                                             </p>
+                                             <p class="text-warning font-weight-bolder">
+                                                2. Select camera frame aspect ratios 1:1 so that image will be captured in the square format.
+                                             </p>
+                                             <p class="text-warning font-weight-bolder">
+                                                3. Make sure the image has the sheet along with cocoons and nothing outside the sheet.
+                                             </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 mt-6" *ngIf="uom=='KGS'">
+                            <ngb-accordion #acc11="ngbAccordion">
+                                <ngb-panel id="toggle-11">
+                                    <ng-template ngbPanelTitle>
+                                        <span class="card-header--title text-success">Chawki Details <span
+                                                class="text-danger">*</span></span>
+                                    </ng-template>
+                                    <ng-template ngbPanelContent>
+                                        <div class="row">
+                                            <div class="col-lg-6 mt-2 selectWrapper">
+                                                <label class="form-label w-100 d-flex justify-content-between">
+                                                    <span>Select Chawki<span class="text-danger">*</span> </span>
+                                                    <span><a class="text-primary cursor-pointer"
+                                                    (click)="openChawkiModel(chawkicontent)">+ New chawki</a></span></label>
+                                                <ng-select class=" select-custom" [(ngModel)]="selectedChawki" [ngModelOptions]="{standalone: true}" (change)="chawkiToChanged($event)"   placeholder="Please enter the name or mobile number">
+                                                  <ng-container *ngFor="let chawki of chawkiList">
+                                                    <ng-option  [value]="chawki" >{{ chawki.name }} - {{ chawki.phone }}</ng-option>
+                                                  </ng-container>
+                                                </ng-select>
+
+                                                <!-- <ng-select class="" [(ngModel)]="selectedFarmer" (change)="onFarmerSelection(farmerKhata)"
+                                                    [ngModelOptions]="{standalone: true}"
+                                                    placeholder="Please enter the name or mobile number" (search)='getFarmersList($event)'>
+                                                    <ng-option *ngFor="let item of farmerList" [value]="item.id">{{ item.name
+                                                        }} - {{ item.phone }}</ng-option>
+                                                </ng-select> -->
+                                              </div>
+                                            <!-- <div class="col-lg-3 mt-2">
+                                                <label class="form-label">Name <span
+                                                        class="text-danger">*</span></label>
+                                                <input type="text" class="form-control form-control-lg"
+                                                    placeholder="Name" autocomplete="off"
+                                                    formControlName="chaakiCenterName" />
+                                            </div>
+                                            <div class="col-lg-3 mt-2">
+                                                <label class="form-label">Phone Number <span
+                                                        class="text-danger">*</span></label>
+                                                <input type="text" class="form-control form-control-lg"
+                                                    placeholder="Number" autocomplete="off"
+                                                    formControlName="chaakiCenterPhone"
+                                                    [class.is-invalid]="isControlInvalidForLot('chaakiCenterPhone')"
+                                                    [class.is-valid]="isControlValidForLot('chaakiCenterPhone')">
+                                                <div class="valid-feedback"
+                                                    *ngIf="isControlValidForLot('chaakiCenterPhone')">Mobile number was
+                                                    entered correct
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3 mt-2">
+                                                <label class="form-label">Region <span
+                                                        class="text-danger">*</span></label>
+                                                <input type="text" class="form-control form-control-lg"
+                                                    placeholder="Chawki Region" autocomplete="off"
+                                                    formControlName="chaakiRegion" />
+                                            </div>
+                                            <div class="col-lg-3 mt-2">
+                                                <label class="form-label">City <span
+                                                        class="text-danger">*</span></label>
+                                                <input type="text" class="form-control form-control-lg"
+                                                    placeholder="City" autocomplete="off"
+                                                    formControlName="chaakiCity" />
+                                            </div> -->
+                                        </div>
+                                    </ng-template>
+                                </ngb-panel>
+                            </ngb-accordion>
+                        </div>
+
+                        <!-- <div class="col-lg-12 mt-6">
+                            <ngb-accordion #acc11="ngbAccordion">
+                              <ngb-panel id="toggle-11">
+                                <ng-template ngbPanelTitle>
+                                  <span class="card-header--title text-success">KYC Details<span class="text-danger">*</span></span>
+                                </ng-template>
+                                <ng-template ngbPanelContent>
+                                  <div class="row">
+                                    <div class="col-lg-3 mt-2">
+                                        <label class="form-label">Aadhaar Number<span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control form-control-lg"
+                                          placeholder="Aadhaar Number" autocomplete="off" formControlName="kycAdhaarNumber" />
+                                      </div>
+                                    <div class="col-lg-3 mt-2">
+                                      <label class="form-label">PAN Number</label>
+                                      <input type="text" class="form-control form-control-lg"
+                                        placeholder="PAN Number" autocomplete="off" formControlName="kycPANNumber" />
+                                    </div>
+                                  </div>
+                                </ng-template>
+                              </ngb-panel>
+                            </ngb-accordion>
+                          </div> -->
+
+                        <div class="col-lg-12 mt-6">
+                            <ngb-accordion #acc11="ngbAccordion">
+                                <ngb-panel id="toggle-bank">
+                                    <ng-template ngbPanelTitle>
+                                        <span class="card-header--title text-success">Bank Details <span
+                                                class="text-danger">*</span></span>
+                                    </ng-template>
+                                    <ng-template ngbPanelContent>
+                                        <p class="text-warning font-weight-bolder">
+                                            Please note that the IFSC code for ALLAHABAD BANK (ALLA), SYNDICATE BANK
+                                            (SYNB),
+                                            DENA BANK (BKDN) and VIJAYA BANK (VIJB) has been disabled by RBI.
+                                            Transactions initiated to
+                                            these IFSCs will be rejected.
+                                        </p>
+                                        <div class="row">
+
+
+
+                                            <div class="col-lg-3 mt-2">
+                                                <label class="form-label">Account Holder’s Name <span
+                                                        class="text-danger">*</span></label>
+                                                <input type="text" class="form-control form-control-lg"
+                                                    placeholder="Account Holder’s Name" autocomplete="off"
+                                                    formControlName="beneficiaryName" />
+                                            </div>
+                                            <div class="col-lg-3 mt-2">
+                                                <label class="form-label">Account Number <span
+                                                        class="text-danger">*</span></label>
+                                                <input type="text" class="form-control form-control-lg"
+                                                    placeholder="8493 xxxx xxxx xxxx" autocomplete="off"
+                                                    formControlName="accountNumber" />
+                                            </div>
+                                            <div class="col-lg-3 mt-2">
+                                                <label class="form-label">Bank Name <span
+                                                        class="text-danger">*</span></label>
+                                                <input type="text" class="form-control form-control-lg"
+                                                    placeholder="Bank Name" autocomplete="off"
+                                                    formControlName="bankName" />
+                                            </div>
+                                            <div class="col-lg-3 mt-2">
+                                                <label class="form-label">IFSC Code <span
+                                                        class="text-danger">*</span></label>
+                                                <input type="text" class="form-control form-control-lg"
+                                                    placeholder="SBINxxxxx" autocomplete="off"
+                                                    formControlName="ifscCode" />
+                                            </div>
+
+                                        </div>
+                                    </ng-template>
+                                </ngb-panel>
+                            </ngb-accordion>
+                        </div>
+
+                        <div class="col-lg-12 mt-6">
+                            <ngb-accordion #acc11="ngbAccordion">
+                                <ngb-panel id="toggle-address">
+                                    <ng-template ngbPanelTitle>
+                                        <span class="ard-header--title text-success">Address Details</span>
+                                    </ng-template>
+                                    <ng-template ngbPanelContent>
+                                        <div class="row">
+                                            <div class="col-lg-3 mt-2">
+                                                <label class="form-label">Address</label>
+                                                <input type="text" class="form-control form-control-lg" name="Address"
+                                                    placeholder="Address" autocomplete="off"
+                                                    formControlName="address" />
+                                            </div>
+                                            <div class="col-lg-3 mt-2">
+                                                <label class="form-label">Village</label>
+                                                <input type="text" class="form-control form-control-lg" name="Village"
+                                                    placeholder="Village" autocomplete="off"
+                                                    formControlName="village" />
+                                            </div>
+                                            <div class="col-lg-3 mt-2">
+                                                <label class="form-label">City</label>
+                                                <input type="text" class="form-control form-control-lg" name="city"
+                                                    placeholder="City" autocomplete="off" formControlName="city" />
+                                            </div>
+                                            <div class="col-lg-3 mt-2">
+                                                <label class="form-label">District</label>
+                                                <input type="text" class="form-control form-control-lg" name="District"
+                                                    placeholder="District" autocomplete="off"
+                                                    formControlName="district" />
+                                            </div>
+                                            <div class="col-lg-3 mt-2">
+                                                <label class="form-label">Taluk</label>
+                                                <input type="text" class="form-control form-control-lg" name="Taluk"
+                                                    placeholder="Taluk" autocomplete="off" formControlName="taluk" />
+                                            </div>
+                                            <div class="col-lg-3 mt-2">
+                                                <label class="form-label">Region</label>
+                                                <input type="text" class="form-control form-control-lg" name="region"
+                                                    placeholder="Region" autocomplete="off" formControlName="region" />
+                                            </div>
+                                            <div class="col-lg-3 mt-2">
+                                                <label class="form-label">State</label>
+                                                <input type="text" class="form-control form-control-lg" name="State"
+                                                    placeholder="State" autocomplete="off" formControlName="state" />
+                                            </div>
+                                            <div class="col-lg-3 mt-2">
+                                                <label class="form-label">PIN Code</label>
+                                                <input type="text" class="form-control form-control-lg" name="PIN Code"
+                                                    placeholder="PIN Code" autocomplete="off"
+                                                    formControlName="pincode" />
+                                            </div>
+
+                                        </div>
+                                    </ng-template>
+                                </ngb-panel>
+                            </ngb-accordion>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-toolbar">
+                <button type="button" class="btn btn-sm btn-secondary mr-2" [routerLink]="['/resha-farms/cocoon-lot']"
+                    (click)="clearLocalData()">Back</button>
+                <!-- <button type="submit" class="btn btn-sm btn-success" [disabled]="lotCreateForm.invalid || invalidRate"
+                    (click)="onSubmit(lotCreateForm.value)">Save</button> -->
+                <submit-button [disabledButton]="lotCreateForm.invalid || invalidRate || imageUploading" [loading]="loading"
+                    (clickButton)="openConfirmation()"></submit-button>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="create-new-farmer">
+    <div>
+        <ng-template #content let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Create New Farmer</h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-12" [formGroup]="farmerCreateForm">
+                    <div class="row" >
+                        <div class="col-lg-6 mt-2">
+                            <label>Select Customer Type <span class="text-danger">*</span> </label>
+                            <select class="form-control form-control-lg" formControlName="customerType" name="customerType"
+                                placeholder="Select Customer Type">
+                                <option *ngFor="let item of kycCustomerTypes" [value]="item.id">{{item.name}}</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-6 mt-2">
+                            <label class="form-label">Name<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="name" placeholder="Name"
+                                autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('name')"
+                                [class.is-valid]="isControlValidForReeler('name')" formControlName="name" />
+                            <div class="valid-feedback" *ngIf="isControlValidForReeler('name')">Name was entered correct</div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'name')">Name is required</div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('pattern', 'name')">Name should not contain digits</div>
+                        </div>
+                        
+                        <div class="col-lg-6 mt-2">
+                            <label>Select Center<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg" formControlName="center" name="Center"
+                                placeholder="Select Center">
+                                <option *ngFor="let item of centerList" [value]="item.id">{{item.centerName}}</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-6 mt-2">
+                            <label>Cocoon Type<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg" formControlName="cocoonType"
+                                placeholder="Select Type">
+                                <option *ngFor="let item of cocoonTypeList" [value]="item.code">{{item.displayName}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-lg-6 mt-2">
+                            <label class="form-label">Mobile Number<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="phone"
+                                placeholder="Mobile Number" autocomplete="off"
+                                [class.is-invalid]="isControlInvalidForReeler('phone')"
+                                [class.is-valid]="isControlValidForReeler('phone')" formControlName="phone" />
+                            <div class="valid-feedback" *ngIf="isControlValidForReeler('phone')">Mobile number was
+                                entered correct
+                            </div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'phone')">Mobile number is required</div>
+                        </div>
+                        <div class="col-lg-6 mt-2" *ngIf="isOTPSent">
+                            <label class="form-label">Enter OTP code sent to phone<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="mobileOTP"
+                                placeholder="Enter OTP" autocomplete="off" formControlName="mobileOTP" />
+                        </div>
+                        <div class="col-lg-12 mt-2 d-flex align-items-center justify-content-end" *ngIf="!createdFarmerId">
+                            <button class="mt-5 mr-3 btn btn-sm btn-success" *ngIf="!isOTPSent" [disabled]="farmerCreateForm.invalid"
+                            (click)="initiateOtp(farmerCreateForm.value)">Send OTP</button>
+                            <button class="mt-5 btn btn-sm btn-success" *ngIf="isOTPSent" (click)="validateOTP(farmerCreateForm.value)">Verify</button>
+                         </div>
+                    </div>
+
+                    <div class="row mt-5" style="border: 1px solid #E4E6EF;padding: 10px;" *ngIf="createdFarmerId && documentsList?.csb_proof" [formGroup]="farmerCreateForm.get('cbsProofForm')">
+                        <label for="" class="csbProof_label text-primary col-lg-12 mt-2">CSB Proof<span class="text-danger">*</span></label>
+                        <div class="col-lg-6 mt-2">
+                            <label>Select Document<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg" formControlName="kycDocument" name="Center"
+                                placeholder="Select Center">
+                                <option *ngFor="let item of documentsList?.csb_proof" [value]="item.id">{{item.name}}</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-6 mt-2">
+                            <label class="form-label">Name on CSB Passbook<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="name" placeholder="Name on CSB Passbook"
+                                autocomplete="off"formControlName="kycNumber" />
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-md-6 col-lg-6 col-12">
+                                    <label class="mt-5">Front Image</label><br>
+                                    <div class="image-input image-input-outline m-1"
+                                       id="kt_profile_avatar">
+                                       <img class="image-input-wrapper"
+                                           src="./assets/media/users/blank.png" />
+                                       <label
+                                           class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                           data-action="change" data-toggle="tooltip" title=""
+                                           data-original-title="Change avatar">
+                                           <i class=" fas fa-camera icon-sm text-muted"></i>
+                                           <input type="file" name="profile_avatar"
+                                               accept=".png, .jpg, .jpeg, .MP4, .FLV"/>
+                                           <input type="hidden" name="profile_avatar_remove" />
+                                       </label>
+                                       <span
+                                           class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                           data-action="cancel" data-toggle="tooltip" title=""
+                                           data-original-title="Cancel avatar">
+                                           <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                       </span>
+                                    </div>
+                                </div>
+    
+                                <div class="col-md-6 col-lg-6 col-12">
+                                    <label class="mt-5">Back Image</label><br>
+                                    <div class="image-input image-input-outline m-1"
+                                       id="kt_profile_avatar">
+                                       <img class="image-input-wrapper"
+                                           src="./assets/media/users/blank.png" />
+                                       <label
+                                           class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                           data-action="change" data-toggle="tooltip" title=""
+                                           data-original-title="Change avatar">
+                                           <i class="fas fa-camera icon-sm text-muted"></i>
+                                           <input type="file" name="profile_avatar"
+                                               accept=".png, .jpg, .jpeg, .MP4, .FLV"/>
+                                           <input type="hidden" name="profile_avatar_remove" />
+                                       </label>
+                                       <span
+                                           class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                           data-action="cancel" data-toggle="tooltip" title=""
+                                           data-original-title="Cancel avatar">
+                                           <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                       </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-5">
+                                <div class="d-flex">
+                                      <!-- <input type="checkbox">
+                                    <p>I hereby confirm  that mentioned Name and  Photo matches with the Farmer</p> -->
+                                    <input type="checkbox" class="mt-3 mr-4" id="vehicle1" name="vehicle1" value="confirm">
+                                    <label for="vehicle1"> I hereby confirm  that mentioned Name and  Photo matches with the Farmer</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-5" style="border: 1px solid #E4E6EF;padding: 10px;" *ngIf="createdFarmerId && documentsList?.identity_proof" [formGroup]="farmerCreateForm.get('idProofForm')">
+                        <label for="" class="csbProof_label text-primary col-lg-12 mt-2">ID Proof<span class="text-danger">*</span></label>
+                        <div class="col-lg-6 mt-2">
+                            <label>Select Document<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg" formControlName="kycDocument" name="Center"
+                                placeholder="Select Center">
+                                <option *ngFor="let item of documentsList?.identity_proof" [value]="item.id">{{item.name}}</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-6 mt-2">
+                            <label class="form-label">Name on ID<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="name" placeholder="Name on CSB Passbook"
+                                autocomplete="off"formControlName="kycNumber" />
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-md-6 col-lg-6 col-12">
+                                    <label class="mt-5">Front Image</label><br>
+                                    <div class="image-input image-input-outline m-1"
+                                       id="kt_profile_avatar">
+                                       <img class="image-input-wrapper"
+                                           src="./assets/media/users/blank.png" />
+                                       <label
+                                           class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                           data-action="change" data-toggle="tooltip" title=""
+                                           data-original-title="Change avatar">
+                                           <i class=" fas fa-camera icon-sm text-muted"></i>
+                                           <input type="file" name="profile_avatar"
+                                               accept=".png, .jpg, .jpeg, .MP4, .FLV"/>
+                                           <input type="hidden" name="profile_avatar_remove" />
+                                       </label>
+                                       <span
+                                           class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                           data-action="cancel" data-toggle="tooltip" title=""
+                                           data-original-title="Cancel avatar">
+                                           <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                       </span>
+                                    </div>
+                                </div>
+    
+                                <div class="col-md-6 col-lg-6 col-12">
+                                    <label class="mt-5">Back Image</label><br>
+                                    <div class="image-input image-input-outline m-1"
+                                       id="kt_profile_avatar">
+                                       <img class="image-input-wrapper"
+                                           src="./assets/media/users/blank.png" />
+                                       <label
+                                           class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                           data-action="change" data-toggle="tooltip" title=""
+                                           data-original-title="Change avatar">
+                                           <i class="fas fa-camera icon-sm text-muted"></i>
+                                           <input type="file" name="profile_avatar"
+                                               accept=".png, .jpg, .jpeg, .MP4, .FLV"/>
+                                           <input type="hidden" name="profile_avatar_remove" />
+                                       </label>
+                                       <span
+                                           class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                           data-action="cancel" data-toggle="tooltip" title=""
+                                           data-original-title="Cancel avatar">
+                                           <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                       </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-5">
+                                <div class="d-flex">
+                                      <!-- <input type="checkbox">
+                                    <p>I hereby confirm  that mentioned Name and  Photo matches with the Farmer</p> -->
+                                    <input type="checkbox" class="mt-3 mr-4" id="vehicle1" name="vehicle1" value="confirm">
+                                    <label for="vehicle1"> I hereby confirm  that mentioned Name and  Photo matches with the Farmer</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  
+                </div>
+            </div>
+            <div class="modal-footer" *ngIf="createdFarmerId">
+                <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+                <button type="button" class="btn btn-sm btn-success" [disabled]="farmerCreateForm.invalid"
+                    (click)="createFarmer(farmerCreateForm.value)">Save</button>
+            </div>
+        </ng-template>
+    </div>
+</div>
+<div class="create-new-chawki">
+    <div>
+        <ng-template #chawkicontent let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Create New Chawki</h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-12">
+                    <div class="row" [formGroup]="chawkiCreateForm">
+                        <div class="col-lg-12 mt-2">
+                            <label class="form-label">Name<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="name" placeholder="Name"
+                                autocomplete="off" [class.is-invalid]="isControlInvalidForChawki('name')"
+                                [class.is-valid]="isControlValidForChawki('name')" formControlName="name" />
+                            <div class="valid-feedback" *ngIf="isControlValidForChawki('name')">Name was entered correct
+                            </div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'name')">Name is
+                                required</div>
+                        </div>
+                        <div class="col-lg-12 mt-2">
+                            <label class="form-label">Mobile Number<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="phone"
+                                placeholder="Mobile Number" autocomplete="off"
+                                [class.is-invalid]="isControlInvalidForChawki('phone')"
+                                [class.is-valid]="isControlValidForChawki('phone')" formControlName="phone" />
+                            <div class="valid-feedback" *ngIf="isControlValidForChawki('phone')">Mobile number was
+                                entered correct
+                            </div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'phone')">Mobile
+                                number is
+                                required</div>
+                        </div>
+                        <div class="col-lg-12 mt-2">
+                            <label>Nearest RM Center<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg" formControlName="nearestRmCenterId" name="Center"
+                                placeholder="Nearest RM Center" (change)="onCenterSelect($event)">
+                                <option *ngFor="let item of centerList" [value]="item.id">{{item.centerName}}</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-12 mt-2">
+                            <ngb-accordion #acc11="ngbAccordion">
+                              <ngb-panel id="toggle-address">
+                                <ng-template ngbPanelTitle>
+                                  <span class="ard-header--title text-success">Chawki Address</span>
+                                </ng-template>
+                                <ng-template ngbPanelContent>
+                                  <div class="row">
+                                    <div class="col-lg-6 mt-2">
+                                      <label class="form-label">Address</label>
+                                      <input type="text" class="form-control form-control-lg" name="Address" placeholder="Address"
+                                        autocomplete="off" formControlName="address" />
+                                    </div>
+                                    <div class="col-lg-6 mt-2">
+                                      <label class="form-label">Village</label>
+                                      <input type="text" class="form-control form-control-lg" name="Village" placeholder="Village"
+                                        autocomplete="off" formControlName="village" />
+                                    </div>
+                                    <div class="col-lg-6 mt-2">
+                                      <label class="form-label">City</label>
+                                      <input type="text" class="form-control form-control-lg" name="city" placeholder="City"
+                                        autocomplete="off" formControlName="city" />
+                                    </div>
+                                    <div class="col-lg-6 mt-2">
+                                      <label class="form-label">District</label>
+                                      <input type="text" class="form-control form-control-lg" name="District" placeholder="District"
+                                        autocomplete="off" formControlName="district" />
+                                    </div>
+                                    <div class="col-lg-6 mt-2">
+                                      <label class="form-label">Taluk</label>
+                                      <input type="text" class="form-control form-control-lg" name="Taluk" placeholder="Taluk"
+                                        autocomplete="off" formControlName="taluk" />
+                                    </div>
+                                    <div class="col-lg-6 mt-2">
+                                      <label class="form-label">Region</label>
+                                      <input type="text" class="form-control form-control-lg" name="region" placeholder="Region"
+                                        autocomplete="off" formControlName="region" />
+                                    </div>
+                                    <div class="col-lg-6 mt-2">
+                                      <label class="form-label">State</label>
+                                      <input type="text" class="form-control form-control-lg" name="State" placeholder="State"
+                                        autocomplete="off" formControlName="state" />
+                                    </div>
+                                    <div class="col-lg-6 mt-2">
+                                      <label class="form-label">PIN Code</label>
+                                      <input type="text" class="form-control form-control-lg" name="PIN Code" placeholder="PIN Code"
+                                        autocomplete="off" formControlName="pincode" />
+                                    </div>
+                                  </div>
+                                </ng-template>
+                              </ngb-panel>
+                            </ngb-accordion>
+                          </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+                <button type="button" class="btn btn-sm btn-success" [disabled]="chawkiCreateForm.invalid"
+                    (click)="createChawki(chawkiCreateForm.value)">Save</button>
+            </div>
+        </ng-template>
+    </div>
+</div>
+<div class="update-farmer-name">
+    <div>
+        <ng-template #updateFarmerName let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Farmer Name</h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-12">
+                    <div class="row" [formGroup]="addFarmerNameForm">
+                        <div class="col-lg-12 mt-2">
+                            <label class="form-label">Name<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="name" placeholder="Name"
+                                autocomplete="off" [class.is-invalid]="isControlInvalid('name')"
+                                [class.is-valid]="isControlValid('name')" formControlName="name" />
+                            <div class="valid-feedback" *ngIf="isControlValid('name')">Name was entered correct</div>
+                            <div class="invalid-feedback" *ngIf="controlHasError('required', 'name')">Name is required
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+                <button type="button" class="btn btn-sm btn-success" [disabled]="addFarmerNameForm.invalid"
+                    (click)="addFarmerName(addFarmerNameForm.value)">Save</button>
+            </div>
+        </ng-template>
+    </div>
+</div>
+
+<div class="example-preview">
+    <div>
+        <ng-template #farmerKhata let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">There are already lot listed for this farmer, Are you sure you want to proceed
+                    listing a new lot for him ? </h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Details:</p>
+                <div style="max-height: 60vh; overflow: auto;">
+                    <p *ngFor="let item of farmerLotKhata">Lot Id: <a matTooltip="Lot Details"
+                            class="btn btn-link-success font-weight-bold" (click)="goTolotDetails(item)"> {{ item.code
+                            }}</a>
+                        of weight <strong>{{item?.weight}} Kgs</strong> on <strong>{{item?.createdDate}}</strong></p>
+                </div>
+                <!-- <div class="font-weight-bold my-2 font-size-h6 pt-3">
+                    Are you sure you want to proceed listing a new lot for him ?
+                </div> -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="doNotProceed()">Cancel</button>
+                <button type="button" class="btn btn-primary" (click)="proceed()">Continue</button>
+            </div>
+        </ng-template>
+    </div>
+</div>
+
+<div class="example-preview">
+    <div>
+        <ng-template #farmerCSBverification let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Farmer CSB/ID Proof Required </h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- <div style="max-height: 60vh; overflow: auto;">
+                    <p>Kindly upload CSB proof</p>
+                </div> -->
+                <div class="font-weight-bold my-2 font-size-h6 pt-3">
+                    <p>Kindly upload farmer CSB/ID proof</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="doNotProceed()">Cancel</button>
+                <button type="button" class="btn btn-primary" (click)="proceedToKyc()">Proceed</button>
+            </div>
+        </ng-template>
+    </div>
+</div>
+
+<div class="example-preview">
+    <div>
+        <ng-template #yarnPurchaseConfirmation let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">You are creating a lot with the below information. Are you sure you want to
+                    proceed?</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="h4">Lot Details:</p>
+                <p>Farmer Name: <strong>{{selectedFarmerDetails? selectedFarmerDetails.farmer.name :
+                        farmerList[0].name}}</strong></p>
+                <p>Farmer Phone: <strong>{{selectedFarmerDetails ? selectedFarmerDetails.farmer.phone :
+                        farmerList[0].phone}}</strong></p>
+                <p>Center: <strong>{{selectedFarmerDetails ? selectedFarmerDetails.centerName :
+                        farmerList[0].centerName}}</strong></p>
+                <p>Type: <strong>{{globalService.getDisplayCocoonType(lotCreateForm.get('type').value)}} </strong></p>
+                <p>Grade: <strong>{{lotCreateForm.get('grade').value}} </strong></p>
+                <p>Received Unit: <strong>{{lotCreateForm.get('receivedWeight').value}} {{uom}}</strong></p>
+                <p>Center Weight Loss: <strong>{{lotCreateForm.get('centerTotalCocoonWeightLoss').value}} Kgs</strong></p>
+                <p>Number of Bags: <strong>{{lotCreateForm.get('noOfBags').value}} </strong></p>
+                <p>Total Bag weight: <strong>{{lotCreateForm.get('centerTotalBagWeightDeduction').value}} Kgs</strong></p>
+                <p>Actual Unit: <strong>{{lotCreateForm.get('lotWeight').value}} {{uom}}</strong></p>
+                <p>Rate: <strong>{{lotCreateForm.get('receivedWeightPricePerKg').value}} Rs/Unit</strong></p>
+                <p>Gross Total: <strong>Rs {{lotCreateForm.get('actualGrossAmount').value}}</strong></p>
+                <p>Logistics Cost: <strong>Rs {{lotCreateForm.get('centerTotalLogisticsCost').value}} </strong></p>
+                <p>Coupon Discount: <strong>Rs {{this.lotCreateForm.get('couponAmt').value}}</strong></p>
+                <p>Total Amount: <strong>Rs {{lotCreateForm.get('totalPrice').value}}</strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Cancel</button>
+                <button type="button" class="btn btn-primary" (click)="onSubmit(lotCreateForm.value)">Proceed</button>
+            </div>
+        </ng-template>
+    </div>
+</div>

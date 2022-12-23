@@ -1,0 +1,126 @@
+<div class="card card-custom gutter-b">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">{{id ? "Update Farm Market Place Details" : "New Farm Market Place Details" }} </h3>
+    </div>
+    <div class="card-toolbar">
+      <!-- Nothing right now-->
+    </div>
+  </div>
+  <div class="card-body">
+    <!-- Farmer FORM -->
+    <div class="form form-label-right">
+      <div class="form-group row">
+        <div class="col-lg-12">
+          <div class="row" [formGroup]="crudForm">
+            <div class="col-lg-4 mt-2">
+              <label class="form-label">Name<span class="text-danger">*</span></label>
+              <input
+                type="text"
+                class="form-control form-control-lg"
+                name="name"
+                placeholder="Name"
+                autocomplete="off"
+                [class.is-invalid]="isControlInvalidForReeler('name')"
+                [class.is-valid]="isControlValidForReeler('name')"
+                formControlName="name"
+              />
+              <div class="valid-feedback" *ngIf="isControlValidForReeler('name')">Name was entered correct</div>
+              <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'name')">Name is required</div>
+            </div>
+            <div class="col-lg-4 mt-2">
+              <label class="form-label">MRP</label>
+              <input
+                type="text"
+                class="form-control form-control-lg"
+                name="MRP"
+                placeholder="MRP"
+                autocomplete="off"
+                [class.is-invalid]="isControlInvalidForReeler('marketPrice')"
+                [class.is-valid]="isControlValidForReeler('marketPrice')"
+                formControlName="marketPrice"
+              />
+              <div class="valid-feedback" *ngIf="isControlValidForReeler('marketPrice')">MRP was entered correct</div>
+            </div>
+            <div class="col-lg-4 mt-2">
+              <label class="form-label">Selling Price</label>
+              <input
+                type="text"
+                class="form-control form-control-lg"
+                name="price"
+                placeholder="Selling Price"
+                autocomplete="off"
+                [class.is-invalid]="isControlInvalidForReeler('price')"
+                [class.is-valid]="isControlValidForReeler('price')"
+                formControlName="price"
+              />
+              <div class="valid-feedback" *ngIf="isControlValidForReeler('price')">Price was entered correct</div>
+            </div>
+            <div class="col-lg-4 mt-2">
+              <label class="form-label">Description</label>
+              <input 
+                type="text"
+                class="form-control form-control-lg"
+                name="description"
+                placeholder="Description"
+                autocomplete="off"
+                [class.is-invalid]="isControlInvalidForReeler('description')"
+                [class.is-valid]="isControlValidForReeler('description')"
+                formControlName="description"/>
+              <div class="valid-feedback" *ngIf="isControlValidForReeler('description')">description was entered correct</div>
+            </div>
+            <!-- <div class="image-input image-input-outline m-2 mt-6"
+              id="kt_profile_avatar"
+              [class.image-input-empty]="marketPlaceDatabyId?.imageUrls.length === 0"
+              [style.backgroundImage]="'url(./assets/media/users/blank.png)'"
+            > -->
+            <div class="image-input image-input-outline m-2 mt-6" id="kt_profile_avatar">
+              <img class="image-input-wrapper" [src]="previewImage || './assets/media/users/blank.png'"/>
+              <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                data-action="change"
+                data-toggle="tooltip"
+                title=""
+                data-original-title="Change avatar"
+              >
+                <i class="fa fa-pen icon-sm text-muted"></i>
+                <input
+                  type="file"
+                  name="profile_avatar"
+                  accept=".png, .jpg, .jpeg"
+                  (change)="onImageUpload($event);"
+                />
+                <input type="hidden" name="profile_avatar_remove" />
+              </label>
+              <span
+                class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                data-action="cancel"
+                data-toggle="tooltip"
+                title=""
+                data-original-title="Cancel avatar"
+              >
+                <i class="ki ki-bold-close icon-xs text-muted"></i>
+              </span>
+              <span
+                *ngIf="previewImage"
+                class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                (click)="remove()"
+                data-action="remove"
+                data-toggle="tooltip"
+                title=""
+                data-original-title="Remove avatar"
+              >
+                <i class="ki ki-bold-close icon-xs text-muted"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-toolbar">
+        <button type="button" class="btn btn-sm btn-secondary mr-2" (click)="goBack();">Back</button>
+        <button type="submit" class="btn btn-sm btn-success" [disabled]="crudForm.invalid" (click)="onSubmit(crudForm.value)">
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

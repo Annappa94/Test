@@ -1,0 +1,64 @@
+<div class="create-new-Reeler">
+    <div>
+        <!-- <ng-template #content let-c="close" let-d="dismiss"> -->
+            <div class="modal-header">
+                <h4 class="modal-title">Create New Weaver</h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-12">
+                    <div class="row" [formGroup]="weaverCreateForm">
+
+                        <div class="col-lg-12 mt-2">
+                            <label class="form-label">Name<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="name" placeholder="Name"
+                              autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('name')"
+                              [class.is-valid]="isControlValidForReeler('name')" formControlName="name" />
+                            <div class="valid-feedback" *ngIf="isControlValidForReeler('name')">Name was entered correct</div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'name')">Name is required</div>
+                        </div>
+
+                          <div class="col-lg-12 mt-2">
+                            <label class="form-label">Mobile Number<span class="text-danger">*</span></label>
+                            <input type="number" class="form-control form-control-lg" name="phone"
+                              placeholder="Mobile Number" autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('phone')"
+                              [class.is-valid]="isControlValidForReeler('phone')" formControlName="phone" />
+                            <div class="valid-feedback" *ngIf="isControlValidForReeler('phone')">Mobile number was entered correct
+                            </div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'phone')">Mobile number is
+                              required</div>
+                          </div>
+
+                          <div class="col-lg-12 mt-2">
+                            <label>Select Type<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg" formControlName="type" name="type"
+                                placeholder="Select Type">
+                                <option value="Raw">Raw</option>
+                                <option value="Twisted">Twisted</option>
+                            </select>
+                          </div>
+
+                          <div class="col-lg-12 mt-2">
+                            <label>Yarn Cocoon Type<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg" formControlName="yarnCocoonType" name="yarnCocoonType"
+                                placeholder="Select Type">
+                                <option value="CBGold">CB Gold</option>
+                                <option value="BVWhite">BV White</option>
+                                <option value="ARMWhite">ARM White</option>
+                                <option value="Tussar">Tussar</option>
+                                <option value="Dupion">Dupion</option>
+                                <option value="Vietnam">Vietnam</option>
+                                <!-- <option value="ChinaWhite">China White</option> -->
+                            </select>
+                          </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" (click)="c()">Cancel</button>
+                <button type="button" class="btn btn-sm btn-success" [disabled]="weaverCreateForm.invalid" (click)="createWeaver(weaverCreateForm.value)">Save</button>
+            </div>
+        <!-- </ng-template> -->
+    </div>
+</div>
+

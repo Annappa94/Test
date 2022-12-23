@@ -1,0 +1,282 @@
+<div class="card card-custom gutter-b">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">New Spinning Unit</h3>
+    </div>
+    <div class="card-toolbar">
+    </div>
+  </div>
+  <div class="card-body pt-0">
+    <!-- Spinning Mill FORM -->
+    <div class="form form-label-right">
+      <div class="form-group row" style="padding-top: 0px;">
+        <div class="col-lg-12">
+          <div class="row" [formGroup]="spinningCreateForm">
+            <div class="col-lg-3 mt-2" *ngIf="!id">
+              <label class="form-label">Mobile Number<span class="text-danger">*</span></label>
+              <input type="text" class="form-control form-control-lg" name="phone" placeholder="Mobile Number"
+                autocomplete="off" [class.is-invalid]="isControlInvalidForSpinning('phone')"
+                [class.is-valid]="isControlValidForSpinning('phone')" formControlName="phone" />
+              <div class="valid-feedback" *ngIf="isControlValidForSpinning('phone')">Mobile number was entered
+                correct
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasErrorForSpinning('required', 'phone')">Mobile
+                number is
+                required</div>
+            </div>
+            <div class="col-lg-3 mt-2" *ngIf="id">
+              <label class="form-label">Mobile Number<span class="text-danger">*</span></label>
+              <input type="text" class="form-control form-control-lg" name="phone" placeholder="Mobile Number"
+                autocomplete="off" [class.is-invalid]="isControlInvalidForSpinning('phone')"
+                [class.is-valid]="isControlValidForSpinning('phone')" formControlName="phone" disabled />
+            </div>
+            <div class="col-lg-3 mt-2" *ngIf="!id">
+              <label>Select Customer Type <span class="text-danger">*</span> </label>
+              <select class="form-control form-control-lg" formControlName="customerType" name="customerType"
+                placeholder="Select Customer Type" (change)="onchangeCustomerType()">
+                <option *ngFor="let item of kycCustomerTypes" [value]="item.id">{{item.name}}</option>
+              </select>
+            </div>
+            <div class="col-lg-3 mt-2" *ngIf="id">
+              <label>Select Customer Type <span class="text-danger">*</span> </label>
+              <select class="form-control form-control-lg" formControlName="customerType" name="customerType"
+                placeholder="Select Customer Type" (change)="onchangeCustomerType()" disabled >
+                <option *ngFor="let item of kycCustomerTypes" [value]="item.id">{{item.name}}</option>
+              </select>
+            </div>
+            <div class="col-lg-3 mt-2" *ngIf="!id">
+              <label>Select nearest sales center</label>
+              <select class="form-control form-control-lg" formControlName="center" name="Center"
+                placeholder="Select Center">
+                <option *ngFor="let item of centerList" [value]="item.id">{{item.centerName}}</option>
+              </select>
+            </div>
+            <div class="col-lg-3 mt-2" *ngIf="id">
+              <label>Select nearest sales center</label>
+              <select class="form-control form-control-lg" formControlName="center" name="Center"
+                placeholder="Select Center" disabled>
+                <option *ngFor="let item of centerList" [value]="item.id">{{item.centerName}}</option>
+              </select>
+            </div>
+            <div class="col-lg-3 mt-2" *ngIf="!id">
+              <label class="form-label">GST Number<span class="text-danger">*</span></label>
+              <input type="text" class="form-control form-control-lg" name="gstNumber" placeholder="GST Number"
+                autocomplete="off" [class.is-invalid]="isControlInvalidForSpinning('gstNumber')"
+                [class.is-valid]="isControlValidForSpinning('gstNumber')" formControlName="gstNumber"
+                style="text-transform:uppercase" />
+              <div class="invalid-feedback" *ngIf="controlHasErrorForSpinning('required', 'gstNumber')">Gst is required
+              </div>
+              <!-- <div class="invalid-feedback" *ngIf="controlHasErrorForSpinning('pattern', 'gstNumber')">Gst is Invalid
+              </div>
+              <div class="valid-feedback" *ngIf="isControlValidForSpinning('gstNumber')">Gst is Valid</div> -->
+            </div>
+            <div class="col-lg-3 mt-2" *ngIf="id">
+              <label class="form-label">GST Number<span class="text-danger">*</span></label>
+              <input type="text" class="form-control form-control-lg disabled" name="gstNumber" placeholder="GST Number"
+                autocomplete="off" [class.is-invalid]="isControlInvalidForSpinning('gstNumber')"
+                [class.is-valid]="isControlValidForSpinning('gstNumber')" formControlName="gstNumber" disabled
+                style="text-transform:uppercase" />
+            </div>
+            <div class="col-lg-2 mt-10" *ngIf="!id">
+              <button type="button" class="btn btn-success btn-md"
+                [disabled]="spinningCreateForm.invalid"
+                (click)="gstVerified(spinningCreateForm.value)">Verify Gst</button>
+            </div>
+            <!--Spinning Mill Form-->
+            <div [formGroup]="spinningCreateForm" *ngIf="id">
+              <div class="col-lg-12 mt-6">
+                <ngb-accordion #acc11="ngbAccordion" activeIds="toggle-spinning-mill-derails">
+                  <ngb-panel id="toggle-spinning-mill-derails">
+                    <ng-template ngbPanelTitle>
+                      <span class="ard-header--title text-success">Spinning Mill Details</span>
+                    </ng-template>
+                    <ng-template ngbPanelContent>
+                      <div class="row">
+                        <div class="col-lg-3 mt-4">
+                          <label class="form-label">Name</label>
+                          <!-- <input type="text" class="form-control form-control-lg form-control-solid" name="name"
+                            placeholder="Name" formControlName="name" readonly /> -->
+                            <textarea class="form-control form-control-lg form-control-solid" name="name" id="" cols="10" rows="3"  placeholder="Name" formControlName="name" readonly></textarea>
+                        </div>
+                        <div class="col-lg-3 mt-4">
+                          <label class="form-label">Principal place of business</label>
+                          <!-- <input type="text" class="form-control form-control-lg form-control-solid"
+                            name="principalPlaceBusiness" placeholder="Principal place"
+                            formControlName="principalPlaceBusiness" readonly /> -->
+                            <textarea class="form-control form-control-lg form-control-solid" name="principalPlaceBusiness" id="" cols="10" rows="3"  placeholder="Principal place" formControlName="principalPlaceBusiness" readonly></textarea>
+
+                        </div>
+                        <div class="col-lg-3 mt-4">
+                          <label class="form-label">Additional place of business</label>
+                          <!-- <input type="text" class="form-control form-control-lg form-control-solid"
+                            name="additionalPlaceBusiness" placeholder="Additional place"
+                            formControlName="additionalPlaceBusiness" readonly /> -->
+                            <textarea class="form-control form-control-lg form-control-solid" name="additionalPlaceBusiness" id="" cols="10" rows="3"  placeholder="Additional place" formControlName="additionalPlaceBusiness" readonly></textarea>
+
+                        </div>
+                        <div class="col-lg-3 mt-4">
+                          <label class="form-label">Juridiction state</label>
+                          <input type="text" class="form-control form-control-lg form-control-solid"
+                            name="jurisdictionState" placeholder="Juridiction state" formControlName="jurisdictionState"
+                            readonly />
+                        </div>
+                        <div class="col-lg-3 mt-4">
+                          <label class="form-label">Business constitution</label>
+                          <input type="text" class="form-control form-control-lg form-control-solid"
+                            name="businessConstitution" placeholder="Business constitution"
+                            formControlName="businessConstitution" readonly />
+                        </div>
+                        <div class="col-lg-3 mt-4">
+                          <label class="form-label">Registerd date</label>
+                          <input type="text" class="form-control form-control-lg form-control-solid"
+                            name="dateRegisterd" placeholder="Registerd date" formControlName="dateRegisterd"
+                            readonly />
+                        </div>
+                        <div class="col-lg-3 mt-4">
+                          <label class="form-label">Taxpayer type</label>
+                          <input type="text" class="form-control form-control-lg form-control-solid" name="taxpayerType"
+                            placeholder="Taxpayer type" formControlName="taxpayerType" readonly />
+                        </div>
+                        <div class="col-lg-3 mt-4">
+                          <label class="form-label">GSTIN status </label>
+                          <input type="text" class="form-control form-control-lg form-control-solid" name="gstinstatus"
+                            placeholder="Gstin status " formControlName="gstinstatus" readonly />
+                        </div>
+                        <div class="col-lg-3 mt-4">
+                          <label class="form-label">Cancellation date </label>
+                          <input type="text" class="form-control form-control-lg form-control-solid"
+                            name="cancelationDate" placeholder="Canceled date " formControlName="cancelationDate"
+                            readonly />
+                        </div>
+                        <div class="col-lg-3 mt-4">
+                          <label class="form-label">Last Verified Date & Time</label>
+                          <input class="form-control form-control-lg form-control-solid" name="lastVerified"
+                            placeholder="Last verified at" formControlName="lastVerified" readonly />
+                        </div>
+                        <div class="col-lg-3 mt-4">
+                          <label class="form-label">Email address</label>
+                          <input type="email" class="form-control form-control-lg " name="email" placeholder="Email"
+                          formControlName="email" />
+                        </div>
+                      </div>
+                    </ng-template>
+                  </ngb-panel>
+                </ngb-accordion>
+              </div>
+              <!--Bale form-->
+              <div class="col-lg-12 mt-6" [formGroup]="spinningCreateForm.get('baleDetails')">
+                <ngb-accordion #acc11="ngbAccordion">
+                  <ngb-panel id="toggle-address">
+                    <ng-template ngbPanelTitle>
+                      <span class="ard-header--title text-success">Bale Details</span>
+                    </ng-template>
+                    <ng-template ngbPanelContent>
+                      <div class="row">
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">Cotton Type</label>
+                          <mat-form-field appearance="legacy" class="w-100">
+                            <mat-select multiple formControlName="cottonType">
+                              <mat-option *ngFor="let item of cottonTypesList" [value]="item.value">{{item.name}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                          <!-- <select class="form-control form-control-lg" formControlName="cottonType" name="cotton-type" placeholder="Select cotton type">
+                            <option *ngFor="let item of cottonTypesList" [value]="item.value">{{item.name}}</option>
+                          </select> -->
+                        </div>
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">Land Size<small>(acers)</small></label>
+                          <input type="text" class="form-control form-control-lg" name="land-size"
+                            placeholder="Land size" autocomplete="off" formControlName="landSize" />
+                        </div>
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">Consumption Capacity(Bales/day)</label>
+                          <input type="text" class="form-control form-control-lg" name="consumption-capacity"
+                            placeholder="Consumption capacity" autocomplete="off"
+                            formControlName="consumptionCapacity" />
+                        </div>
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">Yarn Type</label>
+                          <mat-form-field appearance="legacy" class="w-100">
+                            <mat-select multiple formControlName="yarnType">
+                              <mat-option *ngFor="let item of yarnTypesList" [value]="item.value">{{item.name}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                          <!-- <select class="form-control form-control-lg" formControlName="yarnType" name="select-yarn" placeholder="Select yarn type">
+                            <option *ngFor="let item of yarnTypesList" [value]="item.value">{{item.name}}</option>
+                        </select> -->
+                        </div>
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">Production Capacity<small>(kg/day)</small></label>
+                          <input type="text" class="form-control form-control-lg" name="production-capacity"
+                            placeholder="Production capacity" autocomplete="off" formControlName="productionCapacity" />
+                        </div>
+                      </div>
+                    </ng-template>
+                  </ngb-panel>
+                </ngb-accordion>
+              </div>
+
+              <div class="col-lg-12 mt-6">
+                <bank-form [layouttype]="'page'" [accname] [accnumber] [ifsccode] [bankname] [branchname]></bank-form>
+              </div>
+              
+
+              <div class="col-lg-12 mt-6">
+                <address-pincode-form [address] [village] [layouttype]="'page'"></address-pincode-form>
+              </div><br>
+              
+              <div class="card-toolbar float-right mr-4">
+                <button type="button" class="btn btn-sm btn-secondary mr-3" (click)="goBack();">Back</button>
+                <button type="submit" class="btn btn-sm btn-success" [disabled]="spinningCreateForm.invalid"
+                  (click)="saveSpinningDetails(spinningCreateForm.value)">Save</button>
+              </div>
+
+              
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<!--pop up-->
+  <div class="delete-confirmation-preview">
+    <div>
+      <ng-template #content let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Delete Account {{delBank.accountNumber}}</h4>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete <strong> Account Number {{delBank.value.accountNumber}}</strong>?</p>
+          <p>Account Holder’s Name <strong>{{delBank.value.beneficiaryName}}</strong></p>
+          <p>Bank Name <strong>{{delBank.value.bankName}}</strong></p>
+          <p>IFSC Code <strong>{{delBank.value.ifscCode}}</strong></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+          <button type="button" class="btn btn-sm btn-success" (click)="deleteBankDetails()">Yes</button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  <!--pop up-->
+  <div class="delete-confirmation-preview">
+    <div>
+      <ng-template #kycFillcontent let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">KYC</h4>
+        </div>
+        <div class="modal-body">
+          <div class="mb-2">
+            <p>Please complete KYC.</p>
+            <p class="text-warning">KYC is mandatory while doing any Transactions</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-sm btn-success" (click)="skipKYC()">Skip For Now</button>
+        </div>
+      </ng-template>
+    </div>
+  </div>

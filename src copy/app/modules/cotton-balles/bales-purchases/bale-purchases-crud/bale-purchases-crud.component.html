@@ -1,0 +1,446 @@
+<div class="card card-custom gutter-b" [formGroup]="balepurchasesCreateForm">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">New Bale Listing</h3>
+        </div>
+    </div>
+
+   
+    <div  class="card-body pt-0">
+
+        
+        <div class="form form-label-right">
+            <div class="form-group row" style="padding-top: 0px;">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-3 mt-4" *ngIf="id">
+                            <label>Select Ginner</label>
+                           
+                            <input class="form-control  form-control-solid" [value]="ginnerName+' - '+ginnerPhone" >
+                        </div>
+                
+                
+                        <div *ngIf="!id" class="col-lg-4 mt-2 selectWrapper">
+                            <!-- <h4 class="mb-4 ">Select Ginner<span
+                              class="text-danger">*</span><span class="float-right"><a class="text-primary cursor-pointer"
+                              (click)="open(content)">+ New Ginner</a></span> </h4> -->
+                              <label class="w-100 d-flex justify-content-between">
+                                <span>Select Ginner<span class="text-danger">*</span></span>
+                                <span>
+                                    <a class="text-primary cursor-pointer" (click)="open(content)" >+ New Ginner</a>
+                                </span>
+                            </label>
+                            
+                            
+                              <ng-select class="form-control  form-control-solid" formControlName="ginner"
+                              placeholder="Please enter mobile number"
+                              (search)='getGinnerList($event)'>
+                              <ng-option *ngFor="let item of ginnerData" [value]="item.id">{{ item?.name }} - {{ item?.phone }}</ng-option>
+                            </ng-select>
+                        </div>
+                        <div class="col-lg-3 mt-4">
+                            <label>Select Center<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg" formControlName="balecenter" name="balecenter" placeholder="Select Center">
+                                <option [value]="center.id" *ngFor="let center of centerList">{{center?.centerName}}</option>
+                            </select>
+                        </div>
+                
+                        <div class="col-lg-3 mt-4">
+                            <label class="form-label">Cotton type</label>
+                              <select class="form-control form-control-lg" formControlName="cottonType" name="cotton-type" placeholder="Select cotton type">
+                              <option *ngFor="let item of cottonTypesList" [value]="item.value">{{item.name}}</option>
+                            </select>
+                          </div>
+                        
+                        <!-- <div class="col-lg-3 mt-4">
+                            <label>Select Center<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg" formControlName="balecenter" name="balecenter" placeholder="Select Center">
+                                <option [value]="center.id" *ngFor="let center of centerList">{{center?.centerName}}</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-3 mt-2">
+                            <label class="form-label">Cotton type</label>
+                              <select class="form-control form-control-lg" formControlName="cottonType" name="cotton-type" placeholder="Select cotton type">
+                              <option *ngFor="let item of cottonTypesList" [value]="item.value">{{item.name}}</option>
+                            </select>
+                          </div> -->
+
+
+                          <div class="col-lg-12 mt-6">
+                            <ngb-accordion #acc11="ngbAccordion" activeIds="toggle-bank">
+                                <ngb-panel id="toggle-bank">
+                                    <ng-template ngbPanelTitle>
+                                        <span class="card-header--title text-success">Item<span class="text-danger">*</span></span>
+                                    </ng-template>
+                                    <ng-template ngbPanelContent>
+                                        <div class="row">
+                                            <div class="col-lg-3 mt-4">
+                                                <label class="form-label">Staple length<small>(in mm)</small><span class="text-danger">*</span></label>
+                                                <input type="number" class="form-control form-control-lg" name="leafCountX"  placeholder="Staple length" autocomplete="off" formControlName="stapleLength" />
+                                            </div>
+                                            <div class="col-lg-3 mt-4">
+                                                <label class="form-label">Micronaire Value</label>
+                                                <input type="number" class="form-control form-control-lg" name="leafCountX"  placeholder="Micronaire value" autocomplete="off" formControlName="micronaire"/>
+                                            </div>
+                                            <div class="col-lg-3 mt-4">
+                                                <label class="form-label">Moisture Content<small>(in %)</small></label>
+                                                <input type="number" class="form-control form-control-lg" name="leafCountX"  placeholder="Moisture Content (in %)" autocomplete="off" formControlName="moistureContent" />
+                                                <div *ngIf="balepurchasesCreateForm.get('moistureContent').value>16" style="color:red;">Moisture Content Should be less than 16</div>
+                                            </div>
+                                            <div class="col-lg-3 mt-4">
+                                                <label class="form-label">RD</label>
+                                                <input type="text" class="form-control form-control-lg" name="rd"
+                                                placeholder="Rd" autocomplete="off" formControlName="rd"/>
+                                            </div>
+                                            <div class="col-lg-3 mt-4">
+                                                <label class="form-label">Variance in RD<small>(+b)</small></label>
+                                                <input type="text" class="form-control form-control-lg" name="varianceinrd"
+                                                placeholder="Variancein Rd" autocomplete="off" formControlName="varianceinrd"/>
+                                            </div>
+                                            <div class="col-lg-3 mt-4">
+                                                <label class="form-label">Strength</label>
+                                                <input type="text" class="form-control form-control-lg" name="strength"
+                                                placeholder="Strength" autocomplete="off"  formControlName="strength"/>
+                                            </div>
+                                            <div class="col-lg-3 mt-4">
+                                                <label class="form-label">Elongation</label>
+                                                <input type="text" class="form-control form-control-lg" name="elongation"
+                                                placeholder="Elongation" autocomplete="off"  formControlName="elongation"/>
+                                            </div>
+                                            <div class="col-lg-3 mt-4">
+                                                <label class="form-label">Trash Content<small>(in %)</small></label>
+                                                <input type="text" class="form-control form-control-lg" name="trashcontent"
+                                                placeholder="Trash Content" autocomplete="off"  formControlName="trashcontent"/>
+                                            </div>
+                                        </div>
+                                 
+                                    </ng-template>
+                                </ngb-panel>
+                            </ngb-accordion>
+                        </div>
+
+
+
+
+
+                        
+                        <!-- <div class="col-lg-3 mt-4">
+                            <label class="form-label">Select Grade<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg" formControlName="selectgrade" name="rmGrade"
+                            placeholder="RM Grade" [class.is-invalid]="isControlInvalidForBalesPurchase('selectgrade')">
+                            <option value="Reshamandi A">Reshamandi A</option>
+                            <option value="Reshamandi B">Reshamandi B</option>
+                            <option value="Reshamandi C">Reshamandi C</option>
+                            </select>
+                        </div> -->
+                        <div class="col-lg-3 mt-4">
+                            <label class="form-label">Number Of Bales</label>
+                            <input type="number" class="form-control form-control-lg" name="numberofbales" 
+                            placeholder="Number Of Bales" autocomplete="off" formControlName="numberofbales"/>
+                        </div>
+                        <div class="col-lg-3 mt-4">
+                            <label class="form-label">Received weight <small>(in kgs)</small><span class="text-danger">*</span></label>
+                            <input (keyup)="onValueChanges()" type="number" class="form-control  form-control-lg"  name="receivedweight"  placeholder="Received Weight in Kgs" autocomplete="off" formControlName="receivedweight"/>
+                        </div>
+                        <div class="col-lg-3 mt-4">
+                            <label class="form-label">Deduction<small>(in kgs)</small></label>
+                            <input type="number" class="form-control form-control-lg"  name="deduction"  placeholder="Weight Deduction in Kgs" autocomplete="off" formControlName="deduction" (keyup)="onValueChanges()" />    
+                            <p style="color: red;" *ngIf="balepurchasesCreateForm.get('deduction').value > balepurchasesCreateForm.get('receivedweight').value">Deduction can not be more than {{balepurchasesCreateForm.get('receivedweight').value}} </p>
+
+                        </div>
+                        <div class="col-lg-3 mt-4">
+                            <label class="form-label">Net Weight</label>
+                            <input type="number" class="form-control form-control-lg form-control-solid" name="netweight"
+                            placeholder="Net Weight" autocomplete="off" readonly  formControlName="netweight"/>
+                        </div>
+                        <!-- <div class="col-lg-3 mt-4">
+                            <label class="form-label">Number Of Candies</label>
+                            <input type="number" class="form-control form-control-lg form-control-solid" name="numterofcandies"
+                            placeholder="Number Of Candies" autocomplete="off" readonly  formControlName="numberofcandies"/>
+                        </div> -->
+                        <div class="col-lg-3 mt-4">
+                            <label class="form-label">Rate/Candy<span class="text-danger">*</span></label>
+                            <input type="number" class="form-control form-control-lg" name="ratepercandy"
+                            placeholder="Rate/Candy" autocomplete="off"  formControlName="ratepercandy" (keyup)="onValueChanges()"/>
+                        </div>
+                        <div class="col-lg-3 mt-4">
+                            <label class="form-label">Rate/Kg</label>
+                            <input type="number" class="form-control form-control-lg form-control-solid" name="rateperKg"
+                            placeholder="Rate/Kg" autocomplete="off"  readonly formControlName="rateperKg"/>
+                        </div>
+                        <div class="col-lg-3 mt-4">
+                            <label class="form-label">Gross Total</label>
+                            <input type="Number" class="form-control form-control-lg form-control-solid" name="grostotal"
+                            placeholder="grostotal" autocomplete="off" readonly  formControlName="grostotal"/>
+                        </div>
+                        
+                        <div class="col-lg-3 mt-4">
+                            <label class="form-label">Select State</label>
+                            <select (change)="updateTaxAmount()" class="form-control form-control-lg" formControlName="withInState" name="inState" placeholder="Within State ?">
+                                <option [value]="true">Same State</option>
+                                <option [value]="false">Out Of State</option>
+                            </select>
+                        </div>
+
+                        <!-- <div class="col-lg-3 mt-3 selectWrapper" *ngIf="!id">
+                            <label class="form-label">Representive <small>(Sold by)</small><span class="text-danger"> *</span></label>
+                            <ng-select class="form-control form-control-lg form-control-solid select-custom"
+                              formControlName="representative">
+                              <ng-option *ngFor="let item of usersList" [value]="item">{{ item.name }} - {{ item.phone }} <span
+                                  *ngIf="item.role">- {{item.role}}</span></ng-option>
+                            </ng-select>
+                        </div>
+
+                        <div class="col-lg-3 mt-3" *ngIf="id">
+                            <div class="col-lg-12 mt-3" >
+                                <label class="form-label">Representative</label>
+                                <div class="form-control form-control-lg form-control-solid">
+                                  {{balepurchasesCreateForm.get('representativeName').value}} - {{balepurchasesCreateForm.get('representativePhone').value}}
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <div class="col-lg-3 mt-6 selectWrapper" *ngIf="!id">
+                            <label class="form-label">Representive <small>(Created by)</small></label>
+                            <ng-select class=" select-custom" [ngModelOptions]="{standalone: true}" [(ngModel)]="representive">
+                                <ng-option *ngFor="let item of usersList" [value]="item">{{ item.name }} - {{ item.phone }} <span
+                                    *ngIf="item.role">- {{item.role}}</span>
+                                </ng-option>
+                            </ng-select>
+                        </div>
+
+                        <!-- <div class="col-lg-3 mt-6 selectWrapper" *ngIf="id">
+                            <label class="form-label">Representive</label>
+                            <div class="form-control form-control-solid">
+                                {{representive.name}} - {{representive.phone}}
+                            </div>
+                        </div> -->
+                        <div class="col-lg-3 mt-3" *ngIf="id">
+                            <div class="col-lg-12 mt-3" >
+                                <label class="form-label">Representative</label>
+                                <div class="form-control form-control-lg form-control-solid">
+                                    {{representive?.name}} - {{representive?.phone}}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-2 mt-4">
+                            <label class="form-label">SGST <small>2.5%</small> </label>
+                            <input type="number" class="form-control form-control-lg form-control-solid" name="sgst"
+                                readonly autocomplete="off" formControlName="sgst" />
+                        </div>
+
+                        <div class="col-lg-2 mt-4">
+                            <label class="form-label">CGST <small>2.5%</small></label>
+                            <input type="number" class="form-control form-control-lg form-control-solid" name="cgst"
+                                readonly  autocomplete="off" formControlName="cgst" />
+                        </div>
+
+                        <div class="col-lg-2 mt-4">
+                            <label class="form-label">IGST <small>5%</small></label>
+                            <input type="number" class="form-control form-control-lg form-control-solid" name="igst"
+                                readonly autocomplete="off" formControlName="igst" />
+                        </div>
+
+                        <div class="col-lg-3 mt-4">
+                            <label class="form-label">Net Payable Amount (Rs)<span class="text-danger">*</span></label>
+                            <input type="number" class="form-control form-control-lg form-control-solid"
+                                name="totalPrice" readonly placeholder="Total" autocomplete="off"
+                                formControlName="netPayableAmount" />
+                        </div>
+                        
+                       
+                        
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12 col-12">
+                            <span [formGroup]="balepurchasesCreateForm.get('cottonImages')">
+                               <div class="card card-custom" >
+                                   <div class="row">
+
+                                    <div class="col-lg-12">
+                                        <div class="row">
+                                           <div class="col-md-3 col-lg-3 col-12">
+                                            <label class="mt-5">Moisture Content Image</label><br>
+                                               <div class="image-input image-input-outline m-1"
+                                               id="kt_profile_avatar">
+                                               <img class="image-input-wrapper"
+                                                   [src]="balepurchasesCreateForm.get('moistureImage').value ||'./assets/media/users/blank.png'" />
+                                               <label
+                                                   class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                                   data-action="change" data-toggle="tooltip" title=""
+                                                   data-original-title="Change avatar">
+                                                   <i class="fa fa-pen icon-sm text-muted"></i>
+                                                   <input type="file" name="profile_avatar"
+                                                       accept=".png, .jpg, .jpeg, .MP4, .FLV"
+                                                       (change)="onImageUpload($event, -1,'moistureImage');" 
+                                                       />
+                                                   <input type="hidden" name="profile_avatar_remove" />
+                                               </label>
+                                               <span
+                                                   class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                                   data-action="cancel" data-toggle="tooltip" title=""
+                                                   data-original-title="Cancel avatar">
+                                                   <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                               </span>
+                                               </div>
+                                           </div>
+
+                                           <div class="col-md-3 col-lg-3 col-12">
+                                            <label class="mt-5">Bale Image</label><br>
+                                               <div class="image-input image-input-outline m-1"
+                                               id="kt_profile_avatar">
+                                               <img class="image-input-wrapper"
+                                                   [src]="balepurchasesCreateForm.get('baleImage').value ||'./assets/media/users/blank.png'" />
+                                               <label
+                                                   class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                                   data-action="change" data-toggle="tooltip" title=""
+                                                   data-original-title="Change avatar">
+                                                   <i class="fa fa-pen icon-sm text-muted"></i>
+                                                   <input type="file" name="profile_avatar"
+                                                       accept=".png, .jpg, .jpeg, .MP4, .FLV"
+                                                       (change)="onImageUpload($event, -1,'baleImage');" 
+                                                       />
+                                                   <input type="hidden" name="profile_avatar_remove" />
+                                               </label>
+                                               <span
+                                                   class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                                   data-action="cancel" data-toggle="tooltip" title=""
+                                                   data-original-title="Cancel avatar">
+                                                   <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                               </span>
+                                           </div>
+                                           </div>
+
+
+                                           <div class="col-md-3 col-lg-3 col-12">
+                                            <label class="mt-5">Weigh Bridge Slip Image <span class="text-danger">*</span></label><br>
+                                               <div class="image-input image-input-outline m-1"
+                                               id="kt_profile_avatar">
+                                               <img class="image-input-wrapper"
+                                                   [src]="balepurchasesCreateForm.get('weighBridgeSlipImage').value ||'./assets/media/users/blank.png'" />
+                                               <label
+                                                   class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                                   data-action="change" data-toggle="tooltip" title=""
+                                                   data-original-title="Change avatar">
+                                                   <i class="fa fa-pen icon-sm text-muted"></i>
+                                                   <input type="file" name="profile_avatar"
+                                                       accept=".png, .jpg, .jpeg, .MP4, .FLV"
+                                                       (change)="onImageUpload($event, -1,'weighBridgeSlipImage');" 
+                                                       />
+                                                   <input type="hidden" name="profile_avatar_remove" />
+                                               </label>
+                                               <span
+                                                   class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                                   data-action="cancel" data-toggle="tooltip" title=""
+                                                   data-original-title="Cancel avatar">
+                                                   <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                               </span>
+                                           </div>
+                                           </div>
+
+                                           <div class="col-md-3 col-lg-3 col-12">
+                                            <label class="mt-5">Test Report Image <span class="text-danger">*</span></label><br>
+                                               <div class="image-input image-input-outline m-1"
+                                               id="kt_profile_avatar">
+                                               <img class="image-input-wrapper"
+                                                   [src]="balepurchasesCreateForm.get('testReportImage').value ||'./assets/media/users/blank.png'" />
+                                               <label
+                                                   class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                                   data-action="change" data-toggle="tooltip" title=""
+                                                   data-original-title="Change avatar">
+                                                   <i class="fa fa-pen icon-sm text-muted"></i>
+                                                   <input type="file" name="profile_avatar"
+                                                       accept=".png, .jpg, .jpeg, .MP4, .FLV"
+                                                       (change)="onImageUpload($event, -1,'testReportImage');" 
+                                                       />
+                                                   <input type="hidden" name="profile_avatar_remove" />
+                                               </label>
+                                               <span
+                                                   class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                                   data-action="cancel" data-toggle="tooltip" title=""
+                                                   data-original-title="Cancel avatar">
+                                                   <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                               </span>
+                                           </div>
+                                           </div>
+
+                                           
+                                        </div>
+                                    </div>
+                                   </div>
+
+
+                               </div>
+                           </span>
+                        </div>
+                    </div> 
+                </div>
+                <div *ngIf="requestAPI != responseAPI">
+                    <p class="text-warning">Image Uploading ...</p>
+                </div>
+            </div>
+        </div>
+        <div class="card-toolbar float-lg-right">
+            <button type="button" class="btn btn-sm btn-secondary mr-2" [routerLink]="['/resha-farms/bale-purchases']">Back</button>
+            <button [disabled]="balepurchasesCreateForm.invalid"
+            (click)="saveBalepurchase(balepurchasesCreateForm.value)" class="btn btn-success p-2">Save</button>
+            
+        </div>
+    </div>
+</div>
+
+
+<div class="create-new-farmer">
+    <div>
+        <ng-template #content let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Create New Ginner</h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-12">
+                    <div class="row" [formGroup]="ginnerCreateForm">
+                        <div class="col-lg-12 mt-2">
+                            <label class="form-label">Name<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="name" placeholder="Name"
+                                autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('name')"
+                                [class.is-valid]="isControlValidForReeler('name')" formControlName="name" />
+                            <div class="valid-feedback" *ngIf="isControlValidForReeler('name')">Name was entered correct
+                            </div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'name')">Name is
+                                required</div>
+                                <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('pattern', 'name')">Name should not contain digits</div>
+                        </div>
+                        <div class="col-lg-12 mt-2">
+                            <label class="form-label">Mobile Number<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="phone"
+                                placeholder="Mobile Number" autocomplete="off"
+                                [class.is-invalid]="isControlInvalidForReeler('phone')"
+                                [class.is-valid]="isControlValidForReeler('phone')" formControlName="phone" />
+                            <div class="valid-feedback" *ngIf="isControlValidForReeler('phone')">Mobile number was
+                                entered correct
+                            </div>
+                            <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'phone')">Mobile
+                                number is
+                                required</div>
+                        </div>
+                        <div class="col-lg-12 mt-2">
+                            <label>Select Center<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg" formControlName="center" name="Center"
+                                placeholder="Select Center">
+                                <option *ngFor="let item of centerList" [value]="item.id">{{item.centerName}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+                <button type="button" class="btn btn-sm btn-success" [disabled]="ginnerCreateForm.invalid"
+                (click)="createGinner(ginnerCreateForm.value)">Save</button>
+            </div>
+        </ng-template>
+    </div>
+  </div>
+

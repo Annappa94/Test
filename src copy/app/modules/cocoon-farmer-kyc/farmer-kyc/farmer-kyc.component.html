@@ -1,0 +1,156 @@
+<div class="card card-custom gutter-b col-lg-12" [formGroup]="kycForm">
+
+    <div class="card-body">
+        <div class="row justify-content-between">
+            <h3>KYC Details</h3>
+            <div>
+                <!-- <app-back-button></app-back-button> -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 mt-2 selectWrapper pl-0">
+                <div>
+                    <label class="form-label">Customer Type</label>
+                    <input type="text" readonly class="form-control form-control-lg form-control-solid"
+                        placeholder="Customer Type" autocomplete="off" [(ngModel)]="selectedCustomerType" [ngModelOptions]="{standalone: true}"/>
+                </div>
+            </div>
+            <div class="col-lg-3 mt-2 selectWrapper pl-0">
+                <div>
+                    <label class="form-label">Customer Name</label>
+                    <input type="text" class="form-control form-control-lg "
+                        placeholder="Customer Name" autocomplete="off" [(ngModel)]="selectedCustomerName" [ngModelOptions]="{standalone: true}"/>
+                </div>
+            </div>
+            <div class="col-lg-5 ml-4 mt-2">
+                <h5 class="text-warning ml-5">Note:</h5>
+                <ul>
+                    <li class="font-weight-bold text-warning" >CSB proof is mandatory for Karnataka, Tamil Nadu, Andhra Pradesh, and Telangana Regions</li>
+                    <li class="font-weight-bold text-warning">Any one of the KYC proof is mandatory for Maharashtra Region. </li>
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    <p class="text-danger">{{emptydocsMsg}}</p>
+    <div class="kyc_docs_section mb-5">
+        <div class="id_kyc_section mt-4 mb-4" *ngFor="let item of proofs | keyvalue:sortOrder; let baseIndex=index;let last = last;">
+            <ngb-accordion #acc11="ngbAccordion">
+                <ngb-panel id="id-proofs">
+                    <ng-template ngbPanelTitle>
+                    <span class="card-header--title text-success">Upload {{item?.key?.replaceAll('_',' ') | titlecase}} </span>
+                    </ng-template>
+                    <ng-template ngbPanelContent>
+                        <div class="kyc_docs_fields id_kyc_fields">
+                            <div class="row">
+                                <div class="col-lg-3 mt-2">
+                                    <label class="form-label">Select {{item?.key?.replaceAll('_',' ') | titlecase}}</label>
+                                    <mat-form-field appearance="legacy" class="w-100">
+                                        <mat-select multiple [formControl]="tags">
+                                          <mat-option *ngFor="let doc of item.value" [value]="doc.id" (click)="onDocumentSeclect(item,doc)">
+                                            {{doc.name}}</mat-option>
+                                        </mat-select>
+                                      </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row" [formGroup]="kycDocList">
+                                <div class="col-md-12 col-lg-12" [formArrayName]="item.key">
+                                    <div class="col-lg-6"  *ngFor="let cat of  kycDocList.get(item.key)['controls']; let index=index" [formGroupName]="index">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="col-lg-6 mt-2">
+                                                    <label class="form-label">{{cat.value.placeholder}} <span class="text-danger">*</span>(<small>{{cat.value.description}}</small>) </label>
+                                                    <input type="text" placeholder="{{cat.value.placeholder}}" formControlName="name" class="form-control form-control-lg" name="name" placeholder="Name On Document">
+                                                </div>
+                                            </div>
+                                            <div  formArrayName="images" class="col-lg-12 col-md-12">
+                                                <div class="row">
+                                                    <div  *ngFor="let img of cat.get('images')['controls']; let imageIndex = index;let last=last"
+                                                    [formGroupName]="imageIndex" class="col-md-6 col-lg-6 col-12">
+                                                        <label class="mt-5">{{img.value.tag}}</label><br>
+                                                        <div class="image-input image-input-outline m-1"
+                                                        id="kt_profile_avatar">
+                                                        <img class="image-input-wrapper"
+                                                        [src]="img.value.imageUrl ? img.value.imageUrl.includes('.pdf')?'./assets/media/svg/files/pdf.svg': './assets/media/svg/files/jpg.svg' : './assets/media/users/blank.png'"
+                                                        (click)="showImage(img.value.imageUrl)" />
+                                                        <label
+                                                            class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                                            data-action="change" data-toggle="tooltip" title=""
+                                                            data-original-title="Change avatar">
+                                                            <i class="fas fa-camera"></i>
+                                                            <input type="file" name="profile_avatar"
+                                                            (change)="onImageUpload($event, index,item.key,imageIndex);" accept=".png, .jpg, .jpeg, .MP4, .FLV"/>
+                                                            <input type="hidden" name="profile_avatar_remove" />
+                                                        </label>
+                                                        <span
+                                                            class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                                            data-action="cancel" data-toggle="tooltip" title=""
+                                                            data-original-title="Cancel avatar">
+                                                            <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                                        </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                               
+                                            </div>
+                                        </div>
+                                        <div class="row mt-5 mb-5">
+                                            <div class="d-flex align-items-center">
+                                                <!-- <input type="checkbox" class="ml-4 mr-4" id="vehicle1" name="vehicle1"  (change)="updateVerified($event,item.key, index)" formControlName="verified" > -->
+                                                <mat-checkbox  formControlName="verified" class="mr-2"></mat-checkbox> 
+                                                <label class="m-0" for="vehicle1"> I hereby confirm  that mentioned Name and  Photo matches with the Farmer</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                           
+                           
+                        </div>
+                    </ng-template>
+                </ngb-panel>
+            </ngb-accordion>
+        </div>
+    </div>
+    <div class="card-toolbar d-flex justify-content-end mb-5">
+        <button type="button" class="btn btn-sm btn-secondary mr-2" (click)="goBack();">Cancel</button>
+        <button type="submit" class="btn btn-sm btn-success" 
+            (click)="saveData(kycDocList.value)" [disabled]="(!kycDocList || kycDocList?.invalid || !(kycDocList?.controls['csb_proof']['controls']?.length || kycDocList?.controls['identity_proof']['controls']?.length) )">Submit</button>
+            <!-- <button type="submit" class="btn btn-sm btn-success" 
+            (click)="saveData(kycDocList)" >Test Submit</button> -->
+            <!-- <button type="submit" class="btn btn-sm btn-success" 
+            (click)="saveData(kycDocList.value)" disabled *ngIf="tempDiselectedArray.length == 0">Submit</button> -->
+    </div>
+    
+    
+</div>
+
+
+<div class="symbol symbol-50 symbol-light mr-1 cursor-pointer" *ngIf="modelImageUrl" appNoRightClick>
+
+    <!-- The Modal -->
+    <div id="reviewModel" class="modal" [ngClass]="{'display-block' : expandImage, 'display-none' : !expandImage}">
+  
+      <!-- The Close Button -->
+      <span class="close" (click)="expandImage = false">&times;</span>
+  
+      <!-- Modal Content (The Image) -->
+      <img class="modal-content" *ngIf="!modelImageUrl?.includes('.pdf')" [src]="modelImageUrl">
+      <pdf-viewer *ngIf="modelImageUrl?.includes('.pdf')" src="{{modelImageUrl}}"></pdf-viewer>
+    </div>
+    <!-- </span> -->
+  </div>
+
+
+
+<!-- <ngb-accordion #acc11="ngbAccordion">
+    <ngb-panel id="id-proofs">
+        <ng-template ngbPanelTitle>
+        <span class="card-header--title text-success">Upload Identity Proof </span>
+        </ng-template>
+        <ng-template ngbPanelContent>
+        
+        </ng-template>
+    </ngb-panel>
+</ngb-accordion> -->
+

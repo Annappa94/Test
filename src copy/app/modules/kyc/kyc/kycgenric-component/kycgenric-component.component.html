@@ -1,0 +1,173 @@
+<mat-vertical-stepper disableRipple="true" linear>
+  <ng-container *ngFor="let item of proofs | keyvalue:sortOrder; let baseIndex=index;let last = last;" class="mt-2">
+    <mat-step>
+      <div class="card card-custom gutter-b col-lg-12 mt-2">
+        <div class="card-body">
+          <ng-template matStepLabel>Upload {{item?.key?.replaceAll('_',' ') | titlecase}}</ng-template>
+          <div class="row">
+            <div class="col-lg-4">
+              <h3>{{item?.key?.replaceAll('_',' ') | titlecase}}<span *ngIf="item?.key!='bank_proof'"
+                  class="text-danger">*</span>
+              </h3>
+              <ng-container *ngIf="item?.key!='csb_proof' && item?.key!='bank_proof'">(<small>At least one is
+                  required.</small>)</ng-container>
+              <mat-form-field appearance="legacy" class="w-100">
+                <mat-select multiple [formControl]="tags">
+                  <mat-option *ngFor="let doc of item.value" [value]="doc.id" (click)="onDocumentSeclect(item,doc)">
+                    {{doc.name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="col-lg-12">
+
+              <span [formGroup]="kycDocList">
+                <div class="card card-custom" [formArrayName]="item.key">
+
+                  <div class="row mt-3 p-2" style="border:1px solid #E4E6EF;border-radius: 10px;"
+                    *ngFor="let cat of  kycDocList.get(item.key)['controls']; let index=index" [formGroupName]="index">
+
+                    <div class="row col-12">
+                      <div class="col-lg-5 col-12 ml-1 mt-2">
+                        <label class="form-label"> {{cat.value.placeholder}}<span
+                            class="text-danger">*</span>(<small>{{cat.value.description}}</small>)</label>
+                        <input type="text" placeholder="{{cat.value.placeholder}}" class="form-control form-control-lg"
+                          formControlName="name" [class.is-invalid]="isControlInvalid(item.key,'name',index)"
+                          [class.is-valid]="isControlValid(item.key,'name',index)" />
+                      </div>
+
+                      <div class="col-lg-5 col-12 ml-1 mt-2">
+                        <label class="form-label">Verification Type<span class="text-danger">*</span></label>
+                        <select class="form-control form-control-lg" formControlName="verificationType" (change)="onVerificationTypeChange($event.target.value, item, index)"
+                          placeholder="Select Type">
+                          <option *ngFor="let type of verificationType" [value]="type">{{type}}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div formArrayName="images" class="row w-100">
+                      <div
+                        *ngFor="let img of cat.get('images')['controls']; let imageIndex = index;let last=last"
+                        [formGroupName]="imageIndex" class="col-lg-6 px-0">
+
+                        <!-- <div> -->
+                          <div class="row mx-0 align-items-end">
+                            <!-- <div class="row px-0"> -->
+                              <div class="col-lg-2 col-3">
+                                <span class="text-danger">*</span>
+                                <div class="image-input image-input-outline m-1" id="kt_profile_avatar">
+                                  <img class="image-input-wrapper cursor-pointer"
+                                    [src]="img.value.imageUrl ? img.value.imageUrl.includes('.pdf')?'./assets/media/svg/files/pdf.svg': './assets/media/svg/files/jpg.svg' : './assets/media/users/blank.png'"
+                                    (click)="showImage(img.value.imageUrl)" style="width: 50px; height: 50px;" />
+                                  <label
+                                    class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                    data-action="change" data-toggle="tooltip" title=""
+                                    data-original-title="Change avatar">
+                                    <i class="fa fa-pen icon-sm text-muted"></i>
+                                    <input type="file" name="profile_avatar"
+                                      (change)="onImageUpload($event, index,item.key,imageIndex);" />
+                                    <input type="hidden" name="profile_avatar_remove" />
+                                  </label>
+                                  <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                    data-action="cancel" data-toggle="tooltip" title=""
+                                    data-original-title="Cancel avatar">
+                                    <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                  </span>
+                                </div>
+  
+                              </div>
+                              <div class="col-lg-8 col-6 mt-2">
+                                <label class="form-label">Tag<span class="text-danger">*</span></label>
+                                <input type="text" placeholder="Tag" [readonly]="img.value.edit"
+                                  class="form-control form-control-lg" [ngClass]="{'form-control-solid':img.value.edit }" formControlName="tag" />
+                              </div>
+  
+                              <div class="d-flex justify-content-center align-items-center mt-13 px-5">
+                                <button matTooltip="Add" type="button" class="btn btn-icon btn-success btn-xs mb-4"
+                                  (click)=" addImages(item,index)" *ngIf="last">
+                                  <i class="flaticon-add-circular-button"></i>
+                                </button>
+                                <button matTooltip="Remove" type="button" class="btn ml-2 btn-icon btn-danger btn-xs mb-4"
+                                  (click)="deleteImages(item.key,index,imageIndex)"
+                                  *ngIf="cat.value.images.length-1>0 && !img.value.edit">
+                                  <i class="flaticon-cancel"></i>
+                                </button>
+  
+                              </div>
+                            <!-- </div> -->
+                          </div>
+                        <!-- </div> -->
+
+                      </div>
+
+                    </div>
+
+
+                    <div class="row col-12 ml-2 mt-4">
+                      <submit-button [text]="cat.value.editId?'Update':'Save'"
+                        [disabledButton]="cat.invalid&&(countAPIRequest==countAPIResponse)"
+                        [loading]="countAPIResponse!=countAPIRequest" (clickButton)="save(cat.value, index,item.key)">
+                      </submit-button>
+                    </div>
+
+                  </div>
+
+                </div>
+              </span>
+
+            </div>
+
+
+          </div>
+          <div class="mt-6 w-100 text-right">
+            <button class="btn-light-primary btn btn-sm" *ngIf="baseIndex!=0"
+              matStepperPrevious>Previous</button>
+            <button class="btn btn-sm btn-success ml-5" *ngIf="!last" matStepperNext>Next</button>
+            <button type="button" class="btn btn-sm btn-success ml-5" (click)="confirmPopUp(confirm)" *ngIf="last">Submit</button>
+          </div>
+        </div>
+      </div>
+    </mat-step>
+  </ng-container>
+</mat-vertical-stepper>
+
+
+
+<div class="symbol symbol-50 symbol-light mr-1 cursor-pointer" *ngIf="modelImageUrl" appNoRightClick>
+
+  <!-- The Modal -->
+  <div id="reviewModel" class="modal" [ngClass]="{'display-block' : expandImage, 'display-none' : !expandImage}">
+
+    <!-- The Close Button -->
+    <span class="close" (click)="expandImage = false">&times;</span>
+
+    <!-- Modal Content (The Image) -->
+    <img class="modal-content" *ngIf="!modelImageUrl?.includes('.pdf')" [src]="modelImageUrl">
+    <pdf-viewer *ngIf="modelImageUrl?.includes('.pdf')" src="{{modelImageUrl}}"></pdf-viewer>
+  </div>
+  <!-- </span> -->
+</div>
+
+<div class="details-confirmation-preview">
+  <div>
+          <ng-template #confirm let-c="close" let-d="dismiss">
+              <div class="modal-header">
+                  <h4 class="modal-title">Please confirm</h4>
+              </div>
+
+              <div class="modal-body">
+                <ng-container>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <strong>Please check if you have saved all the documents, unsaved documents will be lost.</strong>
+                  </div>
+                </ng-container>              
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+                <button type="button" class="btn btn-sm btn-success" (click)="comfirmBack()">Proceed</button>
+              </div>
+          </ng-template>
+  </div>
+</div>

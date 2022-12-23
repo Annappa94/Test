@@ -1,0 +1,303 @@
+<div class="card card-custom gutter-b">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">Devices</h3>
+    </div>
+    <div class="card-toolbar">
+      <!-- <button type="button" class="btn btn-sm btn-success mr-2 " *ngIf=" selectedBatchList.length ==1" (click)="markSoldSelected()">Mark Sold</button>  -->
+      <!-- <button type="button" class="btn btn-sm btn-success mr-2 " [disabled]="selectedBatchList.length>1 || selectedBatchList.length==0" (click)="markSoldSelected()">Mark Sold</button> -->
+      <button type="button" class="btn btn-sm btn-success mr-2 " disabled *ngIf="selectedBatchList == '' ">Transfer</button> 
+      <button type="button" class="btn btn-sm btn-success mr-2 " (click)="openDeviceTransfer(transferDevice)" *ngIf="selectedBatchList != '' ">Transfer</button> 
+      <button type="button" class="btn btn-sm btn-success mr-2" disabled *ngIf="selectedBatchList == '' ">Assignee</button> 
+      <button type="button" class="btn btn-sm btn-success mr-2" (click)="openAssignechange(assigneeChange)" *ngIf="selectedBatchList != '' ">Assigne</button> 
+     <button type="button" class="btn btn-sm btn-success mr-2" routerLink="/resha-farms/device-management/list-crud">+ New Device</button> 
+    </div>
+  </div>
+  <div class="card-body pt-0">
+    <div class="form form-label-right">
+      <div class="form-group row">
+        <div class="col-lg-7">
+          <!-- <input type="text" class="form-control"  placeholder="Search" value="" /> -->
+          <input type="text" class="form-control" (keyup.enter)="onSearch();" (keyup)="!searchText&&getDevicesList();paginationData.currentPage=0" [(ngModel)]="searchText" placeholder="Search" value="" />
+
+          <small class="form-text text-muted"><b>Search</b> by Assignee Name, Device Code, Assignee Phone</small>
+        </div>
+        <div class="col-lg-1">
+          <button type="button" class="btn btn-sm btn-success mr-2 mt-1"  (click)="onSearch();">Search</button>
+        </div>
+        <div class="col-lg-2">
+          <div class="row">
+            <div class="col-lg-12" [formGroup]="filterForm">
+              <select class="form-control" name="status" formControlName="status" placeholder="Filter by status">
+                <option value="(INUSE,INTRANSIT,AVAILABLE,INREPAIR,REJECTED)">All</option>
+                <option value="INUSE">INUSE</option>
+                <option value="INTRANSIT" >INTRANSIT</option>
+                <option value="AVAILABLE" >AVAILABLE</option>
+                <option value="INREPAIR" >INREPAIR</option>
+                <option value="REJECTED" >REJECTED</option>
+
+              </select><small class="form-text text-muted"><b>Filter</b> by status</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-2">
+          <div class="row">
+            <div class="col-lg-12"  [formGroup]="filterForm">
+              <select class="form-control" name="status" formControlName="healthStatus" placeholder="Filter by Health status">
+                <option value="(NORMAL,DEFECTIVE,DAMAGED)" >All</option>
+                <option value="NORMAL" >NORMAL</option>
+                <option value="DEFECTIVE" >DEFECTIVE</option>
+                <option value="DAMAGED" >DAMAGED</option>
+
+                
+              </select><small class="form-text text-muted"><b>Filter</b> by Health status</small>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="table-responsive angular-bootstrap-table">
+      <table id="excel-table" class="table table-head-custom table-vertical-center overflow-hidden">
+        <thead>
+          <th class="selection-cell-header" data-row-selection="true">
+            <label class="checkbox checkbox-single">
+              <input type="checkbox" [(ngModel)]="selectAll"
+                [ngModelOptions]="{standalone: true}" (change)="selectAllRecord($event)"/>
+              <span></span>
+            </label>
+        </th>
+          <th name="code" ngDefaultControl [(ngModel)]="tableHeader.id">
+            <i *ngIf="tableHeader.id === 1 && activeSort === 'id'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.id === 0 && activeSort === 'id'" class="fas fa-long-arrow-alt-down"></i>
+            Code
+          </th>
+          <th>Device Type</th>
+          <th>Device Serial No.</th>
+          <th>Location</th>
+          <th>Assignee Name</th>
+          <th>Health Status</th>
+          <th>Status</th>
+          <!-- <th>Created Date</th> -->
+
+          <!-- <th name="approvalStatus" ngDefaultControl [(ngModel)]="tableHeader.approvalStatus" >
+            <i *ngIf="tableHeader.approvalStatus === 1 && activeSort === 'approvalStatus'"
+              class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.approvalStatus === 0 && activeSort === 'approvalStatus'"
+              class="fas fa-long-arrow-alt-down"></i>
+              Status
+          </th> -->
+
+          <!-- <th name="createdDate" ngDefaultControl [(ngModel)]="tableHeader.createdDate" >
+            <i *ngIf="tableHeader.createdDate === 1 && activeSort === 'createdDate'"
+              class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.createdDate === 0 && activeSort === 'createdDate'"
+              class="fas fa-long-arrow-alt-down"></i>
+              Created Date
+          </th> -->
+          <th>Actions</th>
+
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of res">
+            <td class="selection-cell">
+              <label class="checkbox checkbox-single">
+                <input type="checkbox" [(ngModel)]="item.selected"
+                  [ngModelOptions]="{standalone: true}" (change)="onSelectBatches($event, item)"/>
+                <span></span>
+              </label>
+            </td>
+            <td><a matTooltip="Batch Details" class="btn btn-link-success font-weight-bold" (click)="routeToDetails(item.id)"> {{ item.code }}</a></td>
+            <!-- <td><a matTooltip="Weaver Details" class="btn btn-link-success font-weight-bold" > {{ item.deviceTypeCode }}</a></td> -->
+            <td><a matTooltip="Device Type " class="btn btn-link-success font-weight-bold" (click)="routeTodevicetype(item.deviceTypeId)">{{ item.deviceTypeCode }}</a></td>
+            <td>{{item.deviceSerialId}}</td>
+            <td>{{ item.location?.centerName || item.location?.name ||'-'}} / {{item?.locationType}}</td>
+            <td>{{ item.assigneeName  || '-'}}</td>
+            <!-- <td>{{ item.health || '-'}}</td> -->
+            <td>
+              <select class="form-control" name="status" [(ngModel)]="item.health"
+              [ngModelOptions]="{standalone: true}"  (change)="onHealthStatusChange($event,item)" placeholder="Filter by Health status">
+                <option value="NORMAL" >NORMAL</option>
+                <option value="DEFECTIVE" >DEFECTIVE</option>
+                <option value="DAMAGED" >DAMAGED</option>
+              </select>
+            </td>
+            <td>
+              <select class="form-control" name="status" [(ngModel)]="item.status"
+              [ngModelOptions]="{standalone: true}" (change)="onDeviceStatusChange($event,item)" placeholder="Filter by status" disabled>
+                <option value="INUSE">INUSE</option>
+                <option value="INTRANSIT" >INTRANSIT</option>
+                <option value="AVAILABLE" >AVAILABLE</option>
+                <option value="INREPAIR" >INREPAIR</option>
+                <option value="REJECTED" >REJECTED</option>
+
+              </select>
+            </td>
+            <!-- <td>{{ item.status}}</td>             -->
+            <!-- <td>{{item.createdDate | date:'dd/M/y'}}</td> -->
+            
+            <td>
+              <a matTooltip="Edit" class="btn btn-icon btn-sm" (click)="routeToEditPage(item.id)">
+                <i class="flaticon-edit-1 text-success"></i>
+              </a>
+              <!-- <a *ngIf="rolesService.checkAccess(user.role, {type: 'actions', component: 'CocoonListComponent', action: 'delete'}) && (!item.paymentDone) && item.soldSKUcount==0 && item.approvalStatus != 'Purchased'" matTooltip="Delete" class="btn btn-icon btn-sm" (click)="open(content,item)">
+                <i class="flaticon-delete text-danger"></i>
+              </a> -->
+              <!-- <a matTooltip="View Invoice" class="btn btn-icon btn-sm" *ngIf="item.invoiceURL && user.role !== 'READADMIN'" href="{{ item.invoiceURL }}" target="_blank">
+                <i class="flaticon-file-2 text-warning"></i>
+              </a> -->
+
+              <!-- <a matTooltip="Details" class="btn btn-icon btn-sm mr-1 mt-1" >
+                <i class="flaticon-list-3 text-dark"></i>
+              </a>   -->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row">
+      <div class="mr-2">
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item">
+              <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(0)" href="javascript:void(0);">
+                <span aria-hidden="true">&laquo;&laquo;</span>
+                <span class="sr-only">First</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(paginationData.currentPage - 1)" href="javascript:void(0);">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" *ngIf="paginationData?.currentPage !== 0 && paginationData?.currentPage !== 1" (click)="onPageChange(paginationData?.currentPage - 2)" href="javascript:void(0);">{{ paginationData?.currentPage -1 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" *ngIf="paginationData?.currentPage !== 0" (click)="onPageChange(paginationData?.currentPage - 1)" href="javascript:void(0);">{{ paginationData?.currentPage}}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link active" href="javascript:void(0);">{{ paginationData?.currentPage + 1 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1" (click)="onPageChange(paginationData?.currentPage + 1)" href="javascript:void(0);">{{ paginationData?.currentPage + 2 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1 && paginationData?.currentPage !== paginationData.pages.length - 2" (click)="onPageChange(paginationData?.currentPage + 2)" href="javascript:void(0);">{{ paginationData?.currentPage + 3 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}" (click)="onPageChange(paginationData.currentPage + 1)" href="javascript:void(0);">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}" (click)="onPageChange(paginationData.pages.length - 1)" href="javascript:void(0);">
+                <span aria-hidden="true">&raquo;&raquo;</span>
+                <span class="sr-only">Last</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div class="mr-2">
+        <select class="custom-select" style="height: calc(1.2em + 1rem + 2px); padding: 0.35rem 2rem 0.35rem 1rem;"
+          [(ngModel)]="paginationData.pageSize" (change)="onPageSizeChange()">
+          <option [ngValue]="10">10 per page</option>
+          <option [ngValue]="50">50 per page</option>
+          <option [ngValue]="100">100 per page</option>
+          <option [ngValue]="200">200 per page</option>
+          <option [ngValue]="500">500 per page</option>
+          <option [ngValue]="1000">1000 per page</option>
+          <option [ngValue]="2000">2000 per page</option>
+          <option [ngValue]="5000">5000 per page</option>
+        </select>
+      </div>
+      <div class="pt-2">
+        <small class="text-muted">(Total: {{paginationData.total}})</small>
+      </div> 
+    </div>
+
+  </div>
+</div>
+
+
+<div class="example-preview">
+  <div>
+    <ng-template #assigneeChange let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <h4 class="modal-title">Device</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+          <div class="col-lg-12 mt-2 selectWrapper">
+            <label class="form-label">Assignee To User<span class="text-danger">*</span></label>
+            <ng-select class=" select-custom"
+                (change)="assignedToChanged($event)">
+              <ng-option *ngFor="let item of usersList" [value]="item">{{ item.name }} - {{ item.phone }}</ng-option>
+            </ng-select>
+          </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">Cancel</button>
+            <button type="button" class="btn btn-primary" (click)="deviceBulkAssigneChange()">Yes</button>
+        </div>
+    </ng-template>
+  </div>
+</div>
+
+
+<div class="orders-transfer">
+  <div [formGroup]="locationChangeDeviceForm">
+    <ng-template #transferDevice let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <h4 class="modal-title">Device Transfer</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+          <div class="col-lg-12 mt-2">
+            <label>Select Location Type</label>
+            <ng-select class=" select-custom" (change)="changeLocationType($event)" formControlName="locationType"   placeholder="Please Select Location Type">
+              <ng-container>
+                <ng-option  value="HQ">HQ</ng-option>
+                <ng-option  value="RMCENTER">RMCENTER</ng-option>
+                <ng-option  value="WAREHOUSE">WAREHOUSE</ng-option>
+              </ng-container>
+            </ng-select>
+           
+        </div>
+
+        <div class="col-lg-12 mt-2">
+          <label>Select Location</label>
+          <ng-select class=" select-custom" (change)="changeLocation($event)" formControlName="location"   placeholder="Please Select Location Type"  *ngIf="changedLocationType == 'HQ'">
+            <ng-container>
+              <ng-option  value="Corporate Office">Corporate Office</ng-option>
+            </ng-container>
+          </ng-select>
+          <ng-select class=" select-custom" (change)="changeLocation($event)"    placeholder="Please Select Location Type"  *ngIf="changedLocationType == 'RMCENTER'">
+            <ng-container *ngFor="let center of centerList">
+              <ng-option  [value]="center">{{ center.centerName }}</ng-option>
+            </ng-container>
+          </ng-select>
+
+          <ng-select class=" select-custom" (change)="changeLocation($event)"    placeholder="Please Select Location Type"  *ngIf="changedLocationType == 'WAREHOUSE'">
+            <ng-container *ngFor="let center of warehouseList">
+              <ng-option  [value]="center">{{ center.name }}</ng-option>
+            </ng-container>
+          </ng-select>
+      </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">Cancel</button>
+            <button type="button" class="btn btn-primary" (click)="locationToChanged()">Yes</button>
+        </div>
+    </ng-template>
+  </div>
+</div>

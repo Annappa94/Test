@@ -1,0 +1,104 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+      <div class="card-title">
+        <h3 class="card-label">{{id ? "Update Device" : "New Device" }}</h3>
+        <!-- <h3 class="card-label">New Device</h3> -->
+
+      </div>
+      <div class="card-toolbar">
+        <!-- Nothing right now-->
+      </div>
+    </div>
+    <div class="card-body pt-0">
+      <div class="form form-label-right">
+        <div class="form-group row" style="padding-top: 0px;">
+          <div class="col-lg-12">
+            <div class="row" [formGroup]="createDeviceForm">
+
+
+              <div class="col-lg-3 mt-2">
+                <label>Device Serial ID <span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-lg" name="deviceId" placeholder="Device ID"
+                    autocomplete="off" formControlName="deviceSerialId" />
+            </div>
+              <div class="col-lg-3 mt-2">
+                <label>Select Device Type <span class="text-danger">*</span></label>
+                <ng-select formControlName="deviceType" class=" select-custom" (change)="getDeviuceTypeDataById($event)" placeholder="Please Select Device Type">
+                  <ng-container>
+                    <ng-option  *ngFor="let device of deviceTypeList" [value]="device.id">{{device.deviceName}} - {{ device.code}}</ng-option>
+                  </ng-container>
+                </ng-select>
+                <!-- <select class="form-control form-control-lg" formControlName="deviceTypeList" name="deviceTypeList"
+                placeholder="Select Device Type" >
+                <option value="INDIVIDUAL">INDIVIDUAL</option>
+                <option value="COMPANY">COMPANY</option>
+                </select> -->
+            </div>
+                <div class="col-lg-3 mt-2">
+                    <label>Device Sim Number</label><span class="text-danger" *ngIf="removeAddStar">*</span>
+                    <input type="number" class="form-control form-control-lg" name="deviceId" placeholder="Device ID"
+                        autocomplete="off" formControlName="simNumber" />
+                </div>
+                <!-- <div class="col-lg-3 mt-2">
+                  <label>Device Sim Number</label><span class="text-danger">*</span>
+                  <input type="number" class="form-control form-control-lg" name="deviceId" placeholder="Device ID"
+                      autocomplete="off" formControlName="simNumber" />
+              </div> -->
+
+                <div class="col-lg-3 mt-2">
+                  <label>Select Location Type</label>
+                  <ng-select class=" select-custom" (change)="changeLocationType($event)" formControlName="locationType"   placeholder="Please Select Location Type">
+                    <ng-container>
+                      <ng-option  value="HQ">HQ</ng-option>
+                      <ng-option  value="RMCENTER">RMCENTER</ng-option>
+                      <ng-option  value="WAREHOUSE">WAREHOUSE</ng-option>
+                    </ng-container>
+                  </ng-select>
+                 
+              </div>
+
+              <div class="col-lg-3 mt-2">
+                <label>Select Location</label>
+                <ng-select class=" select-custom"  (change)="changeLocation($event)" formControlName="location" placeholder="Please Select Location Type"  *ngIf="createDeviceForm.get('locationType').value == 'HQ'">
+                  <ng-container>
+                    <ng-option  value="Corporate Office">Corporate Office</ng-option>
+                  </ng-container>
+                </ng-select>
+                <ng-select class=" select-custom"  (change)="changeLocation($event)" formControlName="location" placeholder="Please Select Location Type"  *ngIf="createDeviceForm.get('locationType').value == 'RMCENTER'">
+                  <ng-container *ngFor="let center of centerList">
+                    <ng-option  [value]="center">{{ center.centerName }}</ng-option>
+                  </ng-container>
+                </ng-select>
+
+                <ng-select class=" select-custom"  (change)="changeLocation($event)" formControlName="location" placeholder="Please Select Location Type"  *ngIf="createDeviceForm.get('locationType').value == 'WAREHOUSE'">
+                  <ng-container *ngFor="let center of warehouseList">
+                    <ng-option  [value]="center">{{ center.name }}</ng-option>
+                  </ng-container>
+                </ng-select>
+            </div>
+
+                <div class="col-lg-3 mt-2">
+                  <label>Select Assigne</label>
+                  <ng-select class=" select-custom" formControlName="assigneeName" (change)="assignedToChanged($event)" placeholder="Please Select Assignee"> 
+                    <ng-option *ngFor="let item of usersList" [value]="item">{{ item.name }} - {{ item.phone }}</ng-option>
+                  </ng-select>
+              </div>
+
+                <div class="row col-lg-12 pb-10 mt-6" [formGroup]="createDeviceForm.get('deviceType')">
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-toolbar d-flex justify-content-end">
+          <button type="button" class="btn btn-sm btn-secondary mr-2" (click)="goBack()">Back</button>
+
+          <button type="submit" class="btn btn-sm btn-success" [disabled]="createDeviceForm.invalid" (click)="createDevice(createDeviceForm.value)">Save</button>
+
+          <!-- <button type="submit" class="btn btn-sm btn-success" (click)="saveDevice(createDeviceForm.value)" >Save</button> -->
+
+
+        </div>
+      </div>
+
+    </div>
+</div>

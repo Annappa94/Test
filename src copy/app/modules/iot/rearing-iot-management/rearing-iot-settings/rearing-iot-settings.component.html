@@ -1,0 +1,258 @@
+<div class="row">
+
+    <div class="col-lg-12 col-12">
+        <div class="card card-custom my-3">
+            <div class="card-header px-4">
+                <div class="card-title">
+                    <span class="card-icon">
+                        <i class="flaticon-statistics text-primary"></i>
+                    </span>
+                    <h3 class="card-label">
+                        Global Thresholds Settings
+                    </h3>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <div class="card card-custom" [formGroup]="settingsForm">
+                    <div class="row">
+                        <div class="col-lg-2 p-3 ml-2 mt-2">
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-md-12  mt-9">
+                                        <label >Day<span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control" formControlName="dayOfChawki">
+                                    </div>
+                                </div>    
+                                <div class="row">
+                                    <div class="col-md-12  mt-3">
+                                        <label >Instar stage</label>
+                                        <input type="text" placeholder="1st instar..." class="form-control" formControlName="instarStage">
+                                    </div>
+                                </div>    
+                            </div>                            
+                        </div>
+                        <div class="col-lg-2 p-3 ml-3 border border-darken-1 rounded">
+                            <label class="form-text text-success">
+                                Temperature
+                            </label>
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label >Min<span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control" formControlName="temp_min_threshold">
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label >Max<span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control" formControlName="temp_max_threshold">
+                                        </div>
+                                    </div>    
+                                </div>   
+                                <p class="mt-4 form-text text-muted" *ngIf="thresholdData.length&&thresholdData[0]?.temp_minBreachAdvisory"><b>Min Advisory: </b><small>{{thresholdData[0]['temp_minBreachAdvisory']}}</small></p>
+                                <p class="form-text text-muted" *ngIf="thresholdData.length&&thresholdData[0]?.temp_maxBreachAdvisory"><b>Max Advisory: </b><small>{{thresholdData[0]['temp_maxBreachAdvisory']}}</small></p>
+                         
+                        </div>
+                        <div class="col-lg-2 p-3 ml-3 border border-darken-1 rounded">
+                            <label class="form-text text-success">
+                                Humidity
+                            </label>
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label >Min<span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control" formControlName="humidity_min_threshold">
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label >Max<span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control" formControlName="humidity_max_threshold">
+                                        </div>
+                                    </div>    
+                                </div> 
+                                <p class="mt-4 form-text text-muted" *ngIf="thresholdData.length&&thresholdData[0]?.hd_minBreachAdvisory"><b>Min Advisory: </b><small>{{thresholdData[0]['hd_minBreachAdvisory']}}</small></p>
+                                <p class="form-text text-muted" *ngIf="thresholdData.length&&thresholdData[0]?.hd_maxBreachAdvisory"><b>Max Advisory: </b><small>{{thresholdData[0]['hd_maxBreachAdvisory']}}</small></p>                           
+                        </div>
+                        <div class="col-lg-2 p-3 ml-3 border border-darken-1 rounded">
+                            <label class="form-text text-success">
+                                Air Quality
+                            </label>
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <!-- <div class="col-md-6">
+                                            <label >Min<span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control" formControlName="aq_min_threshold">
+
+                                        </div> -->
+                                        
+                                        <div class="col-md-12">
+                                            <label>Select air quality<span class="text-danger">*</span></label>
+                                            <select class="form-control form-control-lg" formControlName="aq_max_threshold" name="Center"
+                                            placeholder="Select Center">
+                                            <option value="Good">Good</option>
+                                            <option value="Moderate">Moderate</option>
+                                            <option value="Unhealthy">Unhealthy</option>
+                                            <option value="Very Unhealthy">Very Unhealthy</option>
+                                            <option value="Hazardous">Hazardous</option>
+                                            </select>
+                                        </div>
+                                    </div>    
+                                </div>                            
+                        </div>
+                        <div class="col-lg-2 p-3 ml-3 border border-darken-1 rounded">
+                            <label class="form-text text-success">
+                                Light
+                            </label>
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label >Min<span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control" formControlName="light_min_threshold">
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label >Max<span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control" formControlName="light_max_threshold">
+                                        </div>
+                                    </div>    
+                                </div>                            
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center mt-lg-8 mt-3 px-5 mb-17">
+                            <button matTooltip="Save" class="btn btn-icon btn-success btn-xs mb-0 mt-10" [disabled]="settingsForm.invalid || user.role == 'READADMIN'" (click)="editValues(settingsForm.value)">
+                                <i class="fas fa-save"> </i>
+                            </button>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12 col-12">
+        <div class="card card-custom my-3">
+            <div class="card-header px-4">
+                <div class="card-title">
+                    <span class="card-icon">
+                        <i class="flaticon-statistics text-primary"></i>
+                    </span>
+                    <h3 class="card-label">
+                        Per Day Thresholds Settings
+                    </h3>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <span [formGroup]="perDaysettingsForm" >
+                <div class="card card-custom" formArrayName="setting" >
+                    <div class="row" *ngFor="let item of perDaysettingsForm.get('setting')['controls']; let i = index;" [formGroupName]="i">
+                        <div class="col-lg-2 p-3 ml-2 mt-2">
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <div class="col-md-12  mt-2">
+                                            <label >Day<span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control" formControlName="dayOfChawki">
+                                        </div>
+                                    </div>    
+                                    <div class="row">
+                                        <div class="col-md-12  mt-3">
+                                            <label >Instar Stage<span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" formControlName="instarStage">
+                                        </div>
+                                    </div>    
+                                </div>                            
+                        </div>
+                        <div class="col-lg-2 p-3 ml-2 mt-2 border border-darken-1 rounded">
+                            <label class="form-text text-success">
+                                Temperature
+                            </label>
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label >Min<span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control" formControlName="temp_min_threshold">
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label >Max<span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control" formControlName="temp_max_threshold">
+                                        </div>
+                                    </div>    
+                                </div>                            
+                        </div>
+                        <div class="col-lg-2 p-3 ml-2 mt-2 border border-darken-1 rounded">
+                            <label class="form-text text-success">
+                                Humidity
+                            </label>
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label >Min<span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control" formControlName="humidity_min_threshold">
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label >Max<span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control" formControlName="humidity_max_threshold">
+                                        </div>
+                                    </div>    
+                                </div>                            
+                        </div>
+                        <div class="col-lg-2 p-3 ml-2 mt-2 border border-darken-1 rounded">
+                            <label class="form-text text-success">
+                                Air Quality
+                            </label>
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <!-- <div class="col-md-6">
+                                            <label >Min<span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control" formControlName="aq_min_threshold">
+
+                                        </div> -->
+                                        <div class="col-md-12">
+                                            <label>Select air quality<span class="text-danger">*</span></label>
+                                            <select class="form-control form-control-lg" formControlName="aq_max_threshold" name="Center"
+                                            placeholder="Select Center">
+                                            <option value="Good">Good</option>
+                                            <option value="Moderate">Moderate</option>
+                                            <option value="Unhealthy">Unhealthy</option>
+                                            <option value="Very Unhealthy">Very Unhealthy</option>
+                                            <option value="Hazardous">Hazardous</option>
+                                            </select>
+                                        </div>
+                                    </div>    
+                                </div>                            
+                        </div>
+                        <div class="col-lg-2 p-3 ml-2 mt-2 border border-darken-1 rounded">
+                            <label class="form-text text-success">
+                                Light
+                            </label>
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label >Min<span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control" formControlName="light_min_threshold">
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label >Max<span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control" formControlName="light_max_threshold">
+                                        </div>
+                                    </div>    
+                                </div>                            
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center mt-lg-8 mt-3 px-5 mb-17">
+                            <button matTooltip="Save" class="btn btn-icon btn-success btn-xs mb-0 mt-10 mr-2" [disabled]="item.invalid || user.role == 'READADMIN'" (click)="editValues(item.value)">
+                                <i class="fas fa-save"> </i>
+                            </button>
+                            <button matTooltip="Add" type="button" (click)="addSetting(i)" class="btn btn-icon btn-success btn-xs mb-0 mt-10">
+                                <i class="flaticon-add-circular-button" ></i>
+                             </button>
+                              <button matTooltip="Remove" [disabled]="item.invalid || user.role == 'READADMIN'" type="button" (click)="deleteSingleSetting(i,item.value)" *ngIf="perDaysettingsForm.get('setting')['controls'].length>1" class="btn ml-2 btn-icon btn-danger btn-xs mb-0 mt-10">
+                              <i class="flaticon-cancel"></i>
+                             </button>
+                         </div>
+                    </div>
+                </div>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

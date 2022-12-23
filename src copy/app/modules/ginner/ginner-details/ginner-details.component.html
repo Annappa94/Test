@@ -1,0 +1,309 @@
+<div class="bg-white rounded mb-4 d-flex align-items-center py-2 sticky-header justify-content-between">
+    <ul id="breadcrumbs" *ngIf="ginnerDetails">
+        <li><span style="cursor: pointer;" class="hover-item" (click)="goBack()">All Ginners</span></li>
+        <li><span>{{ginnerDetails.code}}</span></li>
+    </ul>
+    <div>
+        <app-back-button></app-back-button>
+    </div>
+</div>
+<div class="row">
+
+    <div class="col-lg-4 col-md-4 col-sm-4">
+        <!--begin::Card-->
+        <div class="card card-custom gutter-b">
+            <!--begin::Body-->
+            <div class="card-body pt-4" *ngIf="ginnerDetails">
+                <!--begin::Toolbar-->
+                <div class="d-flex justify-content-between align-items-baseline mt-5 mb-2">
+                    <div class="font-size-h5 mb-3">
+                        Ginner Profile
+
+                    </div>
+                    <button class="btn btn-outline-success btn-sm " *ngIf="userType.role !== 'READADMIN'"
+                        (click)="editGinner()">
+                        Edit
+                    </button>
+
+                </div>
+                <!--end::Toolbar-->
+                <!--begin::User-->
+                <div class="d-flex align-items-center mb-7">
+                    <!--begin::Pic-->
+                    <div class="flex-shrink-0 mr-4 mt-lg-0 mt-3">
+                        <!-- <div class="symbol symbol-lg-75 symbol-square symbol-secondary">
+                            <span class="symbol-label font-size-h3 font-weight-boldest">{{ginnerDetails.initial}}</span>
+                        </div> -->
+                        <!-- <div class="image-input image-input-outline" id="kt_profile_avatar">
+                            <div *ngIf="!previewImage && ginnerDetails?.initial" class="symbol symbol-lg-75 symbol-square symbol-secondary">
+                                <span class="symbol-label font-size-h3 font-weight-boldest">{{ginnerDetails?.initial}}</span>
+                            </div>
+                            <img *ngIf="previewImage" class="image-input-wrapper" [src]="previewImage || './assets/media/users/blank.png'"/>
+                            <label *ngIf="userType.role !== 'READADMIN'" class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                              data-action="change"
+                              data-toggle="tooltip"
+                              title=""
+                              data-original-title="Change avatar"
+                            >
+                              <i class="fa fa-pen icon-sm text-muted"></i>
+                              <input
+                                type="file"
+                                name="profile_avatar"
+                                accept=".png, .jpg, .jpeg"
+                                (change)="onImageUpload($event);"
+                              />
+                              <input type="hidden" name="profile_avatar_remove" />
+                            </label>
+                            <span
+                              class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                              data-action="cancel"
+                              data-toggle="tooltip"
+                              title=""
+                              data-original-title="Cancel avatar"
+                            >
+                              <i class="ki ki-bold-close icon-xs text-muted"></i>
+                            </span>
+                            <span
+                              *ngIf="previewImage && userType.role !== 'READADMIN'"
+                              class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                              (click)="remove()"
+                              data-action="remove"
+                              data-toggle="tooltip"
+                              title=""
+                              data-original-title="Remove avatar"
+                            >
+                              <i class="ki ki-bold-close icon-xs text-muted"></i>
+                            </span>
+                          </div> -->
+                    </div>
+                    <!--end::Pic-->
+                    <!--begin::Title-->
+                    <div class="d-flex flex-column">
+                        <span class="text-success font-weight-bold font-size-h4 mb-0">
+                            {{ginnerDetails.name}}
+                        </span>
+                        <span class="text-muted font-weight-bold">{{ginnerDetails.code}}</span>
+                        <span class="text-muted font-weight-bold">{{ginnerDetails.appVersion}}</span>
+                        <span class="text-success font-weight-bold"
+                            *ngIf="noOfKYCDocs?.length>0 && ginnerDetails.customerTypeName">{{noOfKYCDocs.length}}
+                            document/s uploaded. Click <u class="text-warning cursor-pointer"
+                                (click)="navigateToKyc();">here</u> to update or add more.</span>
+                        <span class="text-danger font-weight-bold"
+                            *ngIf="noOfKYCDocs?.length==0 && ginnerDetails.customerTypeName">No KYC documents uploaded.
+                            Click <u class="text-warning cursor-pointer" (click)="navigateToKyc();">here</u> to
+                            upload.</span>
+                        <span class="text-danger font-weight-bold"
+                            *ngIf="(noOfKYCDocs?.length==0 || noOfKYCDocs?.length>0) && !ginnerDetails.customerTypeName">Please
+                            select a customer type to proceed with KYC.</span>
+                    </div>
+                    <!--end::Title-->
+                </div>
+                <!--end::User-->
+                <!--begin::Info-->
+                <div class="mb-7">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bolder mr-2">Phone:</span>
+                        <span class="text-dark-75 font-weight-bold">{{ginnerDetails.phone}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bolder mr-2">GST Number:</span>
+                        <span class="text-dark-75 font-weight-bold">{{ginnerDetails.gstNumber}}</span>
+                    </div>
+                    <!-- <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bolder mr-2">RM Center:</span>
+                        <span class="text-dark-75 font-weight-bold">{{centerName}}</span>
+                    </div> -->
+                </div>
+                <!--end::Info-->
+
+                <p class="mt-7 mb-2">
+                    <span class="text-success-75 font-weight-bolder pr-1">Address</span>
+                </p>
+                <p>
+                    <span class="text-muted font-weight-bolder mr-2">
+                        {{ginnerDetails?.address?.address}} {{ginnerDetails?.address?.village}}
+                        {{ginnerDetails?.address?.taluk}} {{ginnerDetails?.address?.city}}
+                    </span><br /><br />
+                    <span class="text-muted font-weight-bolder mr-2 pt-2">{{ginnerDetails?.address?.district ?
+                        ginnerDetails?.address?.district + ' District, ' : ''}} {{ginnerDetails?.address?.state}},
+                        {{ginnerDetails?.address?.pincode}}</span>
+                </p>
+
+                <p class="mt-7 mb-2">
+                    <span class="text-success-75 font-weight-bolder pr-1">Bank</span>
+                </p>
+                <div class="mb-7">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Beneficiary Name:</span>
+                        <span
+                            class="text-dark-75 font-weight-bold">{{ginnerDetails?.bankDetails[0]?.beneficiaryName}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Bank:</span>
+                        <span class="text-dark-75 font-weight-bold">{{ginnerDetails?.bankDetails[0]?.bankName}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bolder mr-2">IFSC Code:</span>
+                        <span class="text-dark-75 font-weight-bold">{{ginnerDetails?.bankDetails[0]?.ifscCode}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bolder mr-2">Account Number:</span>
+                        <span
+                            class="text-dark-75 font-weight-bold">{{ginnerDetails?.bankDetails[0]?.accountNumber}}</span>
+                    </div>
+                </div>
+
+            </div>
+            <!--end::Body-->
+        </div>
+        <!--end::Card-->
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-4">
+        <div class="card card-custom gutter-b">
+            <div class="card-body pt-4" *ngIf="ginnerDetails">
+                <div class="d-flex justify-content-between align-items-baseline mt-5 mb-2">
+                    <div class="font-size-h5 mb-3">
+                        Ginner Cotton Details
+
+                    </div>
+
+                </div>
+                <div class="mb-7">
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bolder mr-2">Cotton type:</span>
+                        <span class="text-dark-75 font-weight-bold">{{ginnerDetails?.cottonTypes?.toString()}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bolder mr-2"> Land Size (Acres):</span>
+                        <span class="text-dark-75 font-weight-bold">{{ginnerDetails.landSize}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bolder mr-2">Production Capacity (Bales/Day):</span>
+                        <span
+                            class="text-dark-75 font-weight-bold">{{ginnerDetails.productionCapacityBalesPerDay}}</span>
+                    </div>
+
+                    <!-- <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-weight-bolder mr-2" [ngClass]="!(ginnerDetails.customerTypeName)?'danger':'muted'">Customer Type:</span>
+                        <span class="text-dark-75 font-weight-bold">{{ginnerDetails.customerTypeName?ginnerDetails.customerTypeName:'-'}} <i class="ml-2 flaticon2-pen text-muted cursor-pointer" (click)="selectCustomerType();"></i></span>
+                    </div> -->
+
+
+                    <!-- <div class="d-flex justify-content-between align-items-center" *ngIf="selectCustomerBoolean">
+                        <span class="text-muted font-weight-bolder mr-2">Select Customer Type:</span>
+                        <span class="text-dark-75 font-weight-bold"> 
+                            <select class="form-control form-control-lg" [(ngModel)]="selectedCustomerType"  placeholder="Select Type">
+                                <option *ngFor="let item of kycCustomerTypes" [value]="item.id">{{item.name}}
+                                </option>
+                            </select>
+                        </span>
+                    </div>  -->
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Customer Type:</span>
+                        <span class="text-dark-75 font-weight-bold">{{ginnerDetails.customerTypeName}}</span>
+                    </div>
+
+                </div>
+
+            </div>
+            <!--end::Body-->
+        </div>
+        <!--end::Card-->
+    </div>
+
+    <!-- gst Data -->
+    <div class="col-lg-4 col-md-4 col-sm-4">
+        <div class="card card-custom gutter-b">
+            <div class="card-body pt-4">
+                <div class="d-flex justify-content-between align-items-baseline mt-5">
+                    <div class="font-size-h5 mb-3 ">GST Details</div>
+                    <button type="button" class="btn btn-sm btn-success" (click)="openGSTPpopup(addGST)">Add
+                        GST</button>
+                </div>
+                <div class="mb-7" *ngFor="let gstdata of gstDetails">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bolder mr-2">GST Number:</span>
+                        <span class="text-dark-75 font-weight-bold">
+                            {{gstdata.gstNumber}}
+                        </span> <br>
+                    </div>
+                    <div class="my-2">
+                        <span class="text-muted font-weight-bolder mr-2">Address:</span>
+
+                        <span class="text-dark-75 font-weight-bold">
+                            {{gstdata.principalPlaceOfBusiness}}
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <mat-tab-group>
+            <mat-tab label="Order's">
+                <app-cotton-order-list [ginnerId]="id"></app-cotton-order-list>
+            </mat-tab>
+            <mat-tab label="Bale Purchase">
+                <app-bales-purchase-list [ginnerId]="id"></app-bales-purchase-list>
+            </mat-tab>
+            <mat-tab label="Contracts">
+                <app-contract [ginnerId]="id" [addressPresent]="addressPresent"></app-contract>
+            </mat-tab>
+
+            <ng-container
+                *ngIf="userType.role==='ADMINISTRATOR' || userType.role==='MudraManager' || userType.role==='MudraAgent'">
+                <mat-tab label="KYC">
+                    <app-customer-details [customerType]="'ginner'" [apiServiceURL]="'cottonsvc'" [customerId]="id">
+                    </app-customer-details>
+                </mat-tab>
+            </ng-container>
+
+        </mat-tab-group>
+
+    </div>
+
+    <div class="example-preview">
+        <div>
+            <ng-template #contentDelete let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h3>Are you sure that you want to change the customer type?</h3>
+                </div>
+                <div class="modal-body">
+                    <p class="text-warning mt-2">Your existing KYC data will be lost after proceeding.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click');">No</button>
+                    <button type="button" class="btn btn-primary" (click)="ConfirmDeleteRecord()">Yes</button>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+    <div class="confirmation-preview">
+        <div>
+            <ng-template #addGST let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add GST</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-2" [formGroup]="gstform">
+                        <div class="col-lg-12 mt-2">
+                            <label class="form-label">GST Number<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg disabled" name="gstNumber"
+                                placeholder="GST Number" autocomplete="off" style="text-transform:uppercase"
+                                [(ngModel)]="gstNumber" formControlName="gstNumber" />
+                        </div>
+                        <!-- <button (click)="verifyGST()">Verify GST</button> -->
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" [disabled]="gstform.invalid" class="btn btn-sm btn-success"
+                        (click)="verifyGST()">Verify GST</button>
+                </div>
+            </ng-template>
+        </div>
+    </div>

@@ -1,0 +1,31 @@
+<app-paginated-table [rowDataList]="rowDataList" [tableHeaders]="tableHeaders" [totalRecords]="totalRecords"
+  (infoFromTable)="infoFromTable($event)" (onPageChange)="onPageChange($event)"
+  [titleOfTable]="'Ginning Mills'" [searchClass]="'col-lg-5'" [searchHint]="'by Name and Phone'">
+  
+  <div class="card-toolbar New">
+    <div>
+    <button type="button" class="btn btn-sm btn-success mr-2" routerLink="/resha-farms/ginners/crud">+ Add Ginning  Mill</button>
+    </div>
+   
+  </div>
+  <!-- <div class="col-lg-2 mt-2" [formGroup]="filterForm">
+    <ng-container>
+      <select class="form-control" name="status" formControlName="contractActive" placeholder="Filter by status">
+        <option value="(false)">All</option>
+        <option value="false">Active</option>
+        <option value="true">Inactive</option>
+      </select><small class="form-text text-muted"><b>Filter</b> by GSTIN STATUS</small>
+   </ng-container>
+   </div> -->
+   <div class="col-lg-2 mt-2" [formGroup]="filterForm">
+    <ng-container>
+      <select class="form-control" name="status" formControlName="contractActive"  placeholder="Filter by status">
+        <option value="ALL">All</option>
+        <option value="false">Regular</option>
+        <option value="true">Contract</option>
+      </select><small class="form-text text-muted"><b>Filter</b> by Relationship</small>
+   </ng-container>
+   </div>
+</app-paginated-table>
+
+

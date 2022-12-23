@@ -1,0 +1,225 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">Seeds Purchase</h3>
+        </div>
+        <div class="card-toolbar">
+        </div>
+    </div>
+    <div class="card-body pt-0">
+        <div class="form form-label-right">
+            <div class="form-group row">
+                <div class="col-lg-3">
+                    <input type="text" class="form-control" (keyup.enter)="onSearch();" (keyup)="!searchText&&getAllSeedLots();paginationData.currentPage=0" [(ngModel)]="searchText" placeholder="Search" value="" />
+                    <small class="form-text text-muted"><b>Search</b> By Seeds Lot id&Ginning Mill Name&phone.</small>
+                </div>
+                <div class="col-lg-1">
+                    <button type="button" class="btn btn-sm btn-success mr-2 mt-1 " (click)="onSearch()">Search</button>
+                </div>
+                <!-- <div class="row"> -->
+                <div class="col-lg-2" [formGroup]="filterForm">
+                    <select class="form-control" name="status" placeholder="Filter by status" formControlName="status">
+                        <option value="(AVAILABLE,SOLD)">All</option>
+                        <!-- <option value="NEW">New</option> -->
+                        <option value="AVAILABLE">Available</option>
+                        <option value="SOLD">Sold</option>
+                    </select><small class="form-text text-muted"><b>Filter</b> by Inventory Status</small>
+                </div>
+                <div class="col-lg-2" [formGroup]="filterForm">
+                    <select class="form-control" name="paymentStatus" placeholder="Filter by status" formControlName="paymentStatus">
+                        <option value="(PENDING,PAID)">All</option>
+                        <option value="PAID">Paid</option>
+                        <option value="PENDING">Pending Payment</option>
+                    </select><small class="form-text text-muted"><b>Filter</b> by Payment status</small>
+                </div>
+                <div class="col-lg-4 d-flex">
+                    <div class="col-lg-4">
+                        <button type="button" class="btn btn-sm w-100 btn-success" [routerLink]="'/resha-farms/Cotton-Seeds-purchase/crud'">+New Lot</button>
+                    </div>
+                    <!-- <div class="col-lg-4">
+                        <button type="button" class="btn btn-sm w-100 btn-success " >STOCK </button>
+                    </div> -->
+                    <div class="col-lg-4">
+                        <button type="button" class="btn btn-sm w-100 btn-success " (click)="createSO()" [disabled]="selectedSeedLot.length == 0"> CREATE SO</button>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive angular-bootstrap-table">
+                <table id="excel-table" class="table table-head-custom table-vertical-center overflow-hidden">
+                    <thead>
+                        <th></th>
+                        <th name="code">Seed LOT ID </th>
+                        <th name="name">GINNING MILL <br> NAME & PHONE </th>
+                        <th name="Warehouse">GRADE </th>
+                        <th name="weight"> AVAILABLE QUANTITY <br><small>total quantity</small></th>
+                        <th> INVENTORY <br> STATUS</th>
+                        <th> PAYMENT <br> STATUS</th>
+                        <th name="Create by"> CREATED <br> DATE & TIME</th>
+                        <th name="action">ACTION</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of salesOrderList">
+                            <td class="selection-cell" >
+                                <label class="checkbox checkbox-single" *ngIf="item?.status =='AVAILABLE'">
+                                <input type="checkbox" [(ngModel)]="item.selected" [ngModelOptions]="{standalone: true}"
+                                    (change)="onSelectBaleItem($event, item)" />
+                                <span></span>
+                                </label>
+                            </td>
+                            <td><a matTooltip="Lot Details" class="btn btn-link-success font-weight-bold">
+                                {{item.code}} </a>
+                            </td>
+                            <td>{{item?.ginnerObj?.name}}
+                            <br>{{item.ginnerObj?.phone}}
+                            </td>
+                            
+                            <td>{{item.rmGrade}}</td>
+                            <td>{{item.availableQuantity}}/{{item.lotWeight}}</td>
+                            <!-- <td>{{item.status}}</td> -->
+                            <td class="text-success" *ngIf="item?.status=='AVAILABLE'">{{item.status}}</td>
+                            <td class="text-danger" *ngIf="item?.status=='SOLD'">{{item.status}}</td>
+                            <td class="text-success" *ngIf="item?.paymentStatus=='PAID'">{{item.paymentStatus}}</td>
+                            <td class="text-danger" *ngIf="item?.paymentStatus=='PENDING'">{{item.paymentStatus}}</td>
+                            <td>{{item.createdDate | date: 'M/d/yy, h:mm a'}}</td>
+                            <td>
+                                <div ngbDropdown class="d-inline-block">
+                                    <button
+                                        class="btn btn-hover-text-primary p-0 ml-4 dropdown menu-item menu-item-submenu menu-item-rel"
+                                        id="approovalActionsdropdown" ngbDropdownToggle style="height:72px">
+                                        <i class="fas fa-ellipsis-v icon-lg text-muted"></i>
+                                        <div class="palns_activation_actions" style="max-width: 150px;top:-28px !important"
+                                            ngbDropdownMenu aria-labelledby="approovalActionsdropdown">
+                                            <div *ngIf="item?.paymentStatus=='PENDING'">
+                                                <a matTooltip>
+                                                    <p class="pl-4 cursor dropdow_list" (click)="recordPayment(payment,item)">Record Payment</p>
+                                                </a>
+                                            </div>
+                                            <a matTooltip *ngIf="item?.paymentStatus=='PENDING'">
+                                                <p class="pl-4 cursor dropdow_list" routerLink="/resha-farms/Cotton-Seeds-purchase/crud/{{item?.id}}">Edit</p>
+                                            </a>
+                                        </div>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <div class="ml-5 mr-2">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a class="page-link" (click)="onPageChange(paginationData.currentPage - 1)"
+                                    href="javascript:void(0);">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link"
+                                    *ngIf="paginationData?.currentPage !== 0 && paginationData?.currentPage !== 1"
+                                    (click)="onPageChange(paginationData?.currentPage - 2)" href="javascript:void(0);">{{
+                                    paginationData?.currentPage -1 }}</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" *ngIf="paginationData?.currentPage !== 0"
+                                    (click)="onPageChange(paginationData?.currentPage - 1)" href="javascript:void(0);">{{
+                                    paginationData?.currentPage}}</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link active" href="javascript:void(0);">{{ paginationData?.currentPage + 1
+                                    }}</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link"
+                                    *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1"
+                                    (click)="onPageChange(paginationData?.currentPage + 1)" href="javascript:void(0);">{{
+                                    paginationData?.currentPage + 2 }}</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link"
+                                    *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1 && paginationData?.currentPage !== paginationData.pages.length - 2"
+                                    (click)="onPageChange(paginationData?.currentPage + 2)" href="javascript:void(0);">{{
+                                    paginationData?.currentPage + 3 }}</a>
+                            </li>
+                            <li class="page-item">
+
+                                <a class="page-link" (click)="onPageChange(paginationData.currentPage + 1)"
+                                    href="javascript:void(0);">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </nav>
+                </div>
+                <div class="mr-2">
+                    <select class="custom-select"
+                        style="height: calc(1.2em + 1rem + 2px); padding: 0.35rem 2rem 0.35rem 1rem;"
+                        [(ngModel)]="paginationData.pageSize" (change)="onPageSizeChange()">
+                        <option [ngValue]="10">10 per page</option>
+                        <option [ngValue]="50">50 per page</option>
+                        <option [ngValue]="100">100 per page</option>
+                    </select>
+                </div>
+                <div class="pt-2">
+                    <small class="text-muted">(Total: {{totalElement}})</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="Enter-selling-price">
+        <div [formGroup]="paymentForm">
+            <ng-template #payment let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4>Payment Details</h4>
+                </div>
+                <div class="container">
+                </div>
+                <div class="modal-body form-height pt-0">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-lg-6 mt-8">
+                                <label class="form-label"><b>Code</b></label>
+                                <br>
+                                <p class="text-success">RMCSSO{{paymentForm.get('id').value}}</p>
+
+                            </div>
+                            <div class="col-lg-6 mt-7">
+                                <label class="form-label"><b>Total weight(Kg)</b></label>
+                                <br>
+                                {{paymentForm.get('totalWeight').value}}
+                            </div>
+                            <div class="col-lg-6 mt-7">
+                                <label class="form-label"><b>Total Receivable Amount(₹)</b></label>
+                                <br>
+                                {{paymentForm.get('totalReceivable').value}}
+                            </div>
+                            <div class="col-lg-6 mt-7">
+                                <label class="form-label"><b>Due Amount(₹)</b></label>
+                                <br>
+                                {{paymentForm.get('dueAmount').value}}
+                            </div>
+                            <div class="col-lg-6 mt-6">
+                                <label class="form-label positioned">Amount(₹) <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-lg " name="firstName" autocomplete="off"
+                                    formControlName="amount">
+                            </div>
+                            <div class="col-lg-6 mt-5">
+                                <label class="form-label positioned">Reference No <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-lg " name="firstName" autocomplete="off"
+                                    formControlName="referenceNumber">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+                    <button type="button" class="btn btn-sm btn-primary" [disabled]="paymentForm.invalid"
+                        (click)="createPayment()">Paynow</button>
+                </div>
+            </ng-template>
+        </div>
+    </div>

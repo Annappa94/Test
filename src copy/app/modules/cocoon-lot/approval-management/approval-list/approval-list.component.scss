@@ -1,0 +1,198 @@
+.status_done {
+    background-color: #E7FFCC;
+    &:hover{
+        background-color: #7ED321;
+    }
+}
+.status_rejected {
+    background-color: #FFBFBF;
+    &:hover{
+        background-color: #FF7F7F;
+    }
+}
+.status_pending{
+    background-color: #F5E9C8;
+    &:hover{
+        background-color: #F3AB3C;
+    }
+}
+
+.pending_status {
+    // background-color: #F3AB3C;
+    // border-radius: 5px;
+    padding: 3px 5px;
+    min-width: 60px;
+    text-align: center;
+    color: #F3AB3C;
+
+}
+
+.rejected_status {
+    // background-color: #F3AB3C;
+    // border-radius: 5px;
+    padding: 3px 5px;
+    min-width: 60px;
+    text-align: center;
+    color: #ff0000cc;
+
+}
+
+.done_status{
+    // background-color: #7ED321;
+    // border-radius: 5px;
+    padding: 3px 5px; 
+    min-width: 60px;
+    text-align: center;
+    color: #7ED321;
+}
+
+.filter_category{
+    margin: 0 4px;
+    border-radius: 10px;
+    border: 1px solid #e7e8f1;
+    height: 38px;
+    cursor: pointer;
+  }
+  
+  .filter_category label {
+    // float: left; line-height: 3.0em;
+    // width: 8.0em; height: 3.0em;
+    margin: 0;
+    height: 100%;
+    // padding: 4px;
+    min-width: 90px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  
+  .filter_category label span {
+    text-align: center;
+    padding: 3px 0;
+    display: block;
+  }
+  
+  .filter_category label input {
+    position: absolute;
+    display: none;
+    // color: #fff !important;
+  }
+  /* selects all of the text within the input element and changes the color of the text */
+  .filter_category label input + span{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #3F4254;
+    border-radius: 10px;
+    cursor: pointer;
+    &:hover {
+        color: #fff;
+    }
+  }
+  
+  
+  /* This will declare how a selected input will look giving generic properties */
+
+.status_done input:checked + span{
+    background-color: #7ED321;
+    color: #fff !important;
+}
+.status_rejected input:checked + span{
+    background-color: #FF7F7F;
+    color: #fff !important;
+}
+.status_pending input:checked + span{
+    background-color: #F3AB3C;
+    color: #fff !important;
+}
+
+.approval_flow_body_section {
+    display: flex;
+}
+.cocoon_image{
+    border: 3px solid #FFFFFF;
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.15));
+    border-radius: 10px;
+    height: 147px;
+    img {
+        width: 100%;
+        height: 100%;
+        border-radius: 10px;
+    }
+}
+.item_details {
+    margin-left: 15px;
+    label {
+        max-width: 151px;
+        width: 140px;
+    }
+    p,label{
+        color: #858E9F;
+        font-size: 14px;
+        line-height: 15px;
+        font-weight: 500;
+    }
+    input {
+        width: 89px;
+        border: 1px solid #858e9e;
+        border-radius: 4px;
+        outline: 0;
+    }
+    textarea {
+        border: 1px solid #858e9e;
+        border-radius: 4px;
+        padding: 4px;
+        outline: 0;
+    }
+}
+.modal-header {
+    background: #F4F6F9;
+}
+.reason_text_box {
+    width: 100%;
+    border: 1px solid #858e9e;
+    border-radius: 4px;
+    padding: 10px;
+    outline: 0;
+}
+
+.dropdown-menu.show {
+    top: -28px !important;
+}
+
+.flex-container {
+    display: flex;
+}
+
+.flex-container {
+    display: flex;
+}
+
+.flex-child {
+    flex: 1;
+    background-color: #F0F0F0;
+
+    height: 40px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight:500;
+    font-size: 15px;
+    color:black;
+}  
+
+.flex-child:first-child {
+    background-color: #00aae4;
+
+    height: 40px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight:500;
+    font-size: 15px;
+    color:white
+
+} 
+

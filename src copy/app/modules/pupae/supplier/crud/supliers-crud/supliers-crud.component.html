@@ -1,0 +1,202 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+      <div class="card-title">
+        <h3 class="card-label">{{id ? "Update Supplier Details" : "New Supplier Details" }} </h3>
+      </div>
+      <div class="card-toolbar">
+        <!-- Nothing right now-->
+      </div>
+    </div>
+    <div class="card-body pt-0">
+  
+      <!-- Farmer FORM -->
+      <div class="form form-label-right">
+        <div class="form-group row" style="padding-top: 0px;">
+          <div class="col-lg-12">
+            <div class="row" [formGroup]="farmerCreateForm">
+              <div class="col-lg-3 mt-2">
+                <label class="form-label">Name<span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-lg" name="name" placeholder="Name"
+                  autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('name')"
+                  [class.is-valid]="isControlValidForReeler('name')" formControlName="name" />
+                <div class="valid-feedback" *ngIf="isControlValidForReeler('name')">Name was entered correct</div>
+                <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'name')">Name is required</div>
+                <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('pattern', 'name')">Name should not contain digits</div>
+
+              </div>
+  
+              <div class="col-lg-3 mt-2">
+                <label class="form-label">Mobile Number<span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-lg" name="phone"
+                  placeholder="Mobile Number" autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('phone')"
+                  [class.is-valid]="isControlValidForReeler('phone')" formControlName="phone" />
+                <div class="valid-feedback" *ngIf="isControlValidForReeler('phone')">Mobile number was entered correct
+                </div>
+                <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'phone')">Mobile number is
+                  required</div>
+              </div>
+  
+              <div class="col-lg-3 mt-2">
+                <label>Select Center<span class="text-danger">*</span></label>
+                <select class="form-control form-control-lg" formControlName="center" name="Center"
+                  placeholder="Select Center">
+                  <option *ngFor="let item of centerList" [value]="item.id">{{item.centerName}}</option>
+                </select>
+              </div>
+  
+             
+              <div class="col-lg-3 mt-2">
+                <label>Select Customer Type </label>
+                <select class="form-control form-control-lg" formControlName="customerType" name="customerType"
+                  placeholder="Select Customer Type">
+                  <option *ngFor="let item of kycCustomerTypes" [value]="item.id">{{item.name}}</option>
+                </select>
+              </div>
+  
+              <!-- <div class="col-lg-12 mt-6">
+                <ngb-accordion #acc11="ngbAccordion">
+                  <ngb-panel id="toggle-bank">
+                    <ng-template ngbPanelTitle>
+                      <span class="ard-header--title text-success">Bank Details</span>
+                    </ng-template>
+                    <ng-template ngbPanelContent>
+                      <div formArrayName="bankDetails"> -->
+  
+                        <!-- <div class="d-flex justify-content-end align-items-end w-100 pb-4">
+                          <button type="button" class="btn btn-sm btn-success" (click)="addBankAccount()">
+                           + New Account
+                          </button>
+                        </div> -->
+                        <!-- <p class="text-warning font-weight-bolder">
+                          Please note that the IFSC code for ALLAHABAD BANK (ALLA), SYNDICATE BANK (SYNB),
+                          DENA BANK (BKDN) and VIJAYA BANK (VIJB) has been disabled by RBI. Transactions initiated to
+                          these IFSCs will be rejected.
+                        </p>
+                        <div class="row pb-10"
+                          *ngFor="let bank of farmerCreateForm.get('bankDetails')['controls']; let i=index;"
+                          [formGroupName]="i">
+  
+                          <div class="col-lg-3 mt-2">
+                            <label class="form-label">Account Holder’s Name</label>
+                            <input type="text" class="form-control form-control-lg"
+                              placeholder="Account Holder’s Name" autocomplete="off" formControlName="beneficiaryName" />
+                          </div>
+  
+                          <div class="col-lg-3 mt-2">
+                            <label class="form-label">Bank Name</label>
+                            <input type="text" class="form-control form-control-lg"
+                              placeholder="Bank Name" autocomplete="off" formControlName="bankName" />
+                          </div>
+  
+                          <div class="col-lg-3 mt-2">
+                            <label class="form-label">Bank Account Number</label>
+                            <input type="text" class="form-control form-control-lg"
+                              placeholder="Bank Account Number" autocomplete="off" formControlName="accountNumber">
+                          </div>
+                          <div class="col-lg-2 mt-2">
+                            <label class="form-label">IFSC Code</label>
+                            <input type="text" class="form-control form-control-lg"
+                              placeholder="IFSC Code" autocomplete="off" formControlName="ifscCode">
+                          </div> -->
+                          <!-- <div class="d-flex justify-content-center align-items-center mt-lg-8 mt-3 px-5">
+                            <button type="button" class="btn btn-icon btn-danger btn-xs" (click)="open(content, i)">
+                              <i class="flaticon-delete"></i>
+                          </button>
+                          </div> -->
+                          
+                        <!-- </div>
+                      </div>
+                    </ng-template>
+                  </ngb-panel>
+                </ngb-accordion>
+              </div> -->
+
+              <div class="col-lg-12 mt-6">
+                <bank-form [layouttype]="'page'"  #bank></bank-form>
+              </div>
+              <div class="col-lg-12 mt-6">
+                <address-pincode-form  [layouttype]="'page'" #address></address-pincode-form>
+              </div>
+  
+  
+              <!-- <div class="col-lg-12 mt-6">
+                <ngb-accordion #acc11="ngbAccordion">
+                  <ngb-panel id="toggle-address">
+                    <ng-template ngbPanelTitle>
+                      <span class="ard-header--title text-success">Address Details</span>
+                    </ng-template>
+                    <ng-template ngbPanelContent>
+                      <div class="row">
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">Address</label>
+                          <input type="text" class="form-control form-control-lg" name="Address"
+                            placeholder="Address" autocomplete="off" formControlName="address" />
+                        </div>
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">Village</label>
+                          <input type="text" class="form-control form-control-lg" name="Village"
+                            placeholder="Village" autocomplete="off" formControlName="village" />
+                        </div>
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">City</label>
+                          <input type="text" class="form-control form-control-lg" name="city"
+                            placeholder="City" autocomplete="off" formControlName="city" />
+                        </div>
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">District</label>
+                          <input type="text" class="form-control form-control-lg" name="District"
+                            placeholder="District" autocomplete="off" formControlName="district" />
+                        </div>
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">Taluk</label>
+                          <input type="text" class="form-control form-control-lg" name="Taluk"
+                            placeholder="Taluk" autocomplete="off" formControlName="taluk" />
+                        </div>
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">Region</label>
+                          <input type="text" class="form-control form-control-lg" name="region"
+                            placeholder="Region" autocomplete="off" formControlName="region" />
+                        </div>
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">State</label>
+                          <input type="text" class="form-control form-control-lg" name="State"
+                            placeholder="State" autocomplete="off" formControlName="state" />
+                        </div>
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">PIN Code</label>
+                          <input type="text" class="form-control form-control-lg" name="PIN Code"
+                            placeholder="PIN Code" autocomplete="off" formControlName="pincode" />
+                        </div>
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">Latitude</label>
+                          <input type="text" readonly class="form-control form-control-lg" name="PIN Code"
+                            placeholder="PIN Code" autocomplete="off" formControlName="latitude" />
+                        </div>
+                        <div class="col-lg-3 mt-2">
+                          <label class="form-label">Longitude</label>
+                          <input type="text" readonly class="form-control form-control-lg" name="PIN Code"
+                            placeholder="PIN Code" autocomplete="off" formControlName="longitude" />
+                        </div>
+                        
+  
+                      </div>
+                    </ng-template>
+                  </ngb-panel>
+                </ngb-accordion>
+              </div> -->
+  
+            </div>
+          </div>
+        </div>
+        <div class="card-toolbar">
+          <button type="button" class="btn btn-sm btn-secondary mr-2" (click)="goBack();">Back</button>
+  
+          <button type="submit" class="btn btn-sm btn-success" [disabled]="farmerCreateForm.invalid"
+            (click)="saveFarmerDetails(farmerCreateForm.value)">Save</button>
+  
+        </div>
+      </div>
+  
+    </div>
+  </div>
+  

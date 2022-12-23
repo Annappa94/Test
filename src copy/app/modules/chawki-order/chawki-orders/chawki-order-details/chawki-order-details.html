@@ -1,0 +1,346 @@
+<div class="bg-white rounded mb-4 d-flex align-items-center py-2 sticky-header justify-content-between">
+    <ul id="breadcrumbs" *ngIf="orderDetails">
+        <li><span style="cursor: pointer;" class="hover-item"
+            (click)="goBack()">All Chawki Orders</span></li>
+        <li><span>{{orderDetails?.code}}</span></li>
+    </ul>
+    <div>
+        <app-back-button></app-back-button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-4 mt-4">
+
+        <!--begin::Card-->
+        <div class="card card-custom gutter-b" *ngIf="orderDetails">
+            <!--begin::Body-->
+            <div class="card-body pt-4">
+                <!--begin::Toolbar-->
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <div class="font-size-h5 mb-3 font-weight-bolder text-success">
+                        {{orderDetails?.code}}
+                    </div>
+
+                    <div class="float-right">
+                        <a *ngIf="orderDetails?.invoiceURL !== '' && orderDetails?.invoiceURL !== null" href="{{ orderDetails?.invoiceURL }}" target="_blank">
+                            <span class="btn btn-icon btn-outline-success btn-sm mr-2">
+                                <i class="flaticon-download"></i>
+                            </span>
+                        </a>
+
+                        <!-- <span class="btn btn-icon btn-outline-danger btn-sm" *ngIf="orderDetails?.paymentStatus == 'Pending' && rolesService.checkAccess(user.role, {type: 'actions', component: 'CocoonOrderDetailsComponent', action: 'delete'})"
+                            (click)="deleteConfirmatin(deleteLot)">
+                            <i class="flaticon-delete"></i>
+                        </span> -->
+                    </div>
+
+                </div>
+                <!--end::Toolbar-->
+
+                <p class="mb-4">
+                    <span class="text-success font-weight-bold pr-1">Details</span>
+                </p>
+                <div class="mb-7">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Total DFL's:</span>
+                        <span class="text-dark-75 font-weight-bold">{{orderDetails?.totalDFLs.toLocaleString('en-IN')}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Price/DFL:</span>
+                        <span class="text-dark-75 font-weight-bold">Rs. {{orderDetails?.pricePerDFL.toLocaleString('en-IN')}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="orderDetails?.grossAmount">
+                        <span class="text-muted font-weight-bold mr-2">Gross Amount:</span>
+                        <span class="text-dark-75 font-weight-bold">Rs. {{orderDetails?.grossAmount.toLocaleString('en-IN')}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="orderDetails?.totalDiscount">
+                        <span class="text-muted font-weight-bold mr-2">Discount:</span>
+                        <span class="text-dark-75 font-weight-bold">Rs. {{orderDetails?.totalDiscount.toLocaleString('en-IN')}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="orderDetails?.couponCode">
+                        <span class="text-muted font-weight-bold mr-2">Coupon Code:</span>
+                        <span class="text-dark-75 font-weight-bold">{{orderDetails?.couponCode}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="orderDetails?.couponAmount">
+                        <span class="text-muted font-weight-bold mr-2">Coupon Amount:</span>
+                        <span class="text-dark-75 font-weight-bold">Rs. {{orderDetails?.couponAmount.toLocaleString('en-IN')}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="orderDetails?.totalAmount">
+                        <span class="text-muted font-weight-bold mr-2">Net Amount:</span>
+                        <span class="text-dark-75 font-weight-bold">Rs. {{orderDetails?.totalAmount.toLocaleString('en-IN')}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Credit Days:</span> 
+                        <span class="text-dark-75 font-weight-bold">{{orderDetails?.creditDays}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="orderDetails?.chawkiType">
+                        <span class="text-muted font-weight-bold mr-2">Type:</span>
+                        <span class="text-dark-75 font-weight-bold">{{orderDetails?.chawkiType}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Order Status:</span>
+                        <span class="text-dark-75 font-weight-bold">{{orderDetails?.inputOrderStatus}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Farmer Payment Status:</span>
+                        <span class="label label-primary label-pill label-inline" [ngClass]="{'label-primary' : orderDetails.paymentStatus == 'Paid',
+                                   'label-warning' : orderDetails.paymentStatus !== 'Paid'
+                                    }">
+                            {{ orderDetails.paymentStatus}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="orderDetails.paymentStatus == 'Paid'">
+                        <span class="text-muted font-weight-bold mr-2">Farmer payment Reference Number:</span>
+                        <span class="label label-warning label-pill label-inline">{{orderDetails?.payment?.referenceNumber}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2"
+                        *ngIf="orderDetails?.paymentStatus.toUpperCase() === 'PENDING' && orderDetails?.inputOrderStatus.toUpperCase() != 'CANCELLED'">
+                        <span class="text-muted font-weight-bold mr-2">Farmer payment:</span>
+                        <span class="text-dark-75 font-weight-bold">
+                            <a matTooltip="Add Payment" class="mr-1 mt-1 cursor-pointer"
+                                *ngIf="rolesService.checkAccess(user.role, {type: 'actions', component: 'CocoonOrdersComponent', action: 'payment'})"
+                                (click)="markSoldConfirmation(markPaid)">
+                                <i class="fas fa-money-check-alt text-success"></i>
+                            </a>
+                        </span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="orderDetails?.chawkiPayoutStatus">
+                        <span class="text-muted font-weight-bold mr-2">Chawki Payment Status:</span>
+                        <span class="label label-primary label-pill label-inline" [ngClass]="{'label-primary' : orderDetails.chawkiPayoutStatus == 'Paid',
+                                   'label-warning' : orderDetails.chawkiPayoutStatus !== 'Paid'
+                                    }">
+                            {{ orderDetails.chawkiPayoutStatus}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="orderDetails.chawkiPayoutStatus == 'Paid'">
+                        <span class="text-muted font-weight-bold mr-2">Amount Paid:</span>
+                        <span class="text-dark-75 font-weight-bold">Rs. {{orderDetails?.chawkiPayout?.amount}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2"
+                        *ngIf="orderDetails?.chawkiPayoutStatus?.toUpperCase() === 'PENDING' && orderDetails?.inputOrderStatus.toUpperCase() != 'CANCELLED'">
+                        <span class="text-muted font-weight-bold mr-2">Chawki Payment:</span>
+                        <span class="text-dark-75 font-weight-bold">
+                            <a matTooltip="Add CRC Payout" class="mr-1 mt-1 cursor-pointer"
+                                *ngIf="rolesService.checkAccess(user.role, {type: 'actions', component: 'CocoonOrdersComponent', action: 'payment'})"
+                                (click)="chawkiPayoutConfirmation(chawkiPayout)">
+                                <i class="fas fa-credit-card text-success"></i>
+                            </a>
+                        </span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="orderDetails?.crcBillUrl">
+                        <span class="text-muted font-weight-bold mr-2">CRC Bill:</span>
+                        <span>
+                            <a href="{{orderDetails?.crcBillUrl}}" target="_blank">
+                                Click to View
+                            </a>
+                        </span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="orderDetails?.chawkiPayoutStatus == 'Paid'">
+                        <span class="text-muted font-weight-bold mr-2">Chawki payout Reference Number:</span>
+                        <span class="label label-warning label-pill label-inline">{{orderDetails?.chawkiPayout?.referenceNumber}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Created Date:</span>
+                        <span class="text-dark-75 font-weight-bold">{{orderDetails?.createdDate}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Updated Date:</span>
+                        <span class="text-dark-75 font-weight-bold">{{orderDetails?.lastModifiedDate}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Delivery Date:</span>
+                        <span class="text-dark-75 font-weight-bold">{{orderDetails?.deliveryDate}}</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+    <div class="col-lg-4 mt-4">
+
+        <div class="card card-custom gutter-b" *ngIf="orderDetails">
+            <div class="card-body pt-4">
+
+                <p class="mt-4 mb-4">
+                    <span class="text-success font-weight-bold pr-1">Chawki</span> 
+                </p>
+                <div class="mb-7" *ngIf="chawkiDetail">
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="chawkiDetail?.chawkiName">
+                        <span class="text-muted font-weight-bold mr-2">Name:</span>
+                        <span class="text-dark-75 font-weight-bold">{{chawkiDetail?.chawkiName}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="chawkiDetail?.chawkiPhone">
+                        <span class="text-muted font-weight-bold mr-2">Phone:</span>
+                        <span class="text-success font-weight-bold cursor-pointer" (click)="goToChawkiDetails()">{{chawkiDetail?.chawkiPhone}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="chawkiDetail?.chawkiBatchId">
+                        <span class="text-muted font-weight-bold mr-2">Batch Id:</span>
+                        <span class="text-dark-75 font-weight-bold">{{chawkiDetail?.chawkiBatchId}}</span>
+                    </div>
+                </div>
+
+            </div>
+            <!--end::Body-->
+        </div>
+
+        <!--CRC IMAGE START-->
+        
+        <div class="card card-custom gutter-b">
+            <div class="card-body pt-10">
+                <div class="justify-content-between align-items-center" >
+                    <span class="text-muted font-weight-bold mr-2">CRC BILL Image:</span>
+                    <img style="cursor: pointer;" [src]="orderDetails?.crcBillUrl" width="400" height="300" (click)="openWindow()"/>
+                </div> 
+            </div>
+        </div>
+        <!--crc image end-->
+    </div>
+    <div class="col-lg-4 mt-4">
+
+        <div class="card card-custom gutter-b" *ngIf="orderDetails">
+            <div class="card-body pt-4">
+
+                <p class="mt-4">
+                    <span class="text-success font-weight-bold pr-1">Farmer</span>
+                </p>
+                <div class="mb-7" *ngIf="chawkiDetail">
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="chawkiDetail?.farmerName">
+                        <span class="text-muted font-weight-bold mr-2">Name:</span>
+                        <span class="text-dark-75 font-weight-bold">{{chawkiDetail?.farmerName}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="chawkiDetail?.farmerPhone">
+                        <span class="text-muted font-weight-bold mr-2">Phone:</span>
+                        <span class="text-success font-weight-bold cursor-pointer" (click)="farmerDetail()">{{chawkiDetail?.farmerPhone}}</span>
+                    </div>
+                </div>
+
+                <ng-container *ngIf="(orderDetails?.shippingAddress) && (orderDetails?.shippingAddress?.address || 
+                orderDetails?.shippingAddress?.village || orderDetails?.shippingAddress?.taluk ||
+                orderDetails?.shippingAddress?.city || orderDetails?.shippingAddress?.district ||
+                orderDetails?.shippingAddress?.state || orderDetails?.shippingAddress?.pincode);">
+
+                
+                <p class="mt-7 mb-2" *ngIf="orderDetails?.shippingAddress">
+                    <span class="text-success-75 font-weight-bolder pr-1">Address</span>
+                </p>
+                <p *ngIf="orderDetails?.shippingAddress">
+                    <span class="text-muted font-weight-bolder mr-2">
+                        {{orderDetails?.shippingAddress?.address}} {{orderDetails?.shippingAddress?.village}}
+                        {{orderDetails?.shippingAddress?.taluk}} {{orderDetails?.shippingAddress?.city}}
+                    </span><br /><br />
+                    <span class="text-muted font-weight-bolder mr-2 pt-2">{{orderDetails?.shippingAddress?.district ?
+                        orderDetails?.shippingAddress?.district + ' District, ' : ''}} {{orderDetails?.shippingAddress?.state}},
+                        {{orderDetails?.shippingAddress?.pincode}}</span>
+                </p>
+            </ng-container>
+
+            <!-- <ng-template #selfPickup>
+                <div class="d-flex justify-content-between align-items-cente my-2">
+                    <span class="text-muted font-weight-bold mr-2">Self Pickup:</span>
+                    <span class="text-dark-75 font-weight-bold">Yes</span>
+                </div>
+            </ng-template> -->
+
+            </div>
+            <!--end::Body-->
+        </div>
+        <!--end::Card-->
+
+
+    </div>
+
+</div>
+
+<div class="details-confirmation-preview">
+    <div>
+      <ng-template #markPaid let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            Mark Paid!
+          </h4>
+        </div>
+        
+        <div class="modal-body">
+          <p>You are marking payment for this Chawki Order.</p>
+          <p>You Recieved Rs <strong>Rs. <span class="text-danger h2">{{highlightText[0]}}</span><span *ngIf="highlightText[1]">.{{highlightText[1]}}</span></strong> for chawki name <strong>{{chawkiDetail?.chawkiName}} </strong>of Total DFL <strong>{{orderDetails?.totalDFLs.toLocaleString('en-IN')}}</strong> at price per/DFL <strong>Rs. {{orderDetails?.pricePerDFL.toLocaleString('en-IN')}}</strong> from farmer:</p>
+          <p *ngIf="chawkiDetail.farmerName">Name: <strong>{{chawkiDetail?.farmerName}}</strong></p>
+          <p *ngIf="chawkiDetail.farmerPhone">Phone: <strong>{{chawkiDetail?.farmerPhone}}</strong></p>
+
+          <div class="col-12 my-2">
+            <label class="form-label">Reference Number<span class="text-danger">*</span></label>
+            <input type="text" class="form-control form-control-lg" name="referenceNumber"
+              placeholder="Reference Number" autocomplete="off" [(ngModel)]="orderDetails.referenceNumber" />
+          </div> 
+        </div>
+  
+        <div class="modal-footer">
+          <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+          <button type="button" class="btn btn-sm btn-success" [disabled]="!orderDetails.referenceNumber" (click)="markAsSold()">Confirm</button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+
+  <div class="details-confirmation-preview">
+    <div>
+      <ng-template #chawkiPayout let-c="close" let-d="dismiss" [formGroup]="paymentForm">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            Mark Paid!
+          </h4>
+        </div>
+        
+        <div class="modal-body pb-0" >
+          <p>You are marking payment sent to Chawki!</p>
+          <p>Reshamandi paid Rs. <strong><span class="text-danger h2">{{highlightText[0]}}</span><span *ngIf="highlightText[1]">.{{highlightText[1]}}</span></strong> for order id <strong>{{orderDetails?.code}} </strong>of <strong>{{orderDetails?.totalDFLs}}</strong> DFL's.</p>
+        </div>
+  
+        <div class="row p-4">
+            <div class="col-6">
+              <label class="form-label">Amount<span class="text-danger">*</span></label>
+              <input type="text" class="form-control form-control-lg" name="amount"
+                placeholder="Reference Number" autocomplete="off" [class.is-invalid]="isControlInvalidForChawki('amount')"
+                [class.is-valid]="isControlValidForChawki('amount')" formControlName="amount" />
+              <div class="invalid-feedback" *ngIf="controlHasErrorForChawki('required', 'amount')">
+                  Amount is required
+              </div> 
+              
+            <p class="text-danger" *ngIf="paymentForm.get('amount').value > orderDetails.totalAmount">
+                Amount can not exceed {{orderDetails.totalAmount}}
+            </p>
+          </div> 
+    
+            <div class="col-6">
+                <label class="form-label">Reference Number<span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-lg" name="referenceNumber"
+                  placeholder="Reference Number" autocomplete="off" [class.is-invalid]="isControlInvalidForChawki('referenceNumber')"
+                  [class.is-valid]="isControlValidForChawki('referenceNumber')" formControlName="referenceNumber" />
+                <div class="invalid-feedback" *ngIf="controlHasErrorForChawki('required', 'referenceNumber')">
+                    Reference Number is required
+                </div> 
+            </div> 
+        </div>
+  
+        <div class="modal-footer">
+          <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click'); paymentForm.reset();">Cancel</button>
+          <button type="button" class="btn btn-sm btn-success" [disabled]="paymentForm.invalid || (paymentForm.get('amount').value > orderDetails.totalAmount)" (click)="makeChawkiPayout()">Confirm</button>
+        </div>
+      </ng-template>
+    </div>
+  </div>

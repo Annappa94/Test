@@ -1,0 +1,17 @@
+<app-paginated-table [rowDataList]="rowDataList" [tableHeaders]="tableHeaders" [totalRecords]="totalRecords"
+  (infoFromTable)="infoFromTable($event)" (onPageChange)="onPageChange($event)" (listenAndRefreshPayment)="getRetailerDeposits()"
+  [titleOfTable]="'Deposit History'" [searchClass]="'col-lg-7'" [searchHint]="'Search'">
+  <div class="col-lg-4">
+    <ng-container [formGroup]="filterForm">
+   
+     <div class="row">
+       <div class="col-lg-6 mt-2">
+         <select class="form-control" name="settlementStatus" formControlName="settlementStatus" >
+           <option value="">All</option>
+           <option [value]="status" *ngFor="let status of settlementStatusList">{{status}}</option>
+         </select><small class="form-text text-muted"><b>Filter</b> by settlement status</small>
+       </div>
+     </div>
+   </ng-container>
+   </div>
+</app-paginated-table>

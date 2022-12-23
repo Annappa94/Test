@@ -1,0 +1,24 @@
+
+<div class="ml-6 mr-6 mt-6">
+    <label class="form-label">Customer Type<span class="text-danger">*</span></label>
+    <select class="form-control form-control-lg  mb-4" (change)=slectCustomerType($event)>
+      <!-- <option value="Farmer">Farmer</option>
+      <option value="Retailer">Retailer</option>
+      <option value="Reeler">Reeler</option>
+      <option value="Weaver">Weaver</option>
+      <option value="Chawki">Chawki</option> -->
+      <option [value]="item" *ngFor="let item of customerTypeList" [selected]="item==customerType">{{item}}</option>
+
+      <option  disabled selected>Select</option>
+      <!-- <option value="Rejected">Rejected</option> -->
+      <!-- <option value="Completed">Completed</option> -->
+    </select>
+</div>
+<!-- <div class="modal-footer" > -->
+    <button type="button" *ngIf="!customerType" class="btn btn-sm btn-secondary float-right mb-4 mr-3" (click)="c()">Cancel</button>
+<!-- </div> -->
+<app-farmer *ngIf="customerType=='Farmer'" (apiRrespone)="handelResponseFromFarmer($event)"></app-farmer>
+<app-retailer *ngIf="customerType=='Retailer'" (apiRrespone)="handelResponseFromFarmer($event)"></app-retailer>
+<app-reeler *ngIf="customerType=='Reeler'" (apiRrespone)="handelResponseFromFarmer($event)"></app-reeler>
+<app-weaver *ngIf="customerType=='Weaver'" (apiRrespone)="handelResponseFromFarmer($event)"></app-weaver>
+<app-chawki *ngIf="customerType=='Chawki'" (apiRrespone)="handelResponseFromFarmer($event)"></app-chawki>

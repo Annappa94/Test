@@ -1,0 +1,230 @@
+<div class="card card-custom gutter-b" [formGroup]="createSeedsForm">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label"> Cotton Seeds Sales Order</h3>
+        </div>
+        <div class="card-toolbar">
+        </div>
+    </div>
+    <div class="card-body pt-0">
+        <div class="form form-label-right">
+            <div class="form-group row" style="padding-top: 0px;">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-3 mt-2">
+                            <label class="form-label">Select Warehouse<span class="text-danger">*</span></label>
+                            <ng-select class="" formControlName="warehouseId" (change)="onChangeWareHouse($event)"
+                                name="customerType" placeholder="Select Customer Type">
+                                <ng-option *ngFor="let item of warehouseList" [value]="item.id">{{item.name}}</ng-option>
+                            </ng-select>
+                        </div>
+                        <div class="col-lg-3 mt-2">
+                            <label class="form-label">Select Oil Mill<span
+                                    class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg" formControlName="selectedOilMill"  (change)="onChangeOilMill($event)"
+                               name="customerType" placeholder="Please enter the name or mobile number">
+                                <option *ngFor="let item of oilMilsListData" [value]="item.id">{{ item.name}} - {{item.phone }}</option>
+                            </select>
+                             <p class="text-success"  *ngIf="gstDetails?.gstnStatus == 'Active'" >GSTIN Status is  Active</p>
+                        <p class="text-danger" *ngIf="selectedGstStatus == 'Inactive'">GSTIN Status is {{selectedGstStatus}}</p>  
+                        </div>
+
+                        <div class="col-lg-3 mt-2">
+                            <label>Billing Address<span class="text-danger"></span></label>
+                            <br>
+                           <b>{{gstDetails?.principalPlaceOfBusiness}}</b>
+
+                        </div>
+                        <div class="col-lg-3 mt-2">
+                            <label >GST No<span class="text-danger"></span></label>
+                            <br>
+                            <b>{{gstDetails?.gstNumber}}</b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="gstDetails?.gstnStatus == 'Active'"><span class="text-success"></span> 
+    <div class="section_with__border mt-5"   >
+        <div class="col-lg-12 col-sm-12 mt-5" style="overflow-x: auto;">
+            <div class="d-flex" >
+                <div class="lot-code-width"><b>code</b></div>
+                <div class="lot-code-width"><b>Available Quantity(kg)</b></div>
+                <div class="lot-code-width"><b>Selling weight(kg)</b></div>
+                <div class="lot-code-width"><b>Deduction(kg)</b></div>
+                <div class="lot-code-width"><b>Actual Selling weight(Kg)</b></div>
+                <div class="lot-code-width"><b>Selling Price/(Kg)</b></div>
+                <div class="lot-code-width"><b>Discount Price</b></div>
+                <div class="lot-code-width"><b>Gross Total </b></div>
+                <div class="lot-code-width"><b>Pretax Amount </b></div>
+            </div>
+            <div formArrayName="cottonSeedsOrderItems">
+                <div class="d-flex my-2 p-1" *ngFor="let item of createSeedsForm.get('cottonSeedsOrderItems')['controls']; let i=index;"
+            [formGroupName]="i" [ngClass]="{'border border-warning rounded': item.value.markSold}">
+                <div class="lot-code-width">
+                    <input type="text" class="form-control form-control-lg form-control-solid" formControlName="code" disabled/>
+                </div>
+                <div class="lot-code-width">
+                    <input type="text" class="form-control form-control-lg form-control-solid" formControlName="availableWeight" disabled/>
+                </div>
+                <div class="lot-code-width">
+                    <input type="number" class="form-control form-control-lg" formControlName="sellingWeight"    (input)="priceCalculation(i)"/>
+    
+
+                </div>
+                <div class="lot-code-width">
+                    <input type="number" class="form-control form-control-lg " formControlName="deduction" [class.is-invalid]="item.get('deduction').invalid"  (input)="priceCalculation(i)"/>
+                    <small *ngIf="item.get('deduction').invalid" class="text-danger">Entered Value is Greater Than Selling weight</small>
+                </div>
+                <div class="lot-code-width">
+                    <input type="text" class="form-control form-control-lg form-control-solid"
+                        formControlName="actualWeight" disabled />
+                </div>
+                <div class="lot-code-width">
+                    <input type="number" class="form-control form-control-lg " formControlName="sellingPrice" [class.is-invalid]="item.get('sellingPrice').invalid" (input)="priceCalculation(i)"/>
+                    <small *ngIf="item.get('sellingPrice').invalid" class="text-danger">Entered Value is Less Than Buying Price</small>
+                </div>
+                <div class="lot-code-width">
+                    <input type="number" class="form-control form-control-lg " formControlName="discountAmount" [class.is-invalid]="item.get('discountAmount').invalid"  (input)="priceCalculation(i)"/>
+                    <small *ngIf="item.get('discountAmount').invalid" class="text-danger">Entered Value is Greater Than pretaxAmount</small>
+                </div>
+                <div class="lot-code-width">
+                    <input type="text" class="form-control form-control-lg form-control-solid" formControlName="grossTotal"  disabled/>
+                </div>
+                <div class="lot-code-width">
+                    <input type="text" class="form-control form-control-lg form-control-solid" formControlName="pretaxAmount"  disabled/>
+                </div>
+            </div>
+            </div>
+            
+        </div>
+    </div>
+    <div class="section_with__border mt-5">
+        <div class="card card-custom mt-4">
+            <div class="row">
+                <div class="col-lg-3 mt-6">
+                    <label class="form-label positioned">Hamali Deduction(₹) <span class="text-danger"></span> </label>
+                    <input type="number" class="form-control form-control-lg " name="firstName" autocomplete="off"
+                        formControlName="hamaliDeduction">
+                </div>
+                <div class="col-lg-3 mt-6">
+                    <label class="form-label positioned">Weight Bridge Charge(₹) <span class="text-danger"></span>
+                    </label>
+                    <input type="number" class="form-control form-control-lg " name="firstName" autocomplete="off"
+                        formControlName="weighBridgeCharges">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 mt-6">
+                    <label class="form-label">Credit Days <span class="text-danger"></span> </label>
+                    <select class="form-control form-control-lg" formControlName="creditDays" name="customerType"
+                        placeholder="Select Customer Type">
+                        <option value="1">Today</option>
+                        <option value="15">15 Days</option>
+                        <option value="30">30 Days</option>
+                        <option value="45">45 Days</option>
+                        <option value="60">60 Days</option>
+                    </select>
+                </div>
+                <div class="col-lg-3 mt-6">
+                    <label class="form-label"><b>Upload Weighbridge Slip</b><span class="text-danger"></span> </label>
+                    <div class="image-input image-input-outline m-2 mt-2" id="kt_profile_avatar">
+                        <!-- <img class="image-input-wrapper cursor-pointer" /> -->
+                        <img class="image-input-wrapper"
+                            [src]="createSeedsForm.get('uploadedImage').value? createSeedsForm.get('uploadedImage')?.value?.includes('.pdf')?'./assets/media/svg/files/pdf.svg': './assets/media/svg/files/jpg.svg' : './assets/media/users/blank.png'"
+                            (click)="showImage(createSeedsForm.get('uploadedImage').value)" />
+                        <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                            data-action="change" data-toggle="tooltip" title="" data-original-title="Change avatar">
+                            <i class="fa fa-pen icon-sm text-muted"></i>
+                            <input type="file" name="profile_avatar" accept=".png, .jpg, .jpeg, .pdf"
+                                (change)="onImageUpload($event);" />
+                            <input type="hidden" name="profile_avatar_remove" />
+                        </label>
+                        
+                    </div>
+                </div>
+                <div class="col-lg-6" [formGroup]="createSeedsForm">
+                    <div class="row">
+                        <div class="col-12" >
+                            <div class="mr-auto">
+                                <div class="card-body p-4 mr-25">
+                                    <div class="mb-7">
+                                        <div class="d-flex justify-content-between align-items-center my-2">
+                                            <span class="text-dark-75 font-weight-bold pr-1" >
+                                                <b>Gross Total Amount(<span class="rupee_symbol">&#8377;</span>):</b>
+                                            </span>
+                                            <label for="" class="m-0"><b>{{createSeedsForm.get('grossTotal').value}}</b></label>
+                                        </div>
+                                      <div class="d-flex justify-content-between align-items-center my-2">
+                                            <span class="text-dark-75 font-weight-bold pr-1" >
+                                                <b>Discount Amount(<span class="rupee_symbol">&#8377;</span>):</b>
+                                            </span>
+                                            <label for="" class="m-0"><b>{{createSeedsForm.get('discountAmount').value}}</b></label>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center my-2">
+                                            <span class="text-dark-75 font-weight-bold pr-1" >
+                                                <b>pretax Amount(<span class="rupee_symbol">&#8377;</span>):</b>
+                                            </span>
+                                            <label for="" class="m-0"><b>{{createSeedsForm.get('pretaxAmount').value}}</b></label>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center my-2">
+                                            <span class="text-dark-75 font-weight-bold pr-1">
+                                                <b>CGST(%):</b>
+                                            </span>
+                                            <label for="" class="m-0"><b>{{createSeedsForm.get('cgst').value}}</b></label>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center my-2">
+                                            <span class="text-dark-75 font-weight-bold pr-1"
+                                                ><b>SGST(%):</b></span>
+                                                <label for="" class="m-0"><b>{{createSeedsForm.get('sgst').value}}</b></label>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center my-2">
+                                            <span class="text-dark-75 font-weight-bold pr-1" >
+                                                <b>IGST(%):</b></span>
+                                                <label for="" class="m-0"><b>{{createSeedsForm.get('igst').value}}</b></label>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center my-2">
+                                            <h4>Total(<span class="rupee_symbol">&#8377;</span>):</h4>
+                                            <h4 for="" class="m-0">{{createSeedsForm.get('totalAmount').value}}</h4>
+                                        </div> 
+                                    </div>
+        
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-12 mt-6">
+                <address-pincode-form [layouttype]="'page'"></address-pincode-form>
+                <button type="submit" class="btn btn-sm btn-success float-right" (click)="createCottonSalesOrder(createSeedsForm.value)" [disabled]="createSeedsForm.invalid">Create So</button>
+                <button type="button" class="btn btn-sm btn-secondary float-right mr-3" (click)="goBack()">Back</button>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="Enter-selling-price"*ngIf="gstDetails?.gstnStatus == 'Inactive'"  >
+        <div>
+            <ng-template #payment let-c="close" let-d="dismiss" >
+                <div class="modal-header">
+               
+                </div>
+                <div class="container">
+                  <b>  Please Contact Account Team to Proceed with <br>
+                    creation of SO with this Particular Mill </b>
+                </div>
+                <div class="modal-body form-height pt-0">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+                    <button type="button" class="btn btn-sm btn-primary" (click)="c('Close click')">Proceed</button>
+                </div>
+            </ng-template>
+        </div>
+    </div>

@@ -1,0 +1,49 @@
+.dropdown-menu.show {
+    top: -33px !important;
+}
+.palns_activation_actions {
+    p{
+        &:hover {
+            background-color: #EEF0F8;
+        }
+    }
+}
+
+.flex-container {
+    display: flex;
+}
+
+.flex-child {
+    flex: 1;
+    background-color: #F0F0F0;
+    background-color: #00aae4;
+
+    height: 40px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    font-size: 15px;
+    color:white;
+    
+
+}  
+
+.flex-child:first-child {
+    background-color: #F0F0F0;
+
+    height: 40px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    font-size: 15px;
+    color:black;
+
+} 
+.has-search .form-control {
+    padding-left: 2.375rem;
+}
+

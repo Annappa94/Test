@@ -1,0 +1,36 @@
+<div class="card card-custom gutter-b">
+ <div class="card-header">
+        <div class="card-title">
+          <h3 class="card-label">QB Marketplace</h3>
+        </div>
+      </div>    
+<div class="form card-body form-label-right">
+    <div class="form-group pb-0 row">
+      <div class="col-lg-8 pl-3">
+        <input [(ngModel)]="searchText" type="text" class="form-control" placeholder="Search"/>
+        <small class="form-text text-muted"><b>Search</b> in all fields.</small>
+      </div>
+      <div class="col-lg-4">
+          <!-- <select class="form-control" name="store" (change)="filterChange($event.target.value)">
+            <option *ngFor="let item of stores" [value]="[item.storeID,item.chainID]" [selected]="item.storeID==slectedIds.storeID&&item.chainID==slectedIds.chainID" >{{item.storeName}}</option>
+            <option value="" selected disabled hidden>Select store</option>
+          </select><small class="form-text text-muted"><b>Filter</b> by store</small> -->
+          <mat-form-field class="form-select" >
+            <mat-select [formControl]="storeCtrl" #singleSelect>
+              <mat-option>
+                <ngx-mat-select-search [formControl]="storeFilterCtrl" placeholderLabel="Search store"  ></ngx-mat-select-search>
+              </mat-option>        
+              <mat-option *ngFor="let store of filteredStores | async" [value]="store">
+                {{store.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+      </div>
+    </div>
+    <RMtable 
+    [tableHeaders]="tableHeaders" 
+    [rowDataList]="productList"  
+    [searchText]="searchText">
+    </RMtable>
+</div>
+</div>

@@ -1,0 +1,28 @@
+@import "../../../assets/sass/pages/login/login-1.scss";
+
+:host {
+  height: 100%;
+}
+
+.star-profile-designation {
+  font-size: 20px; 
+}
+
+.star-profile-name {
+  font-size: 18px; 
+}
+
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  .star-profile-designation {
+      font-size: 14px; 
+  }
+
+  .star-profile-name {
+      font-size: 12px; 
+  }
+
+  .hide-on-mobile {
+    display: none !important;
+  }
+}

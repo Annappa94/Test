@@ -1,0 +1,205 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+      <div class="card-title">
+        <h3 class="card-label">Subscription Plans </h3>
+      </div>
+      <div class="card-toolbar">
+        <div>
+          <button *ngIf="userType.role !== 'READADMIN'" type="button" class="btn btn-sm btn-success mr-2" routerLink="/resha-farms/iot/subscription/crud">+ New Plan</button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body pt-0">
+      <div class="form form-label-right">
+        <!-- <div class="form-group row">
+          <div class="col-lg-4">
+            <input type="text" class="form-control" (keyup.enter)="onSearch();" (keyup)="!searchText&&getApprovalList();paginationData.currentPage=0" [(ngModel)]="searchText" placeholder="Search" value="" />
+
+            <small class="form-text text-muted"><b>Search</b> By Ticket Id.</small>
+          </div>
+          <div class="col-lg-1">
+            <button type="button" class="btn btn-sm btn-success mr-2 mt-1" (click)="onSearch();">Search</button>
+          </div>
+        </div> -->
+      </div>
+      <div class="table-responsive angular-bootstrap-table">
+        <table id="excel-table" class="table table-head-custom table-vertical-center overflow-hidden">
+          <thead>
+            <th>Code</th>
+              <th>Name</th>
+            <th name="code"ngDefaultControl [(ngModel)]="tableHeader.id" >
+              <i *ngIf="tableHeader.id === 1 && activeSort === 'id'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.id === 0 && activeSort === 'id'" class="fas fa-long-arrow-alt-down"></i>
+              Business Vertical
+            </th>
+            <th name="name" ngDefaultControl [(ngModel)]="tableHeader.name" >
+              <i *ngIf="tableHeader.name === 1 && activeSort === 'name'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.name === 0 && activeSort === 'name'" class="fas fa-long-arrow-alt-down"></i>
+              Device Type
+            </th>
+            <th name="phone" ngDefaultControl [(ngModel)]="tableHeader.phone" >
+              <i *ngIf="tableHeader.phone === 1 && activeSort === 'phone'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.phone === 0 && activeSort === 'phone'" class="fas fa-long-arrow-alt-down"></i>
+              Deposit Amount <br> <small>(in Rs)</small>
+            </th>
+            <th name="center" ngDefaultControl [(ngModel)]="tableHeader.center.centerName" >
+              <i *ngIf="tableHeader.center.centerName === 1 && activeSort === 'center.centerName'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.center.centerName === 0 && activeSort === 'center.centerName'" class="fas fa-long-arrow-alt-down"></i>
+              Recurring Amount <br> <small>(in Rs)</small>
+            </th>
+            <th>Plan <br> Status</th>
+            <!-- <th>Actions</th> -->
+          </thead>
+          <tbody>
+            <tr  *ngFor="let plans of subscriptionPlan">
+              <td>{{plans?.code}}</td>
+              <td>
+                {{plans?.name}}<br>
+              </td>
+              <td>
+                
+                {{plans?.businessVertical}}
+              </td>
+              <td><a matTooltip="Device Code" class="btn btn-link-success font-weight-bold" (click)="redirectoDeviceType(plans?.deviceTypeId)">{{plans?.deviceTypeCode}}</a> </td>
+              <td>{{plans?.depositAmount}}</td>
+              <td>{{plans?.recurringAmount}}</td>              
+              <td class="">
+                <label for="" class="text-success" *ngIf="plans?.active == true">Active</label>
+                <label for="" class="text-danger"  *ngIf="plans?.active == false">InActive</label>
+                
+              </td>
+              
+              
+              <td class="approval_reject_actions d-flex justify-content-center">
+                <!-- <a matTooltip="Edit" class="btn btn-icon btn-sm mr-1 mt-1" *ngIf="userType.role !== 'READADMIN'" (click)="editFarmer(item)">
+                  <i class="flaticon-edit-1 text-success"></i>
+                </a> -->
+                <!-- <i class="fas fa-ellipsis-v"></i>
+                <i class="fas fa-check approval_action"></i>
+                <i class="fas fa-times rejected_action"></i> -->
+               
+                <div ngbDropdown class="d-inline-block"> 
+                    <button class="btn btn-hover-text-primary p-0 ml-4 dropdown menu-item menu-item-submenu menu-item-rel" id="approovalActionsdropdown" ngbDropdownToggle style="height:72px">
+                        <i class="fas fa-ellipsis-v icon-lg text-muted"></i>
+                    </button>
+                    <div class="palns_activation_actions" style="max-width: 150px;top:-28px !important" ngbDropdownMenu aria-labelledby="approovalActionsdropdown">
+                        <!-- <i class="fas fa-check approval_action"></i>
+                        <i class="fas fa-times rejected_action"></i> -->
+                        <!-- <p class="pl-4 cursor dropdow_list" (click)="redirectToEdit(plans.id)">Edit</p> -->
+                        <p class="pl-4 cursor dropdow_list" *ngIf="plans?.active == false" (click)="patchPlanStatus(StatusRequest,true,plans.id)">Actiavte</p>
+                        <p class="pl-4 cursor dropdow_list" *ngIf="plans?.active != false" (click)="patchPlanStatus(StatusRequest,false,plans.id)">Inactivate</p>
+                    </div>
+                </div>
+                
+
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+      </div>
+      <div class="row">
+        <div class="ml-5 mr-2">
+          <nav aria-label="Page navigation example">
+            <ul class="pagination">
+              <li class="page-item">
+                <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(0)" href="javascript:void(0);">
+                  <span aria-hidden="true">&laquo;&laquo;</span>
+                  <span class="sr-only">First</span>
+                </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(paginationData.currentPage - 1)" href="javascript:void(0);">
+                  <span aria-hidden="true">&laquo;</span>
+                  <span class="sr-only">Previous</span>
+                </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" *ngIf="paginationData?.currentPage !== 0 && paginationData?.currentPage !== 1" (click)="onPageChange(paginationData?.currentPage - 2)" href="javascript:void(0);">{{ paginationData?.currentPage -1 }}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" *ngIf="paginationData?.currentPage !== 0" (click)="onPageChange(paginationData?.currentPage - 1)" href="javascript:void(0);">{{ paginationData?.currentPage}}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link active" href="javascript:void(0);">{{ paginationData?.currentPage + 1 }}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1" (click)="onPageChange(paginationData?.currentPage + 1)" href="javascript:void(0);">{{ paginationData?.currentPage + 2 }}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1 && paginationData?.currentPage !== paginationData.pages.length - 2" (click)="onPageChange(paginationData?.currentPage + 2)" href="javascript:void(0);">{{ paginationData?.currentPage + 3 }}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}" (click)="onPageChange(paginationData.currentPage + 1)" href="javascript:void(0);">
+                  <span aria-hidden="true">&raquo;</span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}" (click)="onPageChange(paginationData.pages.length - 1)" href="javascript:void(0);">
+                  <span aria-hidden="true">&raquo;&raquo;</span>
+                  <span class="sr-only">Last</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <div class="mr-2">
+          <select class="custom-select" style="height: calc(1.2em + 1rem + 2px); padding: 0.35rem 2rem 0.35rem 1rem;"
+            [(ngModel)]="paginationData.pageSize" (change)="onPageSizeChange()">
+            <option [ngValue]="10">10 per page</option>
+            <option [ngValue]="50">50 per page</option>
+            <option [ngValue]="100">100 per page</option>
+            <option [ngValue]="200">200 per page</option>
+            <option [ngValue]="500">500 per page</option>
+            <option [ngValue]="1000">1000 per page</option>
+            <option [ngValue]="2000">2000 per page</option>
+            <option [ngValue]="5000">5000 per page</option>
+          </select>
+        </div>
+        <div class="pt-2">
+          <small class="text-muted">(Total: {{paginationData.total}})</small>
+        </div> 
+
+      </div>
+    </div>
+  </div>
+    <div class="example-preview">
+        <div>
+            <ng-template #contentReject let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Rejection Reason</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Cancel</button>
+            </div>
+            </ng-template>
+        </div>
+    </div>
+  
+  <div class="confirmation-preview">
+
+    <div class="example-preview">
+        <div>
+            <ng-template #StatusRequest let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Plan Status Change</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p *ngIf="planStatus == false">Are you sure you want to <strong class="text-warning">Inactivate</strong> plan ?</p>
+                <p *ngIf="planStatus == true">Are you sure you want to <strong class="text-warning">Activate</strong> plan ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Cancel</button>
+                <button type="button" class="btn btn-primary" (click)="planStatusChangeApi()">Yes</button>
+            </div>
+            </ng-template>
+        </div>
+    </div>

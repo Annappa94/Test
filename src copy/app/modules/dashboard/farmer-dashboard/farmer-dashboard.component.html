@@ -1,0 +1,497 @@
+<div class="row mt-2">
+    <div class="col-lg col-md-4 col-sm-4 col-4">
+        <div class="card card-stretch gutter-b">
+            <div class="card-body cursor-pointer" [routerLink]="[ '/resha-farms/farmers' ]">
+                <span
+                    class="card-title font-weight-bolder text-success font-size-h2 mb-0 d-block">{{totals.totalFarmers}}</span>
+
+                <span class="font-weight-bold text-muted font-size-sm">Farmer</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg col-md-4 col-sm-4 col-4">
+        <div class="card card-stretch gutter-b">
+            <div class="card-body cursor-pointer" [routerLink]="[ '/resha-farms/farmers' ]">
+                <span
+                    class="card-title font-weight-bolder text-success font-size-h2 mb-0 d-block">{{totalCenter}}</span>
+
+                <span class="font-weight-bold text-muted font-size-sm">Total Centers</span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-lg col-md-4 col-sm-4 col-4">
+        <div class="card card-stretch gutter-b">
+            <div class="card-body cursor-pointer" [routerLink]="[ '/resha-farms/cocoon-lot' ]">
+                <span
+                    class="card-title font-weight-bolder text-success font-size-h2 mb-0 d-block">{{totals.totalCocoonLots}}</span>
+
+                <span class="font-weight-bold font-size-sm text-muted">Total Lots</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg col-md-4 col-sm-4 col-4" *ngIf="cocoonLotAnalytics">
+        <div class="card card-stretch gutter-b">
+            <div class="card-body cursor-pointer" [routerLink]="[ '/resha-farms/cocoon-lot' ]">
+                <span
+                    class="card-title font-weight-bolder text-success font-size-h2 mb-0 d-block">{{cocoonLotAnalytics.totalLots}}</span>
+
+                <span class="font-weight-bold text-muted font-size-sm">New Lots</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg col-md-4 col-sm-4 col-4" *ngIf="cocoonLotAnalytics">
+        <div class="card card-stretch gutter-b">
+            <div class="card-body cursor-pointer" [routerLink]="[ '/resha-farms/cocoon-lot' ]">
+                <span
+                    class="card-title font-weight-bolder text-success font-size-h2 mb-0 d-block">{{cocoonLotAnalytics.totalActiveLots}}</span>
+
+                <span class="font-weight-bold text-muted font-size-sm">Active Lots</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-xl-6" *ngIf="paymentAnalytics">
+        <div class="card card-custom bgi-no-repeat card-stretch gutter-b">
+            <div class="card-header border-0 py-5" style="justify-content: left;">
+                <h3 class="card-title align-items-start mt-4">
+                    <span class="card-label font-weight-bolder text-success">Cocoon Payments</span>
+                </h3>
+            </div>
+            <div class="card-body pt-0 pb-5">
+                <div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-dark font-weight-bold mr-2">Reeler Dues:</span>
+                        <span
+                            class="label-outline-danger label label-lg label-inline text-dark font-size-lg font-weight-bold cursor-pointer"
+                            [routerLink]="[ '/resha-farms/cocoon-orders' ]">Rs.
+                            {{paymentAnalytics.cocoonPaymentsDue.toLocaleString('en-IN')}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-dark font-weight-bold mr-2">Farmer Payouts Pending:</span>
+                        <span
+                            class="label-outline-warning label label-lg label-inline text-dark font-size-lg font-weight-bold">Rs.
+                            {{paymentAnalytics.cocoonPayoutsDue.toLocaleString('en-IN')}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-dark font-weight-bold mr-2">Farmer Payouts Completed:</span>
+                        <span
+                            class="label-outline-success label label-lg label-inline text-dark font-size-lg font-weight-bold">Rs.
+                            {{paymentAnalytics.cocoonPayoutsCompleted.toLocaleString('en-IN')}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6" *ngIf="paymentAnalytics">
+        <div class="card card-custom bgi-no-repeat card-stretch gutter-b">
+            <div class="card-header border-0">
+                <h3 class="card-title">
+                    <span class="card-label font-weight-bolder text-success">Operations</span>
+                </h3>
+                <div class="card-toolbar">
+                    <section class="example-section">
+                        <mat-radio-group class="row" [(ngModel)]="operations">
+                            <mat-radio-button (change)="operationsAnalytics($event.value);" class="example-margin col-4"
+                                value="lastWeek">
+                                Week
+                            </mat-radio-button>
+                            <mat-radio-button (change)="operationsAnalytics($event.value);" class="example-margin col-4"
+                                value="lastMonth">
+                                Month
+                            </mat-radio-button>
+                            <mat-radio-button (change)="operationsAnalytics($event.value);" class="example-margin col-4"
+                                value="all">
+                                All
+                            </mat-radio-button>
+
+                        </mat-radio-group>
+                    </section>
+                </div>
+            </div>
+            <div class="card-body pt-0 pb-5">
+                <div *ngIf="!logisticsExpense && !cocoonSoldWastage"
+                    class="d-flex justify-content-center align-items-center h-100 font-size-h3 text-dark font-weight-bold">
+                    No data found
+                </div>
+                <div *ngIf="logisticsExpense || cocoonSoldWastage">
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-dark font-weight-bold mr-2">Total Logistics Expenses:</span>
+                        <span
+                            class="label-outline-danger label label-lg label-inline text-dark font-size-lg font-weight-bold cursor-pointer"
+                            [routerLink]="[ '/resha-farms/cocoon-orders' ]">Rs.
+                            {{logisticsExpense.toLocaleString('en-IN')}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-dark font-weight-bold mr-2">Total Cocoon Sold Wastage</span>
+                        <span
+                            class="label-outline-warning label label-lg label-inline text-dark font-size-lg font-weight-bold">
+                            {{cocoonSoldWastage}}kgs</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="col-lg-12" *ngIf="cocoonAnalytics">
+        <!--begin::Advance Table Widget 4-->
+        <div class="card card-custom card-stretch gutter-b">
+            <!--begin::Header-->
+            <div class="card-header border-0 py-5" style="justify-content: left;">
+                <div class="symbol symbol-70 symbol-light mr-5">
+                    <span class="symbol-label align-items-center flex-column">
+                        <span
+                            class="card-label font-weight-bolder text-dark-75 font-size-lg">{{cocoonAnalytics.totalLots}}</span>
+                        <span class="text-muted mt-0 font-weight-bold font-size-sm">Lots</span>
+                    </span>
+                </div>
+                <h3 class="card-title align-items-start flex-column mt-4">
+                    <span class="card-label font-weight-bolder text-success">Cocoon Inventory</span>
+                    <span class="text-muted mt-1 font-weight-bold font-size-sm">Reshamandi's Cocoon Procurement</span>
+                </h3>
+
+            </div>
+
+            <div class="card-body pt-0 pb-3">
+                <div class="tab-content">
+                    <!--begin::Table-->
+                    <div class="table-responsive">
+                        <table class="table table-head-custom table-head-bg table-borderless table-vertical-center">
+                            <thead>
+                                <tr class="text-left text-uppercase">
+                                    <th style="min-width: 100px">
+                                        <span class="text-dark-75">Reshamandi Grade</span>
+                                    </th>
+                                    <th style="min-width: 100px">Total</th>
+                                    <th style="min-width: 100px">Bivoltine Hybrid</th>
+                                    <th style="min-width: 100px">Bivoltine Seed</th>
+                                    <th style="min-width: 130px">CB Gold</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg">Reshamandi
+                                            A</span>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="text-dark-75 font-weight-bold d-block font-size-md">{{cocoonAnalytics?.byGrade?.A}}
+                                            kgs</span>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="text-dark-75 font-weight-bold d-block font-size-md">{{cocoonAnalytics?.lotTypeByGradeTotals?.A?.BIVOLTINE}}
+                                            kgs</span>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="text-dark-75 font-weight-bold d-block font-size-md">{{cocoonAnalytics?.lotTypeByGradeTotals?.A?.SEEDCOCOON}}
+                                            kgs</span>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="text-dark-75 font-weight-bold d-block font-size-md">{{cocoonAnalytics?.lotTypeByGradeTotals?.A?.CBGOLD}}
+                                            kgs</span>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg">Reshamandi
+                                            B</span>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="text-dark-75 font-weight-bold d-block font-size-md">{{cocoonAnalytics?.byGrade?.B}}
+                                            kgs</span>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="text-dark-75 font-weight-bold d-block font-size-md">{{cocoonAnalytics?.lotTypeByGradeTotals?.B?.BIVOLTINE}}
+                                            kgs</span>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="text-dark-75 font-weight-bold d-block font-size-md">{{cocoonAnalytics?.lotTypeByGradeTotals?.B?.SEEDCOCOON}}
+                                            kgs</span>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="text-dark-75 font-weight-bold d-block font-size-md">{{cocoonAnalytics?.lotTypeByGradeTotals?.B?.CBGOLD}}
+                                            kgs</span>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg">Reshamandi
+                                            C</span>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="text-dark-75 font-weight-bold d-block font-size-md">{{cocoonAnalytics?.byGrade?.C}}
+                                            kgs</span>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="text-dark-75 font-weight-bold d-block font-size-md">{{cocoonAnalytics?.lotTypeByGradeTotals?.C?.BIVOLTINE}}
+                                            kgs</span>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="text-dark-75 font-weight-bold d-block font-size-md">{{cocoonAnalytics?.lotTypeByGradeTotals?.C?.SEEDCOCOON}}
+                                            kgs</span>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="text-dark-75 font-weight-bold d-block font-size-md">{{cocoonAnalytics?.lotTypeByGradeTotals?.C?.CBGOLD}}
+                                            kgs</span>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg">Cocoon
+                                            Jhilli</span>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="text-dark-75 font-weight-bold d-block font-size-md">{{cocoonAnalytics?.byGrade?.JHILLI}}
+                                            kgs</span>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="text-dark-75 font-weight-bold d-block font-size-md">{{cocoonAnalytics?.lotTypeByGradeTotals?.JHILLI?.BIVOLTINE}}
+                                            kgs</span>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="text-dark-75 font-weight-bold d-block font-size-md">{{cocoonAnalytics?.lotTypeByGradeTotals?.JHILLI?.SEEDCOCOON}}
+                                            kgs</span>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="text-dark-75 font-weight-bold d-block font-size-md">{{cocoonAnalytics?.lotTypeByGradeTotals?.JHILLI?.CBGOLD}}
+                                            kgs</span>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg">Double
+                                            Cocoon</span>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="text-dark-75 font-weight-bold d-block font-size-md">{{cocoonAnalytics?.byGrade?.DOUBLECOCOON}}
+                                            kgs</span>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="text-dark-75 font-weight-bold d-block font-size-md">{{cocoonAnalytics?.lotTypeByGradeTotals?.DOUBLECOCOON?.BIVOLTINE}}
+                                            kgs</span>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="text-dark-75 font-weight-bold d-block font-size-md">{{cocoonAnalytics?.lotTypeByGradeTotals?.DOUBLECOCOON?.SEEDCOCOON}}
+                                            kgs</span>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="text-dark-75 font-weight-bold d-block font-size-md">{{cocoonAnalytics?.lotTypeByGradeTotals?.DOUBLECOCOON?.CBGOLD}}
+                                            kgs</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <thead>
+                                <tr class="text-left text-uppercase">
+                                    <th style="min-width: 100px">
+                                        <span class="text-dark-75"></span>
+                                    </th>
+                                    <th style="min-width: 100px">
+                                        <span class="text-dark-75 font-weight-bolder font-size-lg">
+                                            {{cocoonAnalytics?.byGrade?.A + cocoonAnalytics?.byGrade?.B +
+                                            cocoonAnalytics?.byGrade?.C +
+                                            cocoonAnalytics?.byGrade?.JHILLI + cocoonAnalytics?.byGrade?.DOUBLECOCOON}}
+                                            kgs
+                                        </span>
+                                    </th>
+                                    <th style="min-width: 100px">
+                                        <span class="text-dark-75 font-weight-bolder font-size-lg">
+                                            {{cocoonAnalytics.lotTypeByGradeTotals?.A?.BIVOLTINE +
+                                            cocoonAnalytics.lotTypeByGradeTotals?.B?.BIVOLTINE +
+                                            cocoonAnalytics.lotTypeByGradeTotals?.C?.BIVOLTINE +
+                                            cocoonAnalytics.lotTypeByGradeTotals?.JHILLI?.BIVOLTINE +
+                                            cocoonAnalytics.lotTypeByGradeTotals?.DOUBLECOCOON?.BIVOLTINE}} kgs</span>
+                                    </th>
+                                    <th style="min-width: 100px">
+                                        <span class="text-dark-75 font-weight-bolder font-size-lg">
+                                            {{cocoonAnalytics.lotTypeByGradeTotals?.A?.SEEDCOCOON +
+                                            cocoonAnalytics.lotTypeByGradeTotals?.B?.SEEDCOCOON +
+                                            cocoonAnalytics.lotTypeByGradeTotals?.C?.SEEDCOCOON +
+                                            cocoonAnalytics.lotTypeByGradeTotals?.JHILLI?.SEEDCOCOON +
+                                            cocoonAnalytics.lotTypeByGradeTotals?.DOUBLECOCOON?.SEEDCOCOON}} kgs</span>
+                                    </th>
+                                    <th style="min-width: 130px">
+                                        <span class="text-dark-75 font-weight-bolder font-size-lg">
+                                            {{cocoonAnalytics.lotTypeByGradeTotals?.A?.CBGOLD +
+                                            cocoonAnalytics.lotTypeByGradeTotals?.B?.CBGOLD +
+                                            cocoonAnalytics.lotTypeByGradeTotals?.C?.CBGOLD+
+                                            cocoonAnalytics.lotTypeByGradeTotals?.JHILLI?.CBGOLD +
+                                            cocoonAnalytics.lotTypeByGradeTotals?.DOUBLECOCOON?.CBGOLD}} kgs</span>
+                                    </th>
+
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card card-custom bgi-no-repeat card-stretch gutter-b">
+            <div class="card-header border-0">
+                <h3 class="card-title">
+                    <span class="card-label font-weight-bolder text-success">Weight By Center</span>
+                </h3>
+                <div class="card-toolbar">
+                    <section class="example-section">
+                        <mat-radio-group class="row" [(ngModel)]="weightByCenterValue">
+                            <mat-radio-button (change)="weightByCenter($event.value);" class="example-margin col-4"
+                                value="lastWeek">
+                                Week
+                            </mat-radio-button>
+                            <mat-radio-button (change)="weightByCenter($event.value);" class="example-margin col-4"
+                                value="lastMonth">
+                                Month
+                            </mat-radio-button>
+                            <mat-radio-button (change)="weightByCenter($event.value);" class="example-margin col-4"
+                                value="all">
+                                All
+                            </mat-radio-button>
+
+                        </mat-radio-group>
+                    </section>
+                </div>
+            </div>
+            <div class="card-body pt-0 pb-5" *ngIf="pieChartWgtByCenterData?.length">
+                <div>
+                    <div id="chart">
+                        <apx-chart [series]="apexPieChartByWeight.series" [chart]="apexPieChartByWeight.chart"
+                            [dataLabels]="apexPieChartByWeight.dataLabels"
+                            [plotOptions]="apexPieChartByWeight.plotOptions" [xaxis]="apexPieChartByWeight.xaxis"
+                            [stroke]="apexPieChartByWeight.stroke" [fill]="apexPieChartByWeight.fill"
+                            [yaxis]="apexPieChartByWeight.yaxis" [title]="apexPieChartByWeight.title"
+                            [tooltip]="apexPieChartByWeight.tooltip" [legend]="apexPieChartByWeight.legend"></apx-chart>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card card-custom bgi-no-repeat card-stretch gutter-b">
+            <div class="card-header border-0 py-5">
+                <h3 class="card-title">
+                    <span class="card-label font-weight-bolder text-success">Logistics Expenses By Center</span>
+                </h3>
+                <div class="card-toolbar">
+                    <section class="example-section">
+                        <mat-radio-group class="row" [(ngModel)]="logisticsExpByCenterValue">
+                            <mat-radio-button (change)="logisticsByCenter($event.value);" class="example-margin col-4"
+                                value="lastWeek">
+                                Week
+                            </mat-radio-button>
+                            <mat-radio-button (change)="logisticsByCenter($event.value);" class="example-margin col-4"
+                                value="lastMonth">
+                                Month
+                            </mat-radio-button>
+                            <mat-radio-button (change)="logisticsByCenter($event.value);" class="example-margin col-4"
+                                value="all">
+                                All
+                            </mat-radio-button>
+
+                        </mat-radio-group>
+                    </section>
+                </div>
+            </div>
+            <div class="card-body pt-0 pb-5">
+                <div *ngIf="!pieChartLogisticsByCenterData?.length"
+                    class="d-flex justify-content-center align-items-center h-100 font-size-h3 text-dark font-weight-bold">
+                    No data found
+                </div>
+                <div *ngIf="pieChartLogisticsByCenterData?.length">
+                    <div id="charts">
+                        <apx-chart [series]="apexPieChartByCenter.series" [chart]="apexPieChartByCenter.chart"
+                            [dataLabels]="apexPieChartByCenter.dataLabels"
+                            [plotOptions]="apexPieChartByCenter.plotOptions" [xaxis]="apexPieChartByCenter.xaxis">
+                        </apx-chart>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-lg-12">
+        <div class="card card-custom bgi-no-repeat card-stretch gutter-b">
+            <div class="card-header border-0 py-5">
+                <h3 class="card-title">
+                    <span class="card-label font-weight-bolder text-success">Lot Trends</span>
+                </h3>
+                <div class="card-toolbar">
+                    <section class="example-section">
+                        <mat-radio-group class="row" [(ngModel)]="lotTrends">
+                            <mat-radio-button (change)="lotTrendsDate($event.value);" class="example-margin col-4"
+                                value="lastWeek">
+                                Week
+                            </mat-radio-button>
+                            <mat-radio-button (change)="lotTrendsDate($event.value);" class="example-margin col-4"
+                                value="lastMonth">
+                                Month
+                            </mat-radio-button>
+                            <mat-radio-button (change)="lotTrendsDate($event.value);" class="example-margin col-4"
+                                value="all">
+                                All
+                            </mat-radio-button>
+
+                        </mat-radio-group>
+                    </section>
+                </div>
+            </div>
+            <div class="card-body pt-0 pb-5">
+
+                <div *ngIf="lineChartData?.length">
+                    <div style="display: block;">
+                        <canvas baseChart width="100%" height="30vh" style="overflow: auto;" [datasets]="lineChartData"
+                            [labels]="lineChartLabels" [legend]="lineChartLegend" [chartType]="lineChartType"
+                            [plugins]="lineChartPlugins" [colors]="lineChartColors">
+                        </canvas>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

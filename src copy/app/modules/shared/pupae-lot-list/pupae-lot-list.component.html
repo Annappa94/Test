@@ -1,0 +1,62 @@
+<app-paginated-table [rowDataList]="rowDataList" [tableHeaders]="tableHeaders" [totalRecords]="totalRecords" (listenAndRefreshPayment)="getPupaeLot()"
+  (infoFromTable)="infoFromTable($event)" (onPageChange)="onPageChange($event)"
+  [titleOfTable]="'Pupae Lots'" [searchClass]="'col-lg-7'" [searchHint]="'By Name,Phone,Id'">
+
+  <div class="card-toolbar New">
+    <div class="card-toolbar" *ngIf="!pupaeSupplierId">
+     <button [disabled]="selectedCottonLot.length == 0" type="button" class="btn btn-sm btn-outline-dark mr-2 py-3" (click)="onMarkSold();">
+       Mark Sold
+      <span class='badge badge-warning p-1' id='lblCartCount'> {{selectedCottonLot?.length}}</span>
+    </button>
+    </div>
+
+    <div>
+      <button type="button" class="btn btn-sm btn-success mr-2" (click)="routeToCreateLot()" *ngIf="!pupaeSupplierId">+ New Pupae Lot</button>
+    </div>
+ </div>
+
+ <div class="col-lg-2 mt-2">
+  <ng-container [formGroup]="filterForm">
+    <select class="form-control" name="status" formControlName="status"  placeholder="Filter by status">
+      <option value="(New,Sold)">All</option>
+      <option value="New">New</option>
+      <option value="Sold">Sold</option>
+    </select><small class="form-text text-muted"><b>Filter</b> by Status</small>
+ </ng-container>
+ </div>
+ <div class="col-lg-2 mt-2">
+  <ng-container [formGroup]="filterForm">
+    <select class="form-control" name="status" formControlName="orderStatus"  placeholder="Filter by status">
+      <option value="(New,Purchased,Returned,Cancelled)">All</option>
+      <option value="New">New</option>
+      <option value="Purchased">Purchased</option>
+      <option value="Returned">Returned</option>
+      <option value="Cancelled">Canceled</option>
+    </select><small class="form-text text-muted"><b>Filter</b> by order Status</small>
+ </ng-container>
+ </div>
+
+</app-paginated-table>
+
+
+
+<div class="example-preview">
+    <div>
+      <ng-template #popupContent let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Mark Order {{status | titlecase}}</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to mark the order {{status | lowercase}}?</p>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+          <button type="button" class="btn btn-primary" (click)="markProcessing()">Mark {{status |lowercase}}</button>
+        </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>

@@ -1,0 +1,73 @@
+<div class="" [formGroup]="addressForm">
+    <ngb-accordion #acc11="ngbAccordion">
+        <ngb-panel id="toggle-address">
+          <ng-template ngbPanelTitle>
+            <span class="ard-header--title text-success">{{title}}<span class="text-danger">*</span></span>
+          </ng-template>
+          <ng-template ngbPanelContent>
+            <div class="row">
+              <div class="mt-2 selectWrapper" [ngClass]="{'col-lg-3': layouttype == 'page', 'col-lg-12': layouttype == 'popup'}">
+                <label class="form-label">State<span class="text-danger">*</span></label>
+                  <ng-select class=""  formControlName="state" (change)="onSateSelection()"
+                    ngDefaultControl
+                    placeholder="Please enter the state">
+                      <ng-option *ngFor="let item of statesArray" [value]="item">
+                        {{ item }}
+                      </ng-option>
+                  </ng-select>
+              </div>
+              <div class=" mt-2" [ngClass]="{'col-lg-3': layouttype == 'page', 'col-lg-12': layouttype == 'popup'}">
+                <label class="form-label">PIN Code<span class="text-danger">*</span></label>
+                <ng-select class=""  formControlName="pincode" (change)="getPincodeInfo()"
+                    ngDefaultControl
+                    placeholder="Please enter the pincode">
+                      <ng-option *ngFor="let item of pinCodeArray" [value]="item">
+                        {{ item }}
+                      </ng-option>
+                  </ng-select>
+              </div>
+              <div class=" mt-2" [ngClass]="{'col-lg-3': layouttype == 'page', 'col-lg-12': layouttype == 'popup'}">
+                <label class="form-label">District<span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-lg" name="district" placeholder="Address"
+                  autocomplete="off" formControlName="district" readonly/>
+              </div>
+              <div class=" mt-2" [ngClass]="{'col-lg-3': layouttype == 'page', 'col-lg-12': layouttype == 'popup'}">
+                <label class="form-label">Village</label>
+                <input type="text" class="form-control form-control-lg" name="Village"
+                  placeholder="Village" autocomplete="off" formControlName="village" />
+              </div>
+              <div class=" mt-2" [ngClass]="{'col-lg-3': layouttype == 'page', 'col-lg-12': layouttype == 'popup'}">
+                <label class="form-label">City</label>
+                <input type="text" class="form-control form-control-lg" name="city"
+                  placeholder="City" autocomplete="off" formControlName="city" />
+              </div>
+              <div class=" mt-2" [ngClass]="{'col-lg-3': layouttype == 'page', 'col-lg-12': layouttype == 'popup'}">
+                <label class="form-label">Taluk</label>
+                <input type="text" class="form-control form-control-lg" name="Taluk"
+                  placeholder="Taluk" autocomplete="off" formControlName="taluk" readonly/>
+              </div>
+              <div class=" mt-2" [ngClass]="{'col-lg-3': layouttype == 'page', 'col-lg-12': layouttype == 'popup'}">
+                <label class="form-label">Region</label>
+                <input type="text" class="form-control form-control-lg" name="region"
+                  placeholder="Region" autocomplete="off" formControlName="region" readonly/>
+              </div>
+              <div class=" mt-2" [ngClass]="{'col-lg-3': layouttype == 'page', 'col-lg-12': layouttype == 'popup'}">
+                <label class="form-label">Address<span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-lg" name="Address"
+                  placeholder="Address" autocomplete="off" formControlName="address" />
+              </div>
+              <div class=" mt-2" [ngClass]="{'col-lg-3': layouttype == 'page', 'col-lg-12': layouttype == 'popup'}">
+                <label class="form-label">Latitude</label>
+                <input type="text" class="form-control form-control-lg" name="latitude"
+                  placeholder="Latitude" autocomplete="off" formControlName="latitude" />
+              </div>
+              <div class=" mt-2" [ngClass]="{'col-lg-3': layouttype == 'page', 'col-lg-12': layouttype == 'popup'}">
+                <label class="form-label">Longitude </label>
+                <input type="text" class="form-control form-control-lg" name="longitude"
+                  placeholder="Longitude" autocomplete="off" formControlName="longitude" />
+              </div>
+            </div>
+          </ng-template>
+        </ngb-panel>
+      </ngb-accordion>
+</div>

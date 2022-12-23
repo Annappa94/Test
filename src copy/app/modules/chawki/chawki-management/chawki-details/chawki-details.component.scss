@@ -1,0 +1,108 @@
+#breadcrumbs {
+    list-style:none;
+    display:flex;
+    margin-bottom: 0 !important;
+    padding-left: 2.25rem;
+  }
+  
+  .hover-item:hover {
+    text-decoration: none !important;
+    transition:50ms !important;
+    transition-delay:50ms !important;
+    text-decoration:underline !important;
+  }
+
+  .hover-item {
+    color:#569117;
+    text-decoration:none;
+  }
+  
+  #breadcrumbs li+li:before  {
+    padding:8px;
+    color:#000;
+    content: "/\00a0";
+  }
+
+  .sticky-header {
+      position: sticky;
+      top: 65px;
+      z-index: 1;
+  }
+
+  .dot {
+    height: 10px;
+    width: 10px;
+    background-color: #F64E60;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .dot1 {
+    height: 10px;
+    width: 10px;
+    background-color: #7ed321;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .mat-form-field-appearance-fill, .mat-form-field-flex {
+    /* background-color: rgba(0, 0, 0, 0.04); */
+    background-color: #F3F6F9 !important;
+    border-color: #F3F6F9 !important;
+    color: #3F4254 !important;
+}
+
+.mat-form-field-wrapper {
+    background: white !important;
+}
+
+// for image modal
+ 
+  /* The Modal (background) */
+  .modal {
+    display: none; /* Hidden by default */
+    padding-top: 100px; /* Location of the box */
+    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+  }
+ 
+  /* Modal Content (Image) */
+  .modal-content {
+    height: 95%;
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    object-fit: contain;
+    background-color: black;
+  }
+ 
+  /* The Close Button */
+  .close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+ 
+  .close:hover,
+  .close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .display-none {
+      display: none !important;
+  }
+
+  .display-block {
+    display: block !important
+  }
+
+  @media only screen and (max-width: 700px) {
+    .modal-content {
+      width: 100%;
+    }
+  }

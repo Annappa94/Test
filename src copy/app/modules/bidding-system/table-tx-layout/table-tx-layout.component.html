@@ -1,0 +1,21 @@
+<div class="row p-6" [formGroup]="matrixForm">
+    <ng-container *ngFor="let row of  matrixForm?.controls | keyvalue:originalOrder; let rowIndex = index">
+        <div  [ngClass]="rowIndex==0&& width>600?'col-lg-2.8':'col-lg-2'">
+            <p class="text-center m-0"><b>Partition {{rowIndex+1}}</b></p>
+            <ng-container [formArrayName]="row.key">
+                <div *ngFor="let col of row.value.controls; let columnIndex = index"
+                [formGroupName]="columnIndex" class="form-inline" >
+                <span *ngIf="rowIndex==0 && width>600"><b>Rack {{columnIndex+1}}</b></span>
+                <input type="number" 
+                class="form-control form-control-lg m-3"
+                [class.is-invalid]="isMatrixFormValid(matrixForm,rowIndex,columnIndex,'invalid')"
+                [class.is-valid] ="isMatrixFormValid(matrixForm,rowIndex,columnIndex,'valid')"
+                placeholder="Capacity in {{uom}}" 
+                autocomplete="off" 
+                formControlName="capacity" />
+                </div>
+            </ng-container>
+        </div>
+    </ng-container>
+
+</div>

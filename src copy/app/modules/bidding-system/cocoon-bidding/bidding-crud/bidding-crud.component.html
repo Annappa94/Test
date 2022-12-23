@@ -1,0 +1,102 @@
+<div class="card card-custom gutter-b">
+
+    <div class="card-header">
+      <div class="card-title">
+        <h3 class="card-label">{{id ? "Update Bid Details" : "New Bid Details" }}</h3>
+      </div>
+      <div class="card-toolbar">
+        <!-- Nothing right now-->
+      </div>
+    </div>
+
+    <div class="card-body pt-0">
+  
+      <div class="form form-label-right">
+
+        <div class="form-group ml-2 row" style="padding-top: 0px;">
+          <!-- <div class="col-lg-12"> -->
+
+            <div class="row" [formGroup]="biddingCreateForm">
+
+              <div class="col-lg-3 mt-2">
+                <label class="form-label">Start DateTime<span class="text-danger">*</span></label>
+                <mat-form-field  class="form-control-file ">
+                  <!-- <mat-placeholder>Start DateTime</mat-placeholder> -->
+                  <input
+                    matInput
+                    [matDatetimepicker]="dts1"
+                    required
+                    autocomplete="false"
+                    formControlName="startTime"
+                    timeInterval="5"
+                    [max]="biddingCreateForm.get('endTime').value"
+                    />
+                  <mat-datetimepicker-toggle
+                    [for]="dts1"
+                    matSuffix
+                  ></mat-datetimepicker-toggle>
+                  <mat-datetimepicker
+                    #dts1
+                    type="datetime"
+                    openOnFocus="true"
+                    timeInterval="5"
+                    twelvehour="true"
+                  ></mat-datetimepicker>
+                 </mat-form-field>
+                 </div>
+
+                 <div class="col-lg-3 mt-2">
+                  <label class="form-label">End DateTime<span class="text-danger">*</span></label>
+                  <mat-form-field class="form-control-file ">
+                    <!-- <mat-placeholder>Start DateTime</mat-placeholder> -->
+                    <input
+                      matInput
+                      [matDatetimepicker]="dts"
+                      required
+                      autocomplete="false"
+                      formControlName="endTime"
+                      [min]="biddingCreateForm.get('startTime').value"
+                    />
+                    <mat-datetimepicker-toggle
+                      [for]="dts"
+                      matSuffix
+                    ></mat-datetimepicker-toggle>
+                    <mat-datetimepicker
+                      #dts
+                      type="datetime"
+                      openOnFocus="true"
+                      timeInterval="5"
+                      twelvehour="true"
+                    ></mat-datetimepicker>
+                   </mat-form-field>
+                  </div>
+
+                <div class="col-lg-3 mt-2">
+                    <label class="form-label">Select warehouse<span class="text-danger">*</span></label>
+                    <select class="form-control form-control-lg" name="name" formControlName="warehouse">
+                        <option selected disabled hidden>select</option>
+                        <option [value]="item.id" *ngFor="let item of warehouseList">{{item.displayName}}</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-3 mt-2">
+                <label class="form-label">Additional Time In Minutes</label>
+                <input type="number" class="form-control form-control-lg"
+                  placeholder="Additional Time In Minutes" autocomplete="off" formControlName="additionalTimeInMinutes" />
+                </div>
+                
+            </div>
+            
+          <!-- </div> -->
+        </div>
+
+        <div class="card-toolbar float-right">
+          <app-back-button></app-back-button>
+          <button type="submit" class="btn btn-sm btn-success p-3" [disabled]="biddingCreateForm.invalid" (click)="save(biddingCreateForm.value)"
+            >Save</button>
+        </div>
+
+      </div>
+  
+    </div>
+</div>

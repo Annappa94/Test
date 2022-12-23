@@ -1,0 +1,273 @@
+<div class="card card-custom gutter-b" [formGroup]="createSeedsForm">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label"> </h3>
+            <h3 class="card-label">{{id ? "Update Cotton Seeds Purchase" : "Seeds Purchase" }}</h3>
+        </div>
+        <div class="card-toolbar">
+        </div>
+    </div>
+    <div class="card-body pt-0">
+        <div class="form form-label-right">
+            <div class="form-group row" style="padding-top: 0px;">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-3 mt-2" *ngIf="!id">
+                            <label class="form-label">Select Center<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg" formControlName="centerId"
+                                (change)="onChangeCenter($event)" name="customerType"
+                                placeholder="Select Customer Type">
+                                <option *ngFor="let center of centerList" [value]="center.id">{{center?.centerName}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-lg-3 mt-2" *ngIf="id">
+                            <label class="form-label">Select Center<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg" formControlName="centerId"
+                                (change)="onChangeCenter($event)" name="customerType"
+                                placeholder="Select Customer Type" disabled>
+                                <option *ngFor="let center of centerList" [value]="center.id">{{center?.centerName}}
+                                </option>
+                            </select>
+                        </div>
+                        <!-- <div class="col-lg-3 mt-2" *ngIf="id">
+                            <label class="form-label">Representive</label>
+                            <div class="form-control form-control-lg form-control-solid">
+                              {{createSeedsForm.get('rmRepresentativeName').value}} - {{createSeedsForm.get('rmRepresentativePhone').value}}
+                            </div>
+                        </div> -->
+                        <div class="col-lg-3 mt-2 selectWrapper" *ngIf="!id">
+                            <label class="w-100 d-flex justify-content-between">
+                                <span>Select Ginner<span
+                                 class="text-danger">*</span></span><span><a class="text-primary cursor-pointer"></a></span>
+                            </label>
+                            <ng-select class="" formControlName="ginner"
+                                placeholder="Please enter mobile number" (search)='getGinnerList($event)' (change)="onChangeGinner($event,Bankverification)">
+                                <ng-option *ngFor="let item of ginnerData" [value]="item.id">{{ item?.name }} - {{ item?.phone }}</ng-option>
+                            </ng-select>
+                        </div>
+                        <div class="col-lg-3 mt-2 selectWrapper" *ngIf="id">
+                            <label class="w-100 d-flex justify-content-between">
+                                <span>Select Ginner<span
+                                 class="text-danger">*</span></span><span><a class="text-primary cursor-pointer"></a></span>
+                            </label>
+                            <select class="form-control form-control-lg" disabled
+                                placeholder="Please enter mobile number">
+                                <option >{{ selectedSeedlotData?.ginnerObj?.name }} - {{ selectedSeedlotData?.ginnerObj?.phone }}</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-6" *ngIf="selectedGinner">
+                            <h4>Bank Details</h4>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <p for=""><b>A/C Holder Name: </b>{{selectedGinner?.bankDetails[0].beneficiaryName}}</p>
+                                    <p for=""><b>A/C Number: </b>{{selectedGinner?.bankDetails[0].accountNumber}}</p>
+                                    <p for=""><b>IFSC code:</b> {{selectedGinner?.bankDetails[0].ifscCode}}</p>
+                                </div>
+                                <div class="col-lg-6">
+                                    <p for=""><b>Bank Name: </b>{{selectedGinner?.bankDetails[0].bankName}}</p>
+                                    <p for=""><b>Branch Name: </b>{{selectedGinner?.bankDetails[0].branchName}}</p>
+                                </div>    
+                            </div>
+                                      
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-3 mt-4">
+                            <label class="form-label">HSN CODE</label>
+                            <input type="number" class="form-control form-control-lg" name="leafCountX" placeholder="HSN Code"
+                                autocomplete="off"  formControlName="HSNCode" disabled/>
+                        </div>
+                        <div class="col-lg-3 mt-4">
+                            <label>Select Grade<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg" formControlName="grade" name="yarnCocoonType"
+                                placeholder="Select Type">
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-3 mt-4">
+                            <label class="form-label">Received Weight</label>
+                            <input type="number" class="form-control form-control-lg" name="leafCountX" placeholder="Received Weight"
+                                autocomplete="off" formControlName="recivedWeight" (input)="priceCalculation()" />
+                        </div>
+                        <div class="col-lg-3 mt-4">
+                            <label class="form-label">Deduction</label>
+                            <input type="number" class="form-control form-control-lg" name="leafCountX" placeholder="Deduction"
+                                autocomplete="off" formControlName="deduction" (input)="priceCalculation()" />
+                        </div>
+                        <div class="col-lg-3 mt-4">
+                            <label class="form-label">Final Received Weight</label>
+                            <input type="number" class="form-control form-control-lg" name="leafCountX" placeholder="Final Weight"
+                                autocomplete="off" formControlName="finalreciveweight" disabled/>
+                        </div>
+                        <div class="col-lg-3 mt-4">
+                            <label class="form-label">Buying Price</label>
+                            <input type="number" class="form-control form-control-lg" name="leafCountX" placeholder="Buying Price"
+                                autocomplete="off" formControlName="buyingPrice" (input)="priceCalculation()"/>
+                        </div>
+                        <div class="col-lg-3 mt-4">
+                            <label class="form-label">Gross Total</label>
+                            <input type="number" class="form-control form-control-lg" name="leafCountX" placeholder="Gross Total"
+                                autocomplete="off" formControlName="grossTotal" disabled/>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="section_with__border mt-5">
+        <div class="row mt-4">
+            <div class="col-lg-6">
+                <div class="row">
+                    <div class="col-lg-6 mt-6">
+                        <label class="form-label positioned">Hamali Deduction(<span class="rupee_symbol">&#8377;</span>) <span class="text-danger"></span> </label>
+                        <input type="text" class="form-control form-control-lg " name="firstName" autocomplete="off"
+                            formControlName="hamaliDeduction">
+                    </div>
+                    <div class="col-lg-6 mt-6">
+                        <label class="form-label positioned">Weight Bridge Charge(<span class="rupee_symbol">&#8377;</span>) <span class="text-danger"></span>
+                        </label>
+                        <input type="text" class="form-control form-control-lg " name="firstName" autocomplete="off"
+                            formControlName="weighBridgeCharges">
+                    </div>
+                    <div class="col-lg-6 mt-6">
+                        <label class="form-label">Credit Days <span class="text-danger">*</span> </label>
+                        <select class="form-control form-control-lg" name="customerType" formControlName="creditDays" placeholder="Select Customer Type">
+                            <option value="1">Today</option>
+                            <option value="15">15 Days</option>
+                            <option value="30">30 Days</option>
+                            <option value="45">45 Days</option>
+                            <option value="60">60 Days</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-6 mt-6 selectWrapper" *ngIf="!id">
+                        <label class="form-label">Representive <small>(Sold by)</small><span class="text-danger"> </span></label>
+                        <ng-select class="select-custom" formControlName="rmRepresentative">
+                          <ng-option *ngFor="let item of usersList" [value]="item">{{ item.name }} - {{ item.phone }} <span
+                              *ngIf="item.role">- {{item.role}}</span></ng-option>
+                        </ng-select>
+                    </div>
+                    <div class="col-lg-6 mt-6" *ngIf="id">
+                        <label class="form-label">Representive</label>
+                        <div class="form-control form-control-lg form-control-solid" >
+                          {{createSeedsForm.get('rmRepresentativeName').value}} - {{createSeedsForm.get('rmRepresentativePhone').value}}
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 form-group mt-4">
+                        <label for="exampleFormControlTextarea1">Terms and Condition</label>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" style="width: 200%;" rows="3" formControlName="termesandCondition"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="row">
+                    <div class="col-12" >
+                        <div class="mr-auto">
+                            <div class="card-body p-4 mr-25">
+                                <!-- <p class="mt-4 mb-4">
+                                    <span class="text-dark-75 font-weight-bold pr-1"><b>Gross Total Amount(<span class="rupee_symbol">&#8377;</span>):</b></span>
+                                    <label for="">{{createSeedsForm.get('grossTotal').value}}</label>
+                                </p> -->
+                                <div class="mb-7">
+                                    <div class="d-flex justify-content-between align-items-center my-2">
+                                        <span class="text-dark-75 font-weight-bold pr-1">
+                                            <b>Gross Total Amount(<span class="rupee_symbol">&#8377;</span>):</b>
+                                        </span>
+                                        <label for="" class="m-0">{{createSeedsForm.get('grossTotal').value}}</label>
+                                    </div>
+                                  <div class="d-flex justify-content-between align-items-center my-2">
+                                        <span class="text-dark-75 font-weight-bold pr-1">
+                                            <b>Pre TaxcAmount(<span class="rupee_symbol">&#8377;</span>):</b>
+                                        </span>
+                                        <label for="" class="m-0">{{createSeedsForm.get('grossTotal').value}}</label>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center my-2">
+                                        <span class="text-dark-75 font-weight-bold pr-1">
+                                            <b>CGST(%):</b>
+                                        </span>
+                                        <label for="" class="m-0">{{createSeedsForm.get('cgst').value}}</label>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center my-2">
+                                        <span class="text-dark-75 font-weight-bold pr-1"
+                                            ><b>SGST(%):</b></span>
+                                            <label for="" class="m-0">{{createSeedsForm.get('sgst').value}}</label>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center my-2">
+                                        <span class="text-dark-75 font-weight-bold pr-1" >
+                                            <b>IGST(%):</b></span>
+                                            <label for="" class="m-0">{{createSeedsForm.get('igst').value}}</label>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center my-2">
+                                        <h5>Total(<span class="rupee_symbol">&#8377;</span>):</h5>
+                                        <h5 for="" class="m-0">{{createSeedsForm.get('pretaxAmount').value}}</h5>
+                                    </div> 
+                                </div>
+    
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 mt-6">
+                    <!-- <bank-form [layouttype]="'page'" [accname]="true" [accnumber]="true" [ifsccode]="true" [bankname]="true" [branchname]="true" [isVerfied]="true" #bank></bank-form> -->
+                <button type="submit" class="btn btn-sm btn-success float-right" [disabled]="createSeedsForm.invalid"
+                    (click)="createCottonSalesOrder(createSeedsForm.value)">Save</button>
+                <button type="button" class="btn btn-sm btn-secondary float-right mr-3" (click)="goBack()">Back</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="Enter-selling-price">
+    <div>
+        <ng-template #payment let-c="close" let-d="dismiss">
+            <div class="modal-header">
+
+            </div>
+            <div class="container">
+                <b> Please Contact Account Team to Proceed with <br>
+                    creation of SO with this Particular Mill </b>
+            </div>
+            <div class="modal-body form-height pt-0">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+                <button type="button" class="btn btn-sm btn-primary" (click)="c('Close click')">Proceed</button>
+            </div>
+        </ng-template>
+    </div>
+</div>
+
+<div class="example-preview">
+    <div>
+        <ng-template #Bankverification let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Bank Details Verification Required </h4>
+
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="font-weight-bold my-2 font-size-h6 pt-3">
+                    <p>Kindly Verify Bank details</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="doNotProceed()">Cancel</button>
+                <button type="button" class="btn btn-primary" (click)="proceedToKyc()">Proceed</button>
+            </div>
+        </ng-template>
+    </div>
+</div>

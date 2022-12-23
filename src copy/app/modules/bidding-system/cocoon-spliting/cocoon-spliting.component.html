@@ -1,0 +1,94 @@
+<div class="card card-custom  my-3 ">
+    <div class="card-header px-4">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="flaticon-statistics text-primary"></i>
+            </span>
+            <h3 class="card-label">Split Lot</h3>
+        </div>
+    </div>
+    <div class="card-body pt-4">
+        <div class="form form-label-right">
+            <div class="form-group" [formGroup]="splitedSlectedLot">
+                <div class="row">
+                        <div class="col-lg-2 mb-3">
+                            <label class="form-label">Select warehouse<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg" name="name" formControlName="mandi" (change)="getInprogressBid($event.target.value)">
+                                <option selected disabled hidden>select</option>
+                                <option [value]="item.id" *ngFor="let item of mandiList">{{item.name}}</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-2 mb-3">
+                            <label class="form-label">Bid Start Time</label>
+                            <!-- <select class="form-control form-control-lg" name="name" formControlName="bid">
+                                <option selected disabled hidden>Select</option>
+                                <option [value]="item.id" *ngFor="let item of bidList">{{item.type}}</option>
+                            </select> -->
+                            <input class="form-control form-control-lg form-control-solid" formControlName="startTimePlaceHolder"  readonly/>
+                        </div>
+
+                        <div class="col-lg-12 mt-3" style="overflow-x: auto;">
+                            <div class="d-flex">
+                                <div class="lot-code-width">Lot ID</div>
+                                <div class="item-width">Weight<small>(kgs)</small> </div>
+                                <div class="item-width">Bid Weight</div>
+                                <div class="item-width">Received Weight</div>
+                                <div class="item-width">Jilly Cocoon <br><small>(kgs)</small></div>
+                                <div class="item-width">Jilly Price/kg</div>
+                                <div class="item-width">Double Cocoon<br><small>(kgs)</small></div>
+                                <div class="item-width">Double Price/kg</div>
+                              </div>
+                              <div formArrayName="baseList">
+                                <div class="d-flex my-2 p-1" *ngFor="let item of splitedSlectedLot.get('baseList')['controls']; let i=index;"
+                                  [formGroupName]="i" >
+                                  <div class="lot-code-width">
+                                    <input type="text" class="form-control form-control-lg form-control-solid" readonly
+                                      formControlName="lotId" />
+                                  </div>
+                                  <div class="item-width">
+                                    <input type="text" class="form-control form-control-lg form-control-solid" readonly
+                                      formControlName="warehouseReceivedWeight" />
+                                  </div>
+                                  <div class="item-width">
+                                    <input type="text" class="form-control form-control-lg form-control-solid" readonly
+                                      formControlName="bidWeight" 
+                                      [class.is-invalid]="isBidWeightValid(splitedSlectedLot.get('baseList')['controls'],i,'bidWeight')"
+                                      [class.is-valid] ="isBidWeightValid(splitedSlectedLot.get('baseList')['controls'],i,'bidWeight')"/>
+                                  </div>
+                                  <div class="item-width">
+                                    <input type="number" class="form-control form-control-lg" formControlName="warehouseSplitReceivedWeight" (input)="weightChanged(i);listenForWarehouseSplitJhilliWeight(i)" 
+                                    [class.is-invalid]="isBidWeightValid(splitedSlectedLot.get('baseList')['controls'],i,'warehouseSplitReceivedWeight')"
+                                    [class.is-valid] ="isBidWeightValid(splitedSlectedLot.get('baseList')['controls'],i,'warehouseSplitReceivedWeight')"/>
+                                  </div>
+                                  <div class="item-width">
+                                    <input type="number" class="form-control form-control-lg" formControlName="warehouseSplitJhilliWeight" (input)="weightChanged(i);listenForWarehouseSplitJhilliWeight(i)" />
+                                  </div>
+                                  <div class="item-width">
+                                    <input type="number" class="form-control form-control-lg" formControlName="warehouseSplitJhilliPricePerKg"   />
+                                  </div>
+                                  <div class="item-width">
+                                    <input type="number" class="form-control form-control-lg" formControlName="warehouseSplitDoubleWeight" (input)="weightChanged(i);listenForWarehouseSplitDoubleWeight(i)" />
+                                  </div>
+                                  <div class="item-width">
+                                    <input type="number" class="form-control form-control-lg" formControlName="warehouseSplitDoublePricePerKg" />
+                                  </div>
+
+                                  <button type="submit" class="btn btn-sm btn-success p-3 mr-3" [disabled]="splitedSlectedLot.get('mandi').invalid||splitedSlectedLot.get('bid').invalid || item.invalid" 
+                                 (click)="saveLot(item.value,true)" >Receive & add to bid</button>
+                                  <button type="submit" class="btn btn-sm btn-success p-3" [disabled]="splitedSlectedLot.get('mandi').invalid || item.invalid" 
+                                  (click)="saveLot(item.value)" >Receive</button>
+                      
+                                </div>
+                              </div>
+                        </div>
+
+    
+                </div>
+            </div>
+        </div>
+        <div class="card-toolbar float-right">
+          <app-back-button></app-back-button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,37 @@
+<app-paginated-table 
+[titleOfTable]="'Advisory-List Management'"
+ [tableHeaders]="tableHeaders"
+ (infoFromTable)="tableInfo($event)"
+ [rowDataList]="advisoryList"
+ [totalRecords]="totalRecords"
+ (onPageChange)="onPageChange($event)"
+ [searchClass]="'col-lg-6'"
+ 
+ [searchHint]="'By Name,Phone,Id'">
+     <div class="col-lg-5">
+      <div class="row">
+        <div class="col-lg-4" [formGroup]="filterForm">
+          <select class="form-control" name="status" placeholder="Filter by status" formControlName="advisoryType">
+            <option value="(TEMPERATURE,HUMIDITY)">All</option>
+            <option value="(TEMPERATURE)">TEMPERATURE</option>
+            <option value="(HUMIDITY)">HUMIDITY</option>
+          </select><small class="form-text text-muted"><b>Filter by:</b>ADVISORY TYPE </small>
+        </div>
+        <div class="col-lg-4" [formGroup]="filterForm">
+          <select class="form-control" name="status" placeholder="Filter by status" formControlName="status">
+            <option value="(CLOSED,NEW)" >All</option>
+            <option value="(NEW)">NEW</option>
+            <option value="(CLOSED)" >CLOSED</option>
+          </select><small class="form-text text-muted"><b>Filter by:</b>STATUS</small>
+        </div>
+         <div class="col-lg-4">
+            <select class="form-control form-control-lg" name="agronomist" formControlName="agroId"  (change)="getAgronomistList()">
+              <option *ngFor="let item of agronomistList" [value]="item.id">{{ item.name }} - {{ item.phone }}</option>
+            </select>
+          <small class="form-text text-muted"><b>Filter by:</b>	 Agronomist</small>
+        </div> 
+      </div>
+    </div>
+</app-paginated-table>
+
+

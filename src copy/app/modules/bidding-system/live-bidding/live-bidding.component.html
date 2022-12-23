@@ -1,0 +1,28 @@
+<div class="card card-custom gutter-b" *ngIf="liveList.length else NoDataFound">
+    <div class="card-header">
+      <div class="card-title">
+        <h3 *ngIf="disableEndBidButn" class="card-label">Live Bidding</h3>
+        <h3 *ngIf="!disableEndBidButn" class="card-label">Bidding Results</h3>
+      </div>
+      <div class="card-toolbar">
+        <div>
+          <app-back-button ></app-back-button>
+          <button *ngIf="disableEndBidButn" type="button" class="btn btn-sm font-size-sm py-3 px-6 mr-4">{{timedisplay}}</button>
+          <button *ngIf="disableEndBidButn" type="button" class="btn btn-sm btn-success font-size-sm py-3 px-6 mr-4" (click)="getLiveBidResults();">Refresh</button>
+        <button *ngIf="disableEndBidButn" type="button" class="btn btn-sm btn-danger font-size-sm py-3 px-6 mr-2" (click)="endBidding();">End Bidding</button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body pt-0">
+        <RMtable 
+        [tableHeaders]="tableHeaders" 
+        [rowDataList]="liveList"
+        [searchText]="searchText"
+        >
+        </RMtable>
+    </div>
+  </div>
+
+  <ng-template #NoDataFound>
+    <h1 class="font-weight-boldest text-dark-75 mt-15" style="font-size: 5rem;"> No Data Found </h1>
+  </ng-template>

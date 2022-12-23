@@ -1,0 +1,547 @@
+<div class="bg-white rounded mb-4 d-flex align-items-center py-2 sticky-header justify-content-between" >
+    <ul id="breadcrumbs" *ngIf="lotDetails">
+        <li><span style="cursor: pointer;" class="hover-item" (click)="goBack()">All Tussar Lots</span></li>
+        <li><span>{{lotDetails?.code}}</span></li>
+    </ul>
+    <div>
+        <app-back-button></app-back-button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-4">
+
+        <!--begin::Card-->
+        <div class="card card-custom gutter-b">
+            <!--begin::Body-->
+            <div class="card-body pt-4">
+                <!--begin::Toolbar-->
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <div class="font-size-h5 mb-3 font-weight-bolder text-success">
+                        {{lotDetails?.code}}
+                    </div>
+
+                    <div class="float-right">
+                        <a *ngIf="lotDetails?.invoiceURL && user.role !== 'READADMIN'" href="{{ lotDetails?.invoiceURL }}" target="_blank">
+                            <span matTooltip="Download Invoice" class="btn btn-icon btn-outline-success btn-sm mr-2">
+                                <i class="flaticon-download"></i>
+                            </span>
+                        </a>
+                        <span matTooltip="Delete" class="btn btn-icon btn-outline-danger btn-sm" 
+                            *ngIf="lotDetails?.status == 'New' && lotDetails?.paymentStatus == 'Pending' && rolesService.checkAccess(user.role, {type: 'actions', component: 'CocoonDetailsComponent', action: 'delete'})" 
+                            (click)="deleteConfirmatin(deleteLot)">
+                            <i class="flaticon-delete"></i>
+                        </span>
+                    </div>
+
+                </div>
+                <!--end::Toolbar-->
+
+                <div class="mb-7 mt-4" *ngIf="farmerDetails"> 
+                    <div *ngIf="lotDetails?.parentLotId" class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted mr-2 font-weight-bold">Parent Lot:</span>
+                        <span class="text-dark-75 font-weight-bold">{{lotDetails?.parentLotId}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted mr-2 font-weight-bold">Center:</span>
+                        <span class="text-dark-75 font-weight-bold">{{farmerDetails?.centerName}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted mr-2 font-weight-bold">Status:</span>
+                        <span class="text-dark-75 font-weight-bold">{{lotDetails?.status}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted mr-2 font-weight-bold">Created Date:</span>
+                        <span class="text-dark-75 font-weight-bold">{{lotDetails.createdDate}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted mr-2 font-weight-bold">Updated Date:</span>
+                        <span class="text-dark-75 font-weight-bold">{{lotDetails.lastModifiedDate}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="lotDetails.rmRepresentativeName">
+                        <span class="text-muted mr-2 font-weight-bold">Representive Name:</span>
+                        <span class="text-dark-75 font-weight-bold">{{lotDetails.rmRepresentativeName}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="lotDetails.rmRepresentativePhone">
+                        <span class="text-muted mr-2 font-weight-bold">Representive Phone:</span>
+                        <span class="text-dark-75 font-weight-bold">{{lotDetails.rmRepresentativePhone}}</span>
+                    </div>
+                </div>
+
+                <p class="mt-4">
+                    <span class="text-dark-75 font-weight-bold pr-1">Farmer</span>
+                </p>
+                <div class="mb-7">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Name:</span>
+                        
+                        <!-- <a class="btn btn-link-success font-weight-bold" matTooltip="Farmer details" (click)="goToFarmerDetails()">
+                            {{lotDetails?.farmerName | titlecase}}
+                            </a> -->
+                            <span class="text-dark-75 font-weight-bold"> {{lotDetails?.farmerName | titlecase}}</span>
+
+                            
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Phone:</span>
+                        <span class="text-dark-75 font-weight-bold">{{lotDetails?.farmerPhone}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="lotDetails?.lotSoldBy">
+                        <span class="text-muted font-weight-bold mr-2">Lot sold By:</span>
+                        <span class="text-dark-75 font-weight-bold">{{lotDetails?.lotSoldBy}}</span>
+                    </div>
+                </div>
+
+                <p class="mt-4">
+                    <span class="text-dark-75 font-weight-bold pr-1">Bank Details</span>
+                </p>
+                <div class="mb-7">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Account Holder Name:</span>
+                        <span class="text-dark-75 font-weight-bold">{{lotDetails?.bank?.beneficiaryName}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Account Number:</span>
+                        <span class="text-dark-75 font-weight-bold">{{lotDetails?.bank?.accountNumber}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Bank Name:</span>
+                        <span class="text-dark-75 font-weight-bold">{{lotDetails?.bank?.bankName}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">IFSC Code:</span>
+                        <span class="text-dark-75 font-weight-bold">{{lotDetails?.bank?.ifscCode}}</span>
+                    </div>
+                    
+                </div>
+
+                <p class="mt-4 mb-4">
+                    <span class="text-dark-75 font-weight-bold pr-1">Lot</span>
+                </p>
+                <div class="mb-7">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted mr-2 font-weight-bold">Is Acknowledged:</span>
+                        <span *ngIf="lotDetails?.isAcknowledged" class="dot1"></span>
+                        <span *ngIf="!lotDetails?.isAcknowledged" class="dot"></span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="lotDetails?.receivedWeightPricePerKg">
+                        <span class="text-dark-75 mr-2 font-weight-bolder">Rate<small>(per unit)</small>:</span>
+                        <span class="text-dark-75 font-weight-bolder">Rs. {{lotDetails?.receivedWeightPricePerKg}}</span>
+                    </div>
+
+                    <!-- <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted mr-2 font-weight-bold">Buy price <small>(per kg)</small>:</span>
+                        <span class="text-dark-75 font-weight-bold">Rs. {{lotDetails?.pricePerKg.toFixed(2)}}</span>
+                    </div> -->
+                    
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="lotDetails?.receivedWeight">
+                        <span class="text-muted mr-2 font-weight-bold">Recieved Unit:</span>
+                        <span class="text-dark-75 font-weight-bold">{{lotDetails?.receivedWeight}} {{lotDetails?.uom}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="lotDetails?.centerCocoonWeightLoss">
+                        <span class="text-muted mr-2 font-weight-bold">Center weight loss:</span>
+                        <span class="text-dark-75 font-weight-bold">{{lotDetails?.centerCocoonWeightLoss}} %</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="lotDetails?.centerCocoonWeightLoss">
+                        <span class="text-muted mr-2 font-weight-bold">Total Center weight loss:</span>
+                        <span class="text-dark-75 font-weight-bold">{{lotDetails?.centerTotalCocoonWeightLoss}} Kgs</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="lotDetails?.noOfBags">
+                        <span class="text-muted mr-2 font-weight-bold">No. of bags:</span>
+                        <span class="text-dark-75 font-weight-bold">{{lotDetails?.noOfBags}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="lotDetails?.centerPerBagWeightDeduction">
+                        <span class="text-muted mr-2 font-weight-bold">Bags weight:</span>
+                        <span class="text-dark-75 font-weight-bold">{{lotDetails?.centerPerBagWeightDeduction}} gms</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="lotDetails?.centerBagWeightDeductionOverride">
+                        <span class="text-muted mr-2 font-weight-bold">Procurement at Farmer location:</span>
+                        <span class="text-dark-75 font-weight-bold">Yes</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="lotDetails?.centerTotalBagWeightDeduction">
+                        <span class="text-muted mr-2 font-weight-bold">Total Bags weight:</span>
+                        <span class="text-dark-75 font-weight-bold">{{lotDetails?.centerTotalBagWeightDeduction}} kgs</span>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="mr-2 font-weight-bolder text-dark-75">Final Unit After Deduction:</span>
+                        <span class="text-dark-75 font-weight-bolder">{{lotDetails?.receivedQuantity}} {{lotDetails?.uom}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted mr-2 font-weight-bold">Available Unit:</span>
+                        <span class="text-dark-75 font-weight-bold">{{lotDetails?.availableQuantity}} {{lotDetails?.uom}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="lotDetails?.wastageQuantity">
+                        <span class="text-muted mr-2 font-weight-bold">Wastage:</span>
+                        <span class="text-dark-75 font-weight-bold">{{lotDetails?.wastageQuantity}} Kgs</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="lotDetails?.actualGrossAmount">
+                        <span class="mr-2 font-weight-bolder text-dark-75">Gross Total Amount <small>(Actual unit * Rate )</small>:</span>
+                        <span class="text-dark-75 font-weight-bolder">Rs. {{lotDetails?.actualGrossAmount.toLocaleString('en-IN')}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="lotDetails?.centerCocoonLogisticCostPerKg">
+                        <span class="text-muted mr-2 font-weight-bold">Logistics cost for center<small>(per unit)</small>:</span>
+                        <span class="text-dark-75 font-weight-bold">Rs. {{lotDetails?.centerCocoonLogisticCostPerKg}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="lotDetails?.centerCocoonLogisticCostPerKg">
+                        <span class="text-muted mr-2 font-weight-bold">Total Logistics cost for center :</span>
+                        <span class="text-dark-75 font-weight-bold">Rs. {{lotDetails?.centerTotalLogisticsCost}}</span>
+                    </div>
+
+                    <ng-container *ngIf="lotDetails?.discountValue > 0">
+                        
+                        <div class="d-flex justify-content-between align-items-cente my-2">
+                            <span class="text-muted mr-2 font-weight-bold">Coupon Code:</span>
+                            <span class="text-dark-75 font-weight-bold">{{lotDetails?.couponCode}}</span>
+                        </div>
+    
+                        <div class="d-flex justify-content-between align-items-cente my-2">
+                            <span class="text-muted mr-2 font-weight-bold">Coupon Amount:</span>
+                            <span class="text-dark-75 font-weight-bold">Rs. {{lotDetails?.discountValue}}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="lotDetails?.netAmount > 0">
+                            <span class="text-dark-75 mr-2 font-weight-bold">Net Payable Amount:</span>
+                            <span class="text-dark-75 font-weight-bold">Rs. {{lotDetails?.netTotalPrice}}</span>
+                        </div>
+                        <!-- <div class="d-flex justify-content-between align-items-cente my-2">
+                            <span class="text-dark-75 mr-2 font-weight-boldest">Total Amount:</span>
+                            <span class="text-dark-75 font-weight-boldest">Rs. {{lotDetails?.displayTotalPrice}}</span>
+                        </div> -->
+                    </ng-container>
+
+                    <ng-container *ngIf="lotDetails?.discountValue == 0">
+                        <div class="d-flex justify-content-between align-items-cente my-2">
+                            <span class="text-dark-75 mr-2 font-weight-boldest">Net Payable Amount:</span>
+                            <span class="text-dark-75 font-weight-boldest">Rs. {{lotDetails?.displayTotalPrice}}</span>
+                        </div>
+                    </ng-container>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="lotDetails?.askingPricePerKg">
+                        <span class="text-muted mr-2 font-weight-bold">Selling price on Mobile:</span>
+                        <span class="text-dark-75 font-weight-bold">Rs. {{lotDetails?.askingPricePerKg}}/kg</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="lotDetails?.askingWeight">
+                        <span class="text-muted mr-2 font-weight-bold">Selling weight on Mobile:</span>
+                        <span class="text-dark-75 font-weight-bold">{{lotDetails?.askingWeight}} kgs</span>
+                    </div>
+
+                </div> 
+
+            </div>
+            <!--end::Body-->
+        </div>
+        <!--end::Card-->
+
+
+    </div>
+    <div class="col-lg-5">
+
+        <!--begin::Card-->
+        <div class="card card-custom">
+            <!--begin::Body-->
+            <div class="card-body pt-4">
+                <!--begin::Toolbar-->
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <div class="font-size-h5 mb-3 font-weight-bold text-success">
+                        Tussar Order
+                    </div>
+
+                </div>
+                <!--end::Toolbar-->
+
+                <ng-container *ngIf="!lotOrderDetails?.length">
+                    <div class="d-flex justify-content-center align-items-center">
+                        Yet To be Sold
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="lotOrderDetails?.length">
+                    <div class="table-responsive">
+                        <table class="table table-borderless table-vertical-center">
+                            <thead>
+                                <tr>
+                                    <th class="p-0 min-w-100px">Order</th>
+                                    <th class="p-0 min-w-100px">Sell</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr  *ngFor="let item of lotOrderDetails">
+                                    <td class="pl-0">
+                                        <a (click)="goToOrderDetails(item)" matTooltip="Order details"
+                                            class="mb-1 btn btn-link-success font-weight-bold">RMCORDER{{item?.cocoonOrderId}}</a>
+                                        <div>
+                                            <a matTooltip="Reeler details" class="btn btn-link-success font-weight-bold" (click)="goToReelerDetail(item)">{{item?.reelerName}} </a>
+                                        </div>
+                                    </td>
+    
+                                    <td class="pl-0">
+                                        <span class="text-dark-75 font-weight-bold d-block font-size-md">
+                                            Rs. {{item?.totalAmount}}
+                                        </span>
+                                        <span class="text-muted font-weight-bold">{{item?.sellingWeight}}{{item.uom}}@{{item?.sellingPricePerKg}}/unit
+                                            <span *ngIf="item?.discount">and discount Rs. {{item.discount}}</span>
+                                        </span>
+                                    </td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </ng-container>
+                
+
+            </div>
+            <!--end::Body-->
+        </div>
+        <!--end::Card-->
+
+        <!--begin::Card-->
+        <div class="card card-custom mt-4">
+            <!--begin::Body-->
+            <div class="card-body pt-4">
+                <!--begin::Toolbar-->
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <div class="font-size-h5 mb-3 font-weight-bold text-success">
+                        Activity Data
+                    </div>
+                    <div class="font-size-h5 mb-3 font-weight-bold text-success" *ngIf="lotDetails?.availableQuantity != 0">
+                       <p  *ngIf="!timedisplayRed">{{timedisplay}}</p> 
+                      <p class="text-danger" *ngIf="timedisplayRed">{{timedisplayRed}}</p> 
+                    </div>
+                    <div class="font-size-h5 mb-3 font-weight-bold text-success" *ngIf="lotDetails?.availableQuantity == 0">
+                        <p *ngIf="!timedisplayRed">Sold in {{timedisplay}} </p> 
+                        <p class="text-danger" *ngIf="timedisplayRed">Sold in {{timedisplayRed}}</p> 
+                     </div>
+                </div>
+                <!--end::Toolbar-->
+
+                <ng-container>
+                    <div class="example example-basic mt-6">
+                        <div class="">
+                            <div class="timeline timeline-2">
+                                <div class="timeline-bar"></div>
+
+                                <!-- REPEAT for NO OF PAYMENTS //*ngFor="let item of khataList"-->
+                                <div class="timeline-item" > 
+                                    <span class="timeline-badge bg-success"></span>
+                                    <div class="timeline-content d-flex align-items-center justify-content-between">
+                                        <span class="mr-3 font-weight-bold text-dark-50 font-size-sm d-flex flex-column">Lot Created By {{lotDetails?.createdBy}}
+                                            <span class="">
+                                                {{lotDetails?.receivedWeight}}</span>
+                                           </span>
+                                        <span class="text-muted text-right font-size-xs">{{lotDetails?.createdDate}}</span>
+                                    </div>
+                                </div>
+                                <div class="timeline-item" *ngFor="let item of lotOrderDetails "> 
+                                    <span class="timeline-badge bg-success"></span>
+                                    <div class="timeline-content d-flex align-items-center justify-content-between">
+                                        <!-- <div> lotCocoonOrderDetails
+                                            <a matTooltip="Reeler details" class="btn btn-link-success font-weight-bold" (click)="goToReelerDetail(item)">{{item?.reelerName}} </a>
+                                        </div> -->
+                                        <span class="mr-3 font-weight-bold text-dark-50 font-size-sm d-flex flex-column">{{item?.reelerName}}
+                                            <span class="">
+                                                {{item?.sellingWeight}}{{item.uom}}@{{item?.sellingPricePerKg}}/unit
+                                            </span>
+                                           <span class="text-dark-75 font-weight-bold d-block font-size-md">
+                                            Rs. {{item?.totalAmount}}
+                                          </span>
+                                        </span>
+                                        <span class="text-muted text-right font-size-xs">{{item?.createdDate | date:'d/M/yyyy, h:mm a'}}</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!--end::Timeline-->
+                        </div>
+                    </div>
+
+                </ng-container>
+                
+
+            </div>
+            <!--end::Body-->
+        </div>
+        <!--end::Card-->
+
+    </div>
+    <div class="col-lg-3">
+        <div class="card card-custom ">
+           
+            <div class="card-body p-4">
+
+                <!-- Payment details & actions -->
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <div class="font-size-h5 font-weight-bold text-success">Payments</div>
+                    
+                    <button matTooltip="Pay Now" class="btn btn-sm btn-icon float-right" 
+                        *ngIf="lotDetails?.paymentStatus?.toUpperCase() === 'PENDING' && rolesService.checkAccess(user.role, {type: 'actions', component: 'CocoonDetailsComponent', action: 'payment'})"
+                            (click)="markSoldConfirmation(lotDetails, markSold)">
+                        <i class="fas fa-money-check-alt text-success"></i>
+                    </button>
+                </div>
+                <div class="mt-4">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Total:</span>
+                        <span class="text-dark-75 font-weight-bold" [innerHTML]="lotDetails?.displayTotalPriceHTML"></span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Status:</span>
+                        <div>
+                            <span [ngClass]="{'text-danger font-weight-bold': lotDetails?.paymentStatus == 'Pending', 'text-success font-weight-bold': lotDetails?.paymentStatus != 'Pending'}">{{lotDetails?.paymentStatus}}</span>
+                            <span class="label label-inline label-outline-success ml-2" *ngIf="lotDetails?.paymentStatus != 'Pending' && lotDetails?.paymentStatus != 'NotApplicable'">
+                                {{farmerPayout?.referenceNumber}}
+                           </span>
+                        </div>
+                    </div>
+
+                    <ng-container>
+                        <div class="d-flex justify-content-between align-items-cente my-2">
+                            <span class="text-muted font-weight-bold mr-2">Payment Due:</span>
+                           <span class="text-dark-75 font-weight-bold"><small class="text-dark-75 font-weight-bold"> {{lotDetails?.paymentDueDate}} ({{lotDetails?.paymentAfterDays}} days)</small></span>
+                        </div>
+                    </ng-container>
+                    
+                    <ng-container>
+                        <div class="d-flex justify-content-between align-items-cente my-2">
+                            <span class="text-muted font-weight-bold mr-2">Payment On:</span>
+                            <span class="text-dark-75 font-weight-bold"><small class="text-dark-75 font-weight-bold">{{lotDetails?.paymentDate | date:'short'}}</small></span>
+                        </div>
+                    </ng-container>
+                    
+                </div>
+
+                <div class="example example-basic mt-4" *ngIf="lotDetails && lotDetails.paymentStatus == 'PAID'">
+                    <div class="">
+                        <!--begin::Timeline-->
+                        <div class="timeline timeline-2">
+                            <div class="timeline-bar"></div>
+
+                            <div class="timeline-item">
+                                <span class="timeline-badge bg-success"></span>
+                                <div class="timeline-content d-flex align-items-center justify-content-between">
+                                    <span class="mr-3 font-weight-bold text-dark-75 font-size-sm">Rs. {{lotDetails?.displayTotalPrice}}
+                                        <span class="label label-inline label-outline-success">
+                                            RAZORPAY</span>
+                                        <!-- <span class="label label-inline label-light-danger font-weight-bolder">hot</span> --></span>
+                                    <span class="text-muted font-italic text-right font-size-xs">{{lotDetails?.lastModifiedDate}}</span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!--end::Timeline-->
+                    </div>
+                </div>
+
+            </div>
+            <!--end: Card Body-->
+        </div>
+        <!--end: List Widget 9-->
+
+        <div class="card card-custom mt-4">
+           
+            <div class="card-body p-4">
+                <p class="mt-4 mb-4">
+                    <span class="text-dark-75 font-weight-bold pr-1">Quality</span>
+                </p>
+                <div class="mb-7">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted mr-2 font-weight-bold">Type:</span>
+                        <span class="text-dark-75 font-weight-bold">{{lotDetails?.displayCocoonType}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted mr-2 font-weight-bold">Grade:</span>
+                        <span class="text-dark-75 font-weight-bold" *ngIf="lotDetails?.rmGrade">{{globalService.getDisplayCoconGrade(lotDetails?.rmGrade)}}</span>
+                    </div>
+                    <!-- <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted mr-2 font-weight-bold">Renditta:</span>
+                        <span class="text-dark-75 font-weight-bold">{{lotDetails?.grade}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="lotDetails?.cocoonRendittaImage">
+                        <span class="text-muted font-weight-bold mr-2">Renditta image:</span>
+                        <span>
+                            <a href="{{lotDetails?.cocoonRendittaImage }}" target="_blank">
+                                Click to view uploaded image 
+                            </a>
+                        </span>
+                    </div> -->
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="lotDetails?.systemPredictedGrade">
+                        <span class="text-muted mr-2 font-weight-bold">Predicted Renditta Grade:</span>
+                        <span class="text-dark-75 font-weight-bold">{{lotDetails?.systemPredictedGrade}}</span>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="details-confirmation-preview">
+    <div>
+        <ng-template #deleteLot let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Delete</h4>
+            </div>
+            <div class="modal-body">
+                <p><strong>Are You Sure You Want To Delete This Lot?</strong></p>
+                <p>You are deleting a listed lot, which accounts might have imported in Tally. Please inform accounts team about this deletion at <b>accounts@reshamandi.com</b> with deleted LotId</p>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+                <button type="button" class="btn btn-sm btn-success" (click)="deleteCurrentLot()">Yes</button>
+            </div>
+        </ng-template>
+    </div>
+</div>
+
+<div class="details-confirmation-preview">
+    <div>
+      <ng-template #markSold let-c="close" let-d="dismiss" [formGroup]="paymentForm">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            Mark Paid!
+          </h4>
+        </div>
+        
+        <div class="modal-body pb-0" >
+          <p>You are marking payment sent to farmer!</p>
+          <p>Reshamandi paid Rs <strong>{{markSoldItem?.pricePerPc}}/PC</strong> for lot id <strong>{{markSoldItem?.id}} </strong>of weight <strong>{{markSoldItem?.lotWeight}}</strong> kg.</p>
+          <!-- <p>Total Rs. <strong>{{markSoldItem?.displayTotalPrice}}</strong></p> -->
+        </div>
+
+        <div class="row p-4">
+            <div class="col-6">
+                <label class="form-label">Total Rs</label>
+                <input type="text" class="form-control form-control-solid form-control-lg" [value]="markSoldItem?.displayTotalPrice" autocomplete="off"  readonly/>
+            </div> 
+    
+            <div class="col-6">
+                <label class="form-label">Reference Number<span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-lg" name="refRenceNumber"
+                  placeholder="Reference Number" autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('refRenceNumber')"
+                  [class.is-valid]="isControlValidForReeler('refRenceNumber')" formControlName="refRenceNumber" />
+                <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'refRenceNumber')">
+                    Reference Number is required
+                </div> 
+            </div> 
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click'); paymentForm.reset();">Cancel</button>
+          <button type="button" class="btn btn-sm btn-success" [disabled]="paymentForm.invalid" (click)="markAsSold()">Confirm</button>
+        </div>
+      </ng-template>
+    </div>
+  </div>

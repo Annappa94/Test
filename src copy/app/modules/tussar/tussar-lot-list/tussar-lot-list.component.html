@@ -1,0 +1,703 @@
+<div class="card card-custom gutter-b">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">Tussar Purchases</h3>
+    </div>
+    <div class="card-toolbar">
+      <!-- <button [disabled]="selectedLot.length == 0" type="button" class="btn btn-sm btn-outline-dark mr-2 py-3" (click)="createEstimate()">Estimate</button> -->
+      <button *ngIf="user.role !== 'COperationsAgent'  && user.role !== 'COCOON_PROCUREMENT_EXEC' && user.role !== 'COCOON_SALES_EXEC' && user.role !== 'FarmInputAgent' && user.role !== 'FarmInputManager'" [disabled]="selectedLot.length == 0 || disablemarksold" type="button" class="btn btn-sm btn-outline-dark mr-2 py-3" (click)="validateLotIds();">
+        Mark Sold
+       <span class='badge badge-warning p-1' id='lblCartCount'> {{selectedLot?.length}}</span>
+     </button>
+      <!-- <button *ngIf="user.role !== 'COperationsAgent'  && user.role !== 'COCOON_PROCUREMENT_EXEC' && user.role !== 'COCOON_SALES_EXEC' && user.role !== 'FarmInputAgent' && user.role !== 'FarmInputManager'" [disabled]="selectedLot.length == 0" type="button" class="btn btn-sm btn-outline-dark mr-2" (click)="onMarkSold();">Mark Sold</button> -->
+      <!-- <button *ngIf="user.role !== 'FarmInputAgent' && user.role !== 'FarmInputManager' && user.role !== 'READADMIN'" [disabled]="selectedLot.length == 0" type="button" class="btn btn-sm btn-outline-dark mr-2 py-3" (click)="openLogisticsForm(createLogistics)">Dispatch</button> -->
+      <button *ngIf="user.role !== 'READADMIN'" type="button" class="btn btn-sm btn-outline-success mr-2 py-3" (click)="createNewTussarLot();">+ New Lot</button>
+    </div>
+  </div>
+  <div class="card-body pt-0">
+    <div class="mt-4" class="estimate-list">
+      <p *ngIf="disablemarksold&&selectedLot?.length" class="text-warning pt-2 font-weight-bold">{{disableWarningMsg}}</p>
+      <ng-container *ngIf="selectedLot?.length">
+        <div class="alert bg-success-o-15 border-success fade show mx-0">
+          <div class="font-size-h6 text-dark">Selected Lot's:</div>
+          <div class="row mx-0">
+            <div class="mr-2 label label-pill label-inline font-weight-bold my-2 py-5" *ngFor="let item of selectedLot; let i = index">
+              <span class="mr-2">{{item.code}}</span>
+                <span class="cursor-pointer" (click)="deleteRecord(i)">
+                  <i class="flaticon-cancel text-danger"></i>
+                </span>
+            </div>
+          </div>
+
+        </div>
+      </ng-container>
+    </div>
+
+    <div class="mt-4" class="estimate-list">
+      <div class="alert alert-dismissible bg-success-o-15 border-success fade show" *ngFor="let item of estimationArray; let i = index">
+       <p><span class="mr-2 text-dark font-weight-bold" *ngFor="let lot of item.lots">{{lot}}</span></p>
+        <span class="text-dark font-weight-bolder">{{item.totalWeight}}</span>
+        <span class="text-dark"> kgs @ Rs.</span>
+        <span class="text-dark font-weight-bolder"> {{item.pricePerKg.toFixed(2)}}
+        </span>
+        <span class="text-dark"> /kg with logistics of Rs.</span>
+        <span class="text-dark font-weight-bolder">
+           {{item.logisticCost.toFixed(2)}}</span>
+           <span class="text-dark">. Total RM buy of Rs</span>
+           <span class="text-dark font-weight-bolder"> {{item.totalCost.toFixed(2)}}</span> <br/>
+           <span class="text-dark">Recommended Selling (5%) Rs.</span> <span class="text-dark font-weight-bolder"> {{item.estimatedPricePerKg.toFixed(2)}}</span>
+           <span class="text-dark"> per kg for Total<small>(Including logistics)</small>Rs</span>
+           <span class="text-dark font-weight-bolder">
+              {{item.estimatedPrice.toFixed(2)}}</span>
+        <button type="button" aria-label="Close" class="close" (click)="clearEstimate(i)"><i class="flaticon-close text-dark"></i></button>
+      </div>
+    </div>
+    <div class="form form-label-right">
+        <div class="form-group row">
+          <div class="col-lg-5">
+            <input type="text" class="form-control" (keyup.enter)="onSearch();" (keyup)="onSearchKey($event)" [(ngModel)]="searchText" placeholder="Search" value=""/>
+            <small class="form-text text-muted"><b>Search</b> in all fields</small>
+          </div>
+
+          <div class="col-lg-1">
+            <button type="button" class="btn btn-sm btn-success mr-2 mt-1" [disabled]="!enableSearch" (click)="onSearch();">Search</button>
+          </div>
+
+          <div class="col-lg-3">
+            <div class="row">
+              <div class="col-lg-6">
+                <select class="form-control" name="status" (change)="onChangeRole($event)" placeholder="Filter by status">
+                  <option value="(Sold,Available)" [selected]="selectedStatus == '(Sold,Available)'">All</option>
+                  <!-- <option value="(New)" [selected]="selectedStatus == '(New)'">New</option> -->
+                  <option value="(Available)" [selected]="selectedStatus == '(Available)'">Available</option>
+                  <!-- <option value="(Intransit)" [selected]="selectedStatus == '(Intransit)'">Intransit</option> -->
+                  <option value="(Sold)" [selected]="selectedStatus == '(Sold)'">Sold</option>
+                </select><small class="form-text text-muted"><b>Filter</b> by status</small>
+              </div>
+              <!-- <div class="col-lg-6">
+                <select class="form-control" name="status"  placeholder="Filter by status" (change)="onChangeSplitedFilterHolder($event)">
+                  <option value="" [selected]="splittedFilterHolder==''">All</option>
+                  <option value="(childLots== true and cocoonLotOrigin==FARM)" [selected]="splittedFilterHolder ==  '(childLots== true and cocoonLotOrigin==FARM)'">Parent Splitted</option>
+                  <option value="(childLots== false and cocoonLotOrigin==FARM)" [selected]="splittedFilterHolder == '(childLots== false and cocoonLotOrigin==FARM)'">Parent Un Splitted</option>
+                  <option value="(cocoonLotOrigin==SPLIT)" [selected]="splittedFilterHolder == '(cocoonLotOrigin==SPLIT)'">Splitted</option>
+                </select><small class="form-text text-muted"><b>Filter</b> by lot split</small>
+              </div> -->
+            </div>
+          </div>
+
+          <!-- <div class="col-lg-3">
+            <div class="row">
+              <div class="col-lg-12">
+                <select class="form-control" name="status" (change)="onChangeCocoonType($event)" placeholder="Filter by Cocoon type">
+                  <option value="(SEEDCOCOON,CBGOLD,BIVOLTINE,TUSSAR)" [selected]="selectedCocoonType == '(SEEDCOCOON,CBGOLD,BIVOLTINE,TUSSAR)'">All</option>
+                  <option value="(SEEDCOCOON)" [selected]="selectedCocoonType == '(SEEDCOCOON)'">Bivoltine Seed</option>
+                  <option value="(CBGOLD)" [selected]="selectedCocoonType == '(CBGOLD)'">CB Gold</option>
+                  <option value="(BIVOLTINE)" [selected]="selectedCocoonType == '(BIVOLTINE)'">Bivoltine Hybrid</option>
+                  <option value="(TUSSAR)" [selected]="selectedCocoonType == '(TUSSAR)'">Tussar</option>
+
+                </select><small class="form-text text-muted"><b>Filter</b> by Cocoon type</small>
+              </div>
+            </div>
+          </div> -->
+
+        </div>
+      </div>
+    <div class="table-responsive angular-bootstrap-table">
+      <table id="excel-table" class="table table-head-custom table-vertical-center overflow-hidden">
+        <thead>
+          <th class="selection-cell-header" data-row-selection="true">
+          </th>
+          <th name="code" ngDefaultControl [(ngModel)]="tableHeader.id" (click)="onSort('id')">
+            <i *ngIf="tableHeader.id === 1 && activeSort === 'id'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.id === 0 && activeSort === 'id'"
+              class="fas fa-long-arrow-alt-down"></i>
+              RM Code
+          </th>
+          <!-- <th>RM Code</th> -->
+
+          <th name="farmerName" ngDefaultControl [(ngModel)]="tableHeader.farmer.name" (click)="onSort('farmer.name')">
+            <i *ngIf="tableHeader.farmer.name === 1 && activeSort === 'farmer.name'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.farmer.name === 0 && activeSort === 'farmer.name'"
+              class="fas fa-long-arrow-alt-down"></i>
+              Farmer
+          </th>
+
+          <!-- <th name="farmerPhone" ngDefaultControl [(ngModel)]="tableHeader.farmer.phone" (click)="onSort('farmer.phone')">
+            <i *ngIf="tableHeader.farmer.phone === 1 && activeSort === 'farmer.phone'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.farmer.phone === 0 && activeSort === 'farmer.phone'"
+              class="fas fa-long-arrow-alt-down"></i>
+              Phone
+          </th> -->
+
+          <th name="tableHeader.center.centerName" ngDefaultControl [(ngModel)]="tableHeader.center.centerName" (click)="onSort('center.centerName')">
+            <i *ngIf="tableHeader.center.centerName === 1 && activeSort === 'center.centerName'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.center.centerName === 0 && activeSort === 'center.centerName'"
+              class="fas fa-long-arrow-alt-down"></i>
+              Center
+          </th>
+
+          <!-- <th name="Display" ngDefaultControl [(ngModel)]="tableHeader.isDisplayActive" (click)="onSort('isDisplayActive')">
+            <i *ngIf="tableHeader.isDisplayActive === 1 && activeSort === 'isDisplayActive'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.isDisplayActive === 0 && activeSort === 'isDisplayActive'"
+              class="fas fa-long-arrow-alt-down"></i>
+              Display
+          </th> -->
+          <!-- <th name="Type" ngDefaultControl [(ngModel)]="tableHeader.type" (click)="onSort('type')">
+            <i *ngIf="tableHeader.type === 1 && activeSort === 'type'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.type === 0 && activeSort === 'type'"
+              class="fas fa-long-arrow-alt-down"></i>
+              Type
+          </th> -->
+          <th name="Grade" ngDefaultControl [(ngModel)]="tableHeader.rmGrade" (click)="onSort('rmGrade')">
+            <i *ngIf="tableHeader.rmGrade === 1 && activeSort === 'rmGrade'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.rmGrade === 0 && activeSort === 'rmGrade'"
+              class="fas fa-long-arrow-alt-down"></i>
+              Grade
+          </th>
+          <th name="uom" ngDefaultControl [(ngModel)]="tableHeader.uom" (click)="onSort('uom')">
+            <i *ngIf="tableHeader.uom === 1 && activeSort === 'uom'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.uom === 0 && activeSort === 'uom'"
+              class="fas fa-long-arrow-alt-down"></i>
+              Uom
+          </th>
+          <th name="lotWeight" ngDefaultControl [(ngModel)]="tableHeader.lotWeight" (click)="onSort('lotWeight')">
+            <i *ngIf="tableHeader.lotWeight === 1 && activeSort === 'lotWeight'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.lotWeight === 0 && activeSort === 'lotWeight'"
+              class="fas fa-long-arrow-alt-down"></i>
+              Unit
+          </th>
+          <th name="availableQuantity" ngDefaultControl [(ngModel)]="tableHeader.availableQuantity" (click)="onSort('availableQuantity')">
+            <i *ngIf="tableHeader.availableQuantity === 1 && activeSort === 'availableQuantity'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.availableQuantity === 0 && activeSort === 'availableQuantity'"
+              class="fas fa-long-arrow-alt-down"></i>
+              Available
+          </th>
+
+          <th name="Price" ngDefaultControl [(ngModel)]="tableHeader.pricePerKg" (click)="onSort('pricePerKg')">
+            <i *ngIf="tableHeader.pricePerKg === 1 && activeSort === 'pricePerKg'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.pricePerKg === 0 && activeSort === 'pricePerKg'"
+              class="fas fa-long-arrow-alt-down"></i>
+              Price
+          </th>
+          <th name="Total" ngDefaultControl [(ngModel)]="tableHeader.totalPrice" (click)="onSort('totalPrice')">
+            <i *ngIf="tableHeader.totalPrice === 1 && activeSort === 'totalPrice'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.totalPrice === 0 && activeSort === 'totalPrice'"
+              class="fas fa-long-arrow-alt-down"></i>
+              Total
+          </th>
+          <!-- <th>Logistics Cost</th> -->
+          <th name="Status" ngDefaultControl [(ngModel)]="tableHeader.status" (click)="onSort('status')">
+            <i *ngIf="tableHeader.status === 1 && activeSort === 'status'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.status === 0 && activeSort === 'status'"
+              class="fas fa-long-arrow-alt-down"></i>
+              Status
+          </th>
+          <th name="Payment" ngDefaultControl [(ngModel)]="tableHeader.paymentStatus" (click)="onSort('paymentStatus')">
+            <i *ngIf="tableHeader.paymentStatus === 1 && activeSort === 'paymentStatus'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.paymentStatus === 0 && activeSort === 'paymentStatus'"
+              class="fas fa-long-arrow-alt-down"></i>
+              Payment
+          </th>
+          <!-- <th name="Time" ngDefaultControl [(ngModel)]="tableHeader.createdDate" (click)="onSort('createdDate')">
+            <i *ngIf="tableHeader.createdDate === 1 && activeSort === 'createdDate'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.createdDate === 0 && activeSort === 'createdDate'"
+              class="fas fa-long-arrow-alt-down"></i>
+              Date
+          </th> -->
+          <th>Actions</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of filterdLotsList;let i = index">
+            <td  class="selection-cell">
+              <label  class="checkbox checkbox-single" *ngIf="item.availableQuantity != 0">
+                <input  type="checkbox" [(ngModel)]="item.selected"
+                [ngModelOptions]="{standalone: true}" (change)="onSelectCocoon($event, item)"/>
+                <span></span>
+              </label>
+            </td>
+            <td><a matTooltip="Lot Details" class="btn btn-link-success font-weight-bold" (click)="lotDetail(item)"> {{ item.code }}</a></td>
+            <td>{{ item.farmerName | titlecase}} <br>
+                <small>{{ item.farmerPhone }}</small>
+            </td>
+            <!-- <td>{{ item.farmerPhone }}</td> -->
+            <td>{{item.centerName || item.centerName}}</td>
+            
+            <!-- <td>
+              <span class="label label-rounded label-outline-success mr-2">
+                {{ item?.bookings?.length ? item?.bookings?.length : 0}}
+              </span>
+              </td> -->
+            <!-- <td>{{globalService.getDisplayCoconGrade(item.rmGrade)}}</td> -->
+            <!-- <td>
+              <div>
+                <span class="switch switch-icon switch-sm">
+                  <label>
+                    <input type="checkbox" [disabled]="item.status.toUpperCase() == 'SOLD' || userType.role == 'READADMIN'"
+                    [(ngModel)]="item.isDisplayActive" (change)="markActiveForSell(item, enterSellingPrice)" name="select" />
+                    <span></span>
+                  </label>
+                </span>
+              </div>
+            </td> -->
+            <!-- <td>{{ item.displayCocoonType}}</td> -->
+            <td>{{ item.rmGrade}}</td>
+            <td>{{ item.uom?item.uom:'-'}}</td>
+            <td><span>{{ item.lotWeight}}</span></td>
+            <td><span>{{ item.availableQuantity}}</span></td>
+            <td><span>{{ item.displayReceivedWeightPricePerKg}}</span></td>
+            <td><span>{{ item.displayTotalPrice}}</span></td>
+            <!-- <td><span>{{item.logisticsCost}}</span></td> -->
+            <td><span class="label label-outline-info label-pill label-inline"
+              [ngClass]="{'label-outline-info' : item.status.toUpperCase() == 'AVAILABLE' || 'NEW', 'label-outline-danger' : item.status.toUpperCase() == 'SOLD' ,'label-outline-warning' : item.status.toUpperCase() == 'INTRANSIT'}">
+            {{ item.status}}</span></td>
+            <td><span class="label label-primary label-pill label-inline"
+                [ngClass]="{'label-warning' : item.paymentStatus.toUpperCase() === 'PENDING'}">
+              {{ item.paymentStatus}}</span></td>
+            <!-- <td>{{ item.lastModifiedDate}}</td> -->
+            <td>
+              <a matTooltip="Edit" class="btn btn-icon btn-sm" (click)="editLot(item)" *ngIf="item.status.toUpperCase() != 'SOLD' && item.paymentStatus.toUpperCase() != 'PAID'">
+                <i class="flaticon-edit-1 text-success"></i>
+              </a>
+               <a *ngIf="rolesService.checkAccess(user.role, {type: 'actions', component: 'CocoonListComponent', action: 'delete'}) && item.status.toUpperCase() != 'SOLD' && item.paymentStatus.toUpperCase() != 'PAID'"
+                  title="Delete" class="btn btn-icon btn-sm" (click)="open(content,item,i)">
+                  <i class="flaticon-delete text-danger"></i>
+                </a>
+                <a title="View Invoice" class="btn btn-icon btn-sm" *ngIf="item.invoiceURL && user.role !== 'READADMIN'" href="{{ item.invoiceURL }}" target="_blank">
+                  <i class="flaticon-file-2 text-warning"></i>
+                </a>
+            </td>
+            <!-- <td>
+              <a title="View Invoice" class="btn btn-icon btn-sm" *ngIf="item.invoiceURL && user.role !== 'READADMIN'" href="{{ item.invoiceURL }}" target="_blank">
+                <i class="flaticon-file-2 text-warning"></i>
+              </a>
+            <a *ngIf="rolesService.checkAccess(user.role, {type: 'actions', component: 'CocoonListComponent', action: 'delete'})
+                  && item.status.toUpperCase() != 'SOLD' && item.status.toUpperCase() != 'INTRANSIT'  && userType.role !== 'READADMIN' && item.availableQuantity != item.lotWeight"
+              title="Mark as sold" class="btn btn-icon btn-sm" (click)="openMarkAsSold(markAsSoldConfirm,item)">
+              <i class="fas fa-shopping-basket text-warning"></i>
+            </a>
+              <ng-container *ngIf="item.status.toUpperCase() == 'NEW' && item?.paymentStatus.toUpperCase() != 'PAID' && userType.role !== 'READADMIN' &&
+                                                    (item?.lotWeight == item?.availableQuantity)">
+
+                <a matTooltip="Edit" class="btn btn-icon btn-sm" (click)="editLot(item)">
+                  <i class="flaticon-edit-1 text-success"></i>
+                </a>
+                <a *ngIf="rolesService.checkAccess(user.role, {type: 'actions', component: 'CocoonListComponent', action: 'delete'})"
+                  title="Delete" class="btn btn-icon btn-sm" (click)="open(content,item,i)">
+                  <i class="flaticon-delete text-danger"></i>
+                </a>
+              </ng-container>
+
+            </td> -->
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row">
+      <div class="mr-2">
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item">
+              <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(0)" href="javascript:void(0);">
+                <span aria-hidden="true">&laquo;&laquo;</span>
+                <span class="sr-only">First</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(paginationData.currentPage - 1)" href="javascript:void(0);">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" *ngIf="paginationData?.currentPage !== 0 && paginationData?.currentPage !== 1" (click)="onPageChange(paginationData?.currentPage - 2)" href="javascript:void(0);">{{ paginationData?.currentPage -1 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" *ngIf="paginationData?.currentPage !== 0" (click)="onPageChange(paginationData?.currentPage - 1)" href="javascript:void(0);">{{ paginationData?.currentPage}}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link active" href="javascript:void(0);">{{ paginationData?.currentPage + 1 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1" (click)="onPageChange(paginationData?.currentPage + 1)" href="javascript:void(0);">{{ paginationData?.currentPage + 2 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1 && paginationData?.currentPage !== paginationData.pages.length - 2" (click)="onPageChange(paginationData?.currentPage + 2)" href="javascript:void(0);">{{ paginationData?.currentPage + 3 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}" (click)="onPageChange(paginationData.currentPage + 1)" href="javascript:void(0);">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}" (click)="onPageChange(paginationData.pages.length - 1)" href="javascript:void(0);">
+                <span aria-hidden="true">&raquo;&raquo;</span>
+                <span class="sr-only">Last</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div class="mr-2">
+        <select class="custom-select" style="height: calc(1.2em + 1rem + 2px); padding: 0.35rem 2rem 0.35rem 1rem;" [(ngModel)]="paginationData.pageSize" (change)="onPageSizeChange()">
+          <option [ngValue]="10">10 per page</option>
+          <option [ngValue]="50">50 per page</option>
+          <option [ngValue]="100">100 per page</option>
+        </select>
+      </div>
+      <div class="pt-2">
+        <small class="text-muted">(Total: {{totalElements}})</small>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="delete-confirmation-preview">
+  <div>
+      <ng-template #content let-c="close" let-d="dismiss">
+          <div class="modal-header">
+              <h4 class="modal-title">Delete Cocoon Lot {{lot.code}}</h4>
+          </div>
+          <div class="modal-body">
+              <p>Are you sure you want to delete <strong> Lot {{lot.code}}</strong>?</p>
+              <p>Lot Unit <strong>{{lot.lotWeight}} {{lot.uom}}</strong></p>
+              <p>Price Per Unit <strong>{{lot.pricePerKg}} Rs</strong></p>
+              <p>Total Amount <strong>{{lot.totalPrice}} Rs</strong></p>
+              <p>You are deleting a listed lot, which accounts might have imported in Tally. Please inform accounts team about this deletion at <b>accounts@reshamandi.com</b> with deleted LotId <b>{{lot.code}}</b></p>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+              <button type="button" class="btn btn-sm btn-success" (click)="delete()">Yes</button>
+          </div>
+      </ng-template>
+  </div>
+</div>
+
+<div class="details-confirmation-preview">
+  <div>
+    <ng-template #markSold let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          Mark Paid!
+        </h4>
+      </div>
+
+      <div class="modal-body">
+        <p>You are marking payment sent to farmer!</p>
+        <p>Reshamandi paid Rs <strong>{{markSoldItem?.pricePerKg}}/kg</strong> for lot id <strong>{{markSoldItem?.id}} </strong>of weight <strong>{{markSoldItem?.lotWeight}}</strong> kg.</p>
+        <p>Total Rs. <strong>{{markSoldItem?.totalPrice}}</strong></p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+        <button type="button" class="btn btn-sm btn-success" (click)="markAsSold()">Confirm</button>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<div class="create-Logistics">
+  <div>
+      <ng-template #createLogistics let-c="close" let-d="dismiss">
+          <div class="modal-header">
+              <h4 class="modal-title">Enter Logistics Details</h4>
+          </div>
+          <div class="modal-body form-height pt-0">
+
+              <div class="col-lg-12">
+
+                  <div class="row" [formGroup]="createLogisticsForm">
+                    <div class="col-lg-12 mt-2">
+                      <label>From Center<span class="text-danger">*</span></label>
+                      <select class="form-control form-control-lg" formControlName="center" name="Center"
+                        placeholder="From Center" (change)="checkIfCenterSame()">
+                        <option *ngFor="let item of centerList" [value]="item.id">{{item.centerName}}</option>
+                      </select>
+                    </div>
+
+                    <div class="col-lg-12 mt-2">
+                      <mat-radio-button (change)="changeshipto($event.value);" class="example-margin col-4" value="RM_CENTER" [checked]="createLogisticsForm.get('shipToType').value == 'RM_CENTER'">
+                        To Center
+                      </mat-radio-button>
+                      <mat-radio-button (change)="changeshipto($event.value);" class="example-margin col-4" value="RM_WAREHOUSE">
+                          To Warehouse
+                      </mat-radio-button>
+                    </div>
+                    
+                    <div class="col-lg-12 mt-2" *ngIf="createLogisticsForm.get('shipToType').value == 'RM_CENTER'">
+                      <label>To Center<span class="text-danger">*</span></label>
+                      <select class="form-control form-control-lg" formControlName="toCenterId" name="Center"
+                        placeholder="To Center" (change)="checkIfCenterSame()">
+                        <option *ngFor="let item of centerList" [value]="item.id">{{item.centerName}}</option>
+                      </select>
+                    </div>
+
+                    <div class="col-lg-12 mt-2" *ngIf="createLogisticsForm.get('shipToType').value == 'RM_WAREHOUSE'">
+                      <label>To Warehouse<span class="text-danger">*</span></label>
+                      <select class="form-control form-control-lg" formControlName="toWarehouse" name="Center"
+                        placeholder="To Warehouse">
+                        <option *ngFor="let item of warehouseList" [value]="item.id">{{item.name}}</option>
+                      </select>
+                    </div>
+
+                    <div class="col-lg-12 mt-2" *ngIf="(createLogisticsForm.value.toCenterId == createLogisticsForm.value.center) && (createLogisticsForm.value.toCenterId != '')">
+                      <label class="form-label">Address<span class="text-danger">*</span></label>
+                      <input type="text" class="form-control form-control-lg" name="toCenterAddress" placeholder="Address"
+                        autocomplete="off"
+                        formControlName="toCenterAddress"
+                        [readonly]="createLogisticsForm.value.toCenterId != createLogisticsForm.value.center"/>
+                    </div>
+
+                    <div class="col-lg-12 mt-2">
+                      <label class="form-label">Total Cost<span class="text-danger">*</span></label>
+                      <input type="number" class="form-control form-control-lg" name="totalCost" placeholder="1000"
+                        autocomplete="off"
+                        formControlName="totalCost" />
+                      <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'totalCost')">Cost is required</div>
+                  </div>
+                    <div class="col-lg-12 mt-6">
+                      <ngb-accordion #acc11="ngbAccordion">
+                        <ngb-panel id="toggle-detail">
+                          <ng-template ngbPanelTitle>
+                            <span class="ard-header--title text-success">Driver Details<span class="text-danger">*</span></span>
+                          </ng-template>
+                          <ng-template ngbPanelContent>
+                            <div>
+                              <div class="row pb-10">
+                                <div class="col-lg-12 mt-2 selectWrapper">
+                                  <label class="form-label">Select Driver</label>
+                                  <ng-select class=" select-custom" (change)="driverToChanged($event)"   placeholder="Please enter the name or mobile number">
+                                    <ng-container *ngFor="let driver of driverList">
+                                      <ng-option  [value]="driver" *ngIf="driver.companyId && (!driver.isBlackListed)">{{ driver.name }} - {{ driver.mobile }}</ng-option>
+                                    </ng-container>
+                                  </ng-select>
+                                </div>
+
+                                <div class="col-lg-12 mt-2 selectWrapper">
+                                  <label class="form-label">Select Vehicle</label>
+                                  <ng-select class=" select-custom" (change)="vehicleToChanged($event)"   placeholder="Please enter the name or mobile number">
+                                    <ng-option *ngFor="let vehicle of vehiclesList" [value]="vehicle">{{ vehicle.vehicleNumber }} - {{ vehicle.vehicleType }}</ng-option>
+                                  </ng-select>
+                                </div>
+
+                                <!-- <div class="col-lg-12 mt-2">
+                                  <label class="form-label">Driver Name<span class="text-danger">*</span></label>
+                                  <input type="text" class="form-control form-control-lg" name="name" placeholder="Name"
+                                    autocomplete="off"
+                                    formControlName="driverName" />
+                                  <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'driverName')">Name is required</div>
+                              </div>
+
+                              <div class="col-lg-12 mt-2">
+                                <label class="form-label">Mobile Number<span class="text-danger">*</span></label>
+                                  <input type="text" class="form-control form-control-lg" name="driverNumber"
+                                    placeholder="Mobile Number" autocomplete="off" [class.is-invalid]="isControlInvalidForReeler('driverNumber')"
+                                    [class.is-valid]="isControlValidForReeler('driverNumber')" formControlName="driverNumber" />
+                                  <div class="valid-feedback" *ngIf="isControlValidForReeler('driverNumber')">Mobile number was entered correct
+                                  </div>
+                                  <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'driverNumber')">Mobile number is
+                                    required</div>
+                              </div> -->
+
+                              <!-- <div class="col-lg-12 mt-2">
+                                <label class="form-label">Vehicle Number<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-lg" name="driverName" placeholder="Vehicle Number"
+                                  autocomplete="off"
+                                  formControlName="vehicleNumber" />
+                                <div class="invalid-feedback" *ngIf="controlHasErrorForReeler('required', 'vehicleNumber')">Vehicle Number is required</div>
+                              </div> -->
+                              </div>
+                            </div>
+                          </ng-template>
+                        </ngb-panel>
+                      </ngb-accordion>
+                    </div>
+
+                      <div class="col-lg-12 mt-6">
+                        <ngb-accordion #acc11="ngbAccordion">
+                          <ngb-panel id="toggle-bank">
+                            <ng-template ngbPanelTitle>
+                              <span class="ard-header--title text-success">Bank Details<span class="text-danger">*</span></span>
+                            </ng-template>
+                            <ng-template ngbPanelContent>
+                              <div>
+                                <div class="row pb-10">
+                                  <div class="col-lg-12 mt-2">
+                                    <label class="form-label">Account Holder’s Name<span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control form-control-lg"
+                                      placeholder="Account Holder’s Name" autocomplete="off" formControlName="beneficiaryName" />
+                                  </div>
+
+                                  <div class="col-lg-12 mt-2">
+                                    <label class="form-label">Bank Name<span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control form-control-lg"
+                                      placeholder="Bank Name" autocomplete="off" formControlName="bankName" />
+                                  </div>
+
+                                  <div class="col-lg-12 mt-2">
+                                    <label class="form-label">Bank Account Number<span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control form-control-lg"
+                                      placeholder="Bank Account Number" autocomplete="off" formControlName="accountNumber">
+                                  </div>
+                                  <div class="col-lg-12 mt-2">
+                                    <label class="form-label">IFSC Code<span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control form-control-lg"
+                                      placeholder="IFSC Code" autocomplete="off" formControlName="ifscCode">
+                                  </div>
+
+                                </div>
+                              </div>
+                            </ng-template>
+                          </ngb-panel>
+                        </ngb-accordion>
+                      </div>
+
+                      <div class="col-lg-6 mt-2">
+                        <label class="form-label">E-Way Number</label>
+                        <input type="text" class="form-control form-control-lg" name="ewayBillNo"
+                          autocomplete="off" formControlName="ewayBillNo" />
+                      </div>
+
+                      <div class="col-lg-2 mt-4 pr-0">
+                        <div class="image-input image-input-outline m-2 mt-6"
+                            id="kt_profile_avatar">
+                            <img class="image-input-wrapper"
+                                [src]="preImgUrl || './assets/media/users/blank.png'"  style="width: 50px;height:50px;"/>
+                            <label
+                                class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                data-action="change" data-toggle="tooltip" title=""
+                                data-original-title="Change avatar">
+                                <i class="fa fa-pen icon-sm text-muted"></i>
+                                <input type="file" name="profile_avatar"
+                                    (change)="onImageUpload($event);" />
+                                <input type="hidden" name="profile_avatar_remove" />
+                            </label>
+                            <span
+                                class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                data-action="cancel" data-toggle="tooltip" title=""
+                                data-original-title="Cancel avatar">
+                                <i class="ki ki-bold-close icon-xs text-muted"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                      <div class="col-md-12 col-lg-12 col-12">
+                        <span [formGroup]="category">
+                           <div class="card card-custom"  formArrayName="baseList">
+                                <label class="mt-5">Images</label>
+                                   <div class="row"  *ngFor="let cat of  category.get('baseList')['controls']; let index=index" [formGroupName]="index">
+                                      <div class="col-lg-6 col-6 mt-3">
+                                        <input type="text" placeholder="Label" class="form-control form-control-lg" formControlName="tag"/>
+                                      </div>
+
+                                       <div class="col-lg-3 col-3 col-md-3">
+                                           <app-image-upload [index]="index" [flag]="'cat'" [img]="cat.value" (prevImage)="listenForImageComponent($event)"></app-image-upload>
+                                       </div>
+                                       <div>
+                                        <div class="d-flex justify-content-center align-items-center mt-lg-8 mt-3 px-5">
+                                          <button matTooltip="Add" type="button" class="btn btn-icon btn-success btn-xs mb-6" (click)="addCategory(index+1)" *ngIf="index<3">
+                                              <i class="flaticon-add-circular-button"></i>
+                                           </button>
+                                            <button matTooltip="Remove" type="button" class="btn ml-2 btn-icon btn-danger btn-xs mb-6" (click)="deleteCategory(index)" *ngIf="category.get('baseList')['controls'].length>1">
+                                            <i class="flaticon-cancel"></i>
+                                           </button>
+                                       </div>
+                                       </div>
+
+                                   </div>
+                           </div>
+                       </span>
+                       </div>
+
+
+                  </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-sm btn-secondary"
+                                    (click)="c('Close click');createLogisticsForm.reset();">Cancel</button>
+              <button type="button" class="btn btn-sm btn-success" *ngIf="selectedDriverName != '' && selectedvehicleNumber != ''"
+                                      [disabled]="createLogisticsForm.invalid || (createLogisticsForm.value.toCenterId == createLogisticsForm.value.center &&
+                                      (!createLogisticsForm.value.toCenterAddress || createLogisticsForm.value.toCenterAddress == ''))"
+                                      (click)="dispatchLots(createLogisticsForm.value)">Save</button>
+          </div>
+      </ng-template>
+  </div>
+</div>
+
+<div class="Enter-selling-price">
+<div>
+    <ng-template #enterSellingPrice let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <h4 class="modal-title">Code: {{sellingLotDetails.code}}</h4>
+        </div>
+
+        <div class="modal-body form-height pt-0" *ngIf="sellingLotDetails?.lotWeight">
+
+            <div class="col-lg-12">
+              <p class="mt-2">Total weight: <strong>{{sellingLotDetails.lotWeight}} kgs </strong></p>
+              <p class="mt-2">Available weight: <strong>{{sellingLotDetails.availableQuantity}} kgs </strong></p>
+              <p>Actual Price: <strong> {{sellingLotDetails.pricePerKg}}/kg </strong></p>
+
+                <div class="row mb-4" [formGroup]="sellingPriceForm">
+
+                  <div class="col-lg-12 mt-2">
+                    <label class="form-label">Selling Price/kg</label>
+                    <input type="number" readonly class="form-control form-control-lg form-control-solid" name="sellingPricePerKg" placeholder="amount"
+                      autocomplete="off" (keyup)="onValueChangesOfSellingPrice()"
+                      formControlName="sellingPricePerKg" />
+                    <!-- <div class="invalid-feedback" *ngIf="controlHasErrorForSellingPrice('required', 'sellingPricePerKg')">Price is required</div> -->
+                </div>
+
+                <div class="col-lg-12 mt-2">
+                  <label class="form-label">Weight:</label>
+                  <input type="number" class="form-control form-control-lg" name="sellWeight" placeholder="Selling weight"
+                    autocomplete="off" (keyup)="onValueChangesOfSellingPrice()"
+                    formControlName="sellWeight" />
+                    <p class="mt-1">({{sellingLotDetails.wastageQty}} kgs wastage deducted.)</p>
+              </div>
+
+
+                </div>
+                <!-- <p>Code: <strong>{{sellingLotDetails.code}}</strong></p> -->
+                <!-- <p>Weight: <strong>{{sellingLotDetails.sellWeight}} kgs</strong> ({{sellingLotDetails.lotWeight - sellingLotDetails.sellWeight}} kgs wastage deducted.)</p> -->
+                <p>Total Price: Rs. <strong>{{sellingLotDetails.displayTotal}}</strong></p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-secondary" (click)="onCancel()">Cancel</button>
+            <!-- <button type="button" class="btn btn-sm btn-success" [disabled]="sellingPriceForm.invalid || sellingPriceForm.value.sellingPricePerKg < sellingLotDetails.minPrice" (click)="showHideLot(sellingLotDetails,sellingPriceForm.value)">Save</button> -->
+            <button type="button" class="btn btn-sm btn-success" [disabled]="sellingPriceForm.invalid || sellingPriceForm.value.sellWeight > sellingLotDetails.lotWeight" (click)="showHideLot(sellingLotDetails,sellingPriceForm.value)">Save</button>
+        </div>
+    </ng-template>
+</div>
+</div>
+
+<div class="delete-confirmation-preview">
+<div>
+    <ng-template #markAsSoldConfirm let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <h4 class="modal-title text-warning">Are you sure you want to mark this lot as sold ?</h4>
+        </div>
+        <div class="modal-body">
+            <p>Lot Code <strong>{{markSoldItem.code}}</strong></p>
+            <p>Total Weight <strong>{{markSoldItem.lotWeight}} {{markSoldItem?.uom}}</strong></p>
+            <p>Available weight <strong>{{markSoldItem.availableQuantity}} {{markSoldItem?.uom}}</strong></p>
+            <p *ngIf="markSoldItem?.uom == 'KGS'">Wastage <strong>{{markSoldItem.availableQuantity}}</strong></p>
+            <p *ngIf="markSoldItem?.uom == 'KGS'">You are marking this lot as sold, with {{markSoldItem.availableQuantity}} kgs wastage, Please confirm.</p>
+            <p class="text-warning">Please type - <strong>wastage {{markSoldItem.availableQuantity}}{{markSoldItem?.uom}} </strong></p>
+            <div class="col-12 p-0">
+              <input type="text" class="form-control form-control-lg" placeholder="Please type {{validMessage}}"
+                      autocomplete="off" [(ngModel)]="validationText" onPaste="return false">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+            <button type="button" class="btn btn-sm btn-success"
+              [disabled]="validationText != validMessage" (click)="markLotAsSold()">Mark sold</button>
+        </div>
+    </ng-template>
+</div>
+</div>

@@ -1,0 +1,26 @@
+<ngb-accordion #acc11="ngbAccordion">
+      <ngb-panel id="toggle-11">
+        <ng-template ngbPanelTitle>
+          <span class="card-header--title text-success">{{title}}<span class="text-danger" *ngIf="manditory">*</span></span>
+        </ng-template>
+        <ng-template ngbPanelContent>
+          <div class="row" [formGroup]="kycForm">
+            <div class="col-lg-4 mt-2">
+              <label class="form-label">PAN Number <span class="text-danger" *ngIf="manditory">*</span></label>
+              <input type="text" class="form-control form-control-lg" placeholder="PAN Number"
+                autocomplete="off" formControlName="kycPANNumber" />
+            </div>
+            <div class="col-lg-4 mt-2">
+              <label class="form-label">Aadhaar Number</label>
+              <input type="text" class="form-control form-control-lg" placeholder="Aadhaar Number"
+                autocomplete="off" formControlName="kycAdhaarNumber" />
+            </div>
+            <div class="col-lg-4 mt-2">
+              <label class="form-label">GST Number</label>
+              <input type="text" class="form-control form-control-lg" placeholder="GST Number"
+                autocomplete="off" formControlName="govRegistrationId" />
+            </div>
+          </div>
+        </ng-template>
+      </ngb-panel>
+</ngb-accordion>

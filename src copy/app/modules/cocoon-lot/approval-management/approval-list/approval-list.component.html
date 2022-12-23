@@ -1,0 +1,416 @@
+<div class="flex-container">
+ 
+</div>
+
+<div class="card card-custom gutter-b">
+  <div class=" ml-6 mt-6">
+    <h3 class="card-label">Approval request</h3>
+  </div>
+  <div class="card-header">
+  <div class="flex-child black cursor">
+      Cocoon Price Request
+     </div>
+     <div class="flex-child white cursor" [routerLink]="[ '/resha-farms/cocoon-lot/payout-request' ]" *ngIf="userType.role !== 'FinanceManager' && userType.role !== 'FinanceHead'">
+      Payout Request
+     </div>
+
+    <!-- <div class="card-toolbar">
+        <div>
+          <button *ngIf="userType.role !== 'READADMIN'" type="button" class="btn btn-sm btn-success mr-2" (click)="createNew();">+ New Silk Farmer</button>
+        </div>
+      </div> -->
+  </div>
+  <div class="card-body pt-0">
+
+
+    <div class="form form-label-right">
+      <div class="form-group row">
+        <div class="col-lg-4">
+          <!-- <input [(ngModel)]="searchText" (keyup.enter)="buildonSearch();" (keyup)="onSearchKey($event)" type="text" class="form-control" placeholder="Search"/> -->
+          <input type="text" class="form-control" (keyup.enter)="onSearch();"
+            (keyup)="!searchText&&getApprovalList();paginationData.currentPage=0" [(ngModel)]="searchText"
+            placeholder="Search" value="" />
+
+          <small class="form-text text-muted"><b>Search</b> By Ticket Id.</small>
+        </div>
+        <div class="col-lg-1">
+          <button type="button" class="btn btn-sm btn-success mr-2 mt-1" (click)="onSearch();">Search</button>
+        </div>
+        <div class="col-lg-3">
+          <div class="row">
+            <div class="col-lg-6">
+              <select class="form-control" name="status" (change)="onChangeStatus($event)"
+                placeholder="Filter by status">
+                <option value="" [selected]="selectedStatus == ''">Request Status</option>
+                <option value="STARTED" [selected]="selectedStatus == 'STARTED'">Pending</option>
+                <option value="APPROVED" [selected]="selectedStatus == 'APPROVED'">Approved</option>
+                <option value="RESUBMITTED" [selected]="selectedStatus == 'RESUBMITTED'">Raised</option>
+                <option value="REJECTED" [selected]="selectedStatus == 'REJECTED'">Rejected</option>
+              </select><small class="form-text text-muted"><b>Filter</b> by status</small>
+            </div>
+            <!-- <div class="col-lg-6">
+                <select class="form-control" name="status" (change)="onChangeStatus($event)" placeholder="Filter by status">
+                  <option value="" [selected]="selectedStatus == ''">Payout Request</option>
+                </select>
+              </div> -->
+          </div>
+        </div>
+
+        <!-- <div class="col-lg-3">
+            <div class="row">
+              <div class="col-lg-6">
+                <select class="form-control" name="status" (change)="onChangeRole($event)" placeholder="Filter by status">
+                  <option value="(New,Sold,Intransit,Available)" [selected]="selectedStatus == '(New,Sold,Intransit,Available)'">All</option>
+                  <option value="(New)" [selected]="selectedStatus == '(New)'">New</option>
+                  <option value="(Available)" [selected]="selectedStatus == '(Available)'">Available</option>
+                  <option value="(Intransit)" [selected]="selectedStatus == '(Intransit)'">Intransit</option>
+                  <option value="(Sold)" [selected]="selectedStatus == '(Sold)'">Sold</option>
+                </select><small class="form-text text-muted"><b>Filter</b> by status</small>
+              </div>
+            </div>
+          </div> -->
+        <!-- <div class="col-lg-2" [formGroup]="filter" *ngIf="productType">
+            <select class="form-control" name="status" formControlName="productType">
+              <option value="(Silk,Cotton)">All</option>
+              <option value="Silk">Silk</option>
+              <option value="Cotton">Cotton</option>
+            </select><small class="form-text text-muted"><b>Filter</b> by product type</small>
+          </div> -->
+        <!-- <div class="col-lg-7 d-flex flex-column align-items-end">
+            <div class="row" [formGroup]="filter">
+                <div class="filter_category status_pending">
+                    <label>
+                       <input type="checkbox" value="false" formControlName="csbStatus_Pending"><span>Pending</span>
+                    </label>
+                 </div>
+                <div class="filter_category status_done">
+                    <label>
+                       <input type="checkbox" value="true" formControlName="csbStatus_Done"><span>Approved</span>
+                    </label>
+                 </div>
+                 <div class="filter_category status_rejected">
+                    <label>
+                       <input type="checkbox" value="true" formControlName="csbStatus_rejected"><span>Rejected</span>
+                    </label>
+                 </div>
+            </div>
+            <small class="form-text text-muted"><b>Filter</b> By Approval Status</small>
+
+          </div> -->
+      </div>
+    </div>
+    <div class="table-responsive angular-bootstrap-table">
+      <table id="excel-table" class="table table-head-custom table-vertical-center overflow-hidden">
+        <thead>
+          <th>Cocoon Image</th>
+          <th name="code" ngDefaultControl [(ngModel)]="tableHeader.id" (click)="onSort('id')">
+            <i *ngIf="tableHeader.id === 1 && activeSort === 'id'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.id === 0 && activeSort === 'id'" class="fas fa-long-arrow-alt-down"></i>
+            RM Lot ID
+          </th>
+          <th name="name" ngDefaultControl [(ngModel)]="tableHeader.name" (click)="onSort('name')">
+            <i *ngIf="tableHeader.name === 1 && activeSort === 'name'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.name === 0 && activeSort === 'name'" class="fas fa-long-arrow-alt-down"></i>
+            Farmer
+          </th>
+          <th name="phone" ngDefaultControl [(ngModel)]="tableHeader.phone" (click)="onSort('phone')">
+            <i *ngIf="tableHeader.phone === 1 && activeSort === 'phone'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.phone === 0 && activeSort === 'phone'" class="fas fa-long-arrow-alt-down"></i>
+            Cocoon Type
+          </th>
+
+          <!-- <th *ngIf="userType.role === 'ADMINISTRATOR'">Black List</th>
+            <th name="village" ngDefaultControl [(ngModel)]="tableHeader.address.village" (click)="onSort('address.village')">
+              <i *ngIf="tableHeader.address.village === 1 && activeSort === 'address.village'" class="fas fa-long-arrow-alt-up"></i>
+              <i *ngIf="tableHeader.address.village === 0 && activeSort === 'address.village'" class="fas fa-long-arrow-alt-down"></i>
+              Village
+            </th> -->
+          <th name="center" ngDefaultControl [(ngModel)]="tableHeader.center.centerName"
+            (click)="onSort('center.centerName')">
+            <i *ngIf="tableHeader.center.centerName === 1 && activeSort === 'center.centerName'"
+              class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.center.centerName === 0 && activeSort === 'center.centerName'"
+              class="fas fa-long-arrow-alt-down"></i>
+            Grade
+          </th>
+          <th name="displayCocoonType" ngDefaultControl [(ngModel)]="tableHeader.cocoonType"
+            (click)="onSort('cocoonType')" *ngIf="filter.get('productType').value == 'Silk'">
+            <i *ngIf="tableHeader.cocoonType === 1 && activeSort === 'cocoonType'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.cocoonType === 0 && activeSort === 'cocoonType'"
+              class="fas fa-long-arrow-alt-down"></i>
+            Weight(KG)
+          </th>
+          <!-- <th>Referred By</th>
+            <th *ngIf="filter.get('productType').value == 'Silk'">App Version</th> -->
+          <th>Requested <br> Rate</th>
+          <th name="chaakiDate" ngDefaultControl [(ngModel)]="tableHeader.chaakiDate" (click)="onSort('chaakiDate')"
+            *ngIf="filter.get('productType').value == 'Silk'">
+            <i *ngIf="tableHeader.chaakiDate === 1 && activeSort === 'chaakiDate'" class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.chaakiDate === 0 && activeSort === 'chaakiDate'"
+              class="fas fa-long-arrow-alt-down"></i>
+            Alloted <br> Max Rate
+          </th>
+          <th name="createdDate" ngDefaultControl [(ngModel)]="tableHeader.createdDate" (click)="onSort('createdDate')">
+            <i *ngIf="tableHeader.createdDate === 1 && activeSort === 'createdDate'"
+              class="fas fa-long-arrow-alt-up"></i>
+            <i *ngIf="tableHeader.createdDate === 0 && activeSort === 'createdDate'"
+              class="fas fa-long-arrow-alt-down"></i>
+            Total <br> Amount
+          </th>
+          <th>Created <br> Date</th>
+          <th>Approval <br> Status</th>
+          <!-- <th>Actions</th> -->
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of filteredTicketsList" [ngClass]="{blacklist:item.isBlackListed}">
+            <td>
+              <img [src]="item.cocoonImage || './assets/media/users/blank.png'" alt="" width="80px">
+            </td>
+            <td><a matTooltip="Farmer Details" class="btn btn-link-success font-weight-bold">
+                {{item.code}}</a></td>
+            <td>{{item.farmerName}} <br> <small>{{item.FarmerPhone}}</small></td>
+            <td>{{ item.cocoonType }}</td>
+            <td>{{item.cocoonGrade }}</td>
+            <td>{{item.weight}}</td>
+            <td>{{item.reqRate}}</td>
+            <td>{{item.allotedRate}}</td>
+            <td>{{item.totalAmnt}}</td>
+            <td>{{item.createdDate | date:'d/M/yy'}} <br> {{item.createdDate | date:'shortTime'}}</td>
+            <td>
+              <label for="" class="done_status" *ngIf="item?.approvalStatus == 'APPROVED'">Approved</label>
+              <label for="" class="cursor pending_status"
+                *ngIf="item?.approvalStatus == 'STARTED' || item?.approvalStatus == 'INPROGRESS'">Pending</label>
+              <label for="" class="cursor pending_status" *ngIf="item?.approvalStatus == 'RESUBMITTED'">Raised</label>
+              <label for="" class="cursor rejected_status" *ngIf="item?.approvalStatus == 'REJECTED'">Rejected</label>
+            </td>
+
+
+            <td class="approval_reject_actions d-flex justify-content-center">
+              <!-- <a matTooltip="Edit" class="btn btn-icon btn-sm mr-1 mt-1" *ngIf="userType.role !== 'READADMIN'" (click)="editFarmer(item)">
+                  <i class="flaticon-edit-1 text-success"></i>
+                </a> -->
+              <!-- <i class="fas fa-ellipsis-v"></i>
+                <i class="fas fa-check approval_action"></i>
+                <i class="fas fa-times rejected_action"></i> -->
+
+              <div ngbDropdown class="d-inline-block"
+                *ngIf="(item?.approvalStatus != 'APPROVED' && item?.approvalStatus != 'REJECTED' && item?.approvalStatus != 'RESUBMITTED' && (!item.isSameGroup))">
+                <button class="btn btn-hover-text-primary p-0 ml-4 dropdown menu-item menu-item-submenu menu-item-rel"
+                  id="approovalActionsdropdown" ngbDropdownToggle style="height:72px">
+                  <i class="fas fa-ellipsis-v icon-lg text-muted"></i>
+                </button>
+                <div style="max-width: 150px;top:-28px !important" ngbDropdownMenu
+                  aria-labelledby="approovalActionsdropdown">
+                  <!-- <i class="fas fa-check approval_action"></i>
+                        <i class="fas fa-times rejected_action"></i> -->
+                  <p class="pl-4 cursor" (click)="approvalProcess(approvalForm,item,'approved')"
+                    *ngIf="item.reqRate <= item.allotedRate">Approve</p>
+                  <p class="pl-4 cursor" (click)="approvalProcess(approvalForm,item,'approved')"
+                    *ngIf="item.allotedRate == 'N/A'">Approve</p>
+                  <p class="pl-4 cursor" (click)="approvalProcess(contentReject,item,'reject')">Reject</p>
+                  <p class="pl-4 cursor" (click)="approvalProcess(riseRequest,item,'raise')"
+                    *ngIf="item.reqRate > item.allotedRate">Raise Request</p>
+                </div>
+              </div>
+              <div *ngIf="item?.approvalStatus == 'APPROVED' && (item.isSameGroup)" class="d-flex align-items-center"
+                style="height:72px">
+                <button class="btn btn-sm btn-primary" disabled *ngIf="item.isLotCreated == 'CREATED'">Purchase</button>
+                <button class="btn btn-sm btn-primary" (click)="purchaselot(item.code)"
+                  *ngIf="!(item.isLotCreated == 'CREATED')">Purchase</button>
+              </div>
+              <div *ngIf="item?.approvalStatus == 'REJECTED' && (item.isSameGroup)" class="d-flex align-items-center"
+                style="height:72px">
+                <!-- <button class="btn btn-sm btn-primary" (click)="purchaselot(item.code)" style="background-color: #F3AB3C; border:0" [diabled]="item.isLotCreated == 'CREATED'">Duplicate</button> -->
+                <button class="btn btn-sm btn-primary" disabled
+                  *ngIf="item.isLotCreated == 'CREATED'">Duplicate</button>
+                <button class="btn btn-sm btn-primary" (click)="purchaselot(item.code)"
+                  *ngIf="!(item.isLotCreated == 'CREATED')">Duplicate</button>
+
+              </div>
+
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+    <div class="row">
+      <div class="ml-5 mr-2">
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <!-- <li class="page-item">
+                <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(0)" href="javascript:void(0);">
+                  <span aria-hidden="true">&laquo;&laquo;</span>
+                  <span class="sr-only">First</span>
+                </a>
+              </li> -->
+            <li class="page-item">
+              <!-- <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(paginationData.currentPage - 1)" href="javascript:void(0);">
+                  <span aria-hidden="true">&laquo;</span>
+                  <span class="sr-only">Previous</span>
+                </a> -->
+              <a class="page-link" (click)="onPageChange(paginationData.currentPage - 1)" href="javascript:void(0);">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" *ngIf="paginationData?.currentPage !== 0 && paginationData?.currentPage !== 1"
+                (click)="onPageChange(paginationData?.currentPage - 2)" href="javascript:void(0);">{{
+                paginationData?.currentPage -1 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" *ngIf="paginationData?.currentPage !== 0"
+                (click)="onPageChange(paginationData?.currentPage - 1)" href="javascript:void(0);">{{
+                paginationData?.currentPage}}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link active" href="javascript:void(0);">{{ paginationData?.currentPage + 1 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link"
+                *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1"
+                (click)="onPageChange(paginationData?.currentPage + 1)" href="javascript:void(0);">{{
+                paginationData?.currentPage + 2 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link"
+                *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1 && paginationData?.currentPage !== paginationData.pages.length - 2"
+                (click)="onPageChange(paginationData?.currentPage + 2)" href="javascript:void(0);">{{
+                paginationData?.currentPage + 3 }}</a>
+            </li>
+            <li class="page-item">
+              <!-- <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}" (click)="onPageChange(paginationData.currentPage + 1)" href="javascript:void(0);">
+                  <span aria-hidden="true">&raquo;</span>
+                  <span class="sr-only">Next</span>
+                </a> -->
+              <a class="page-link" (click)="onPageChange(paginationData.currentPage + 1)" href="javascript:void(0);">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+            <!-- <li class="page-item">
+                <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}" (click)="onPageChange(paginationData.pages.length - 1)" href="javascript:void(0);">
+                  <span aria-hidden="true">&raquo;&raquo;</span>
+                  <span class="sr-only">Last</span>
+                </a>
+              </li> -->
+          </ul>
+        </nav>
+      </div>
+      <div class="mr-2">
+        <select class="custom-select" style="height: calc(1.2em + 1rem + 2px); padding: 0.35rem 2rem 0.35rem 1rem;"
+          [(ngModel)]="paginationData.pageSize" (change)="onPageSizeChange()">
+          <option [ngValue]="10">10 per page</option>
+          <option [ngValue]="50">50 per page</option>
+          <option [ngValue]="100">100 per page</option>
+        </select>
+      </div>
+      <!-- <div class="pt-2">
+          <small class="text-muted">(Total: {{totalElements}})</small>
+        </div> -->
+    </div>
+  </div>
+</div>
+
+<div class="example-preview">
+  <div>
+      <ng-template #contentReject let-c="close" let-d="dismiss">
+      <div class="modal-header">
+          <h4 class="modal-title">Rejection Reason <span class="text-danger">*</span></h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body" [formGroup]="approvalFormProcess">
+          <textarea formControlName="reason" class="reason_text_box" name="" id="" cols="30" rows="10"></textarea>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Cancel</button>
+          <button type="button" class="btn btn-primary" (click)="updateTicketStatus(approvalFormProcess.value)" [disabled]="approvalFormProcess.invalid">Reject</button>
+      </div>
+      </ng-template>
+  </div>
+</div>
+
+<div class="approval-confirmation-preview">
+<div>
+  <ng-template #approvalForm let-c="close" let-d="dismiss">
+      <div class="modal-header">
+          <h4 class="modal-title">Approve Price / KG</h4>
+      </div>
+      <div class="modal-body" [formGroup]="approvalFormProcess">
+          <div class="approval_flow_body_section col-12">
+              <div class=" col-lg-4">
+                  <div class="cocoon_image">
+                      <img class="image-input-wrapper" [src]="ticketItem?.cocoonImage || './assets/media/users/blank.png'">
+                  </div>
+              </div>
+              <div class="item_details col-lg-8">
+                  <div class="row">
+                      <label for="">Farmer Name:</label>
+                      <p>{{ticketItem.farmerName}}</p>
+                  </div>
+                  <div class="row">
+                      <!-- <label for="">Center:</label> -->
+                      <label for="">Farmer Phone:</label>
+                      <p>{{ticketItem.FarmerPhone}}</p>
+                  </div>
+                  <div class="row">
+                      <label for="">Weight:</label>
+                      <p>{{ticketItem.weight}}</p>
+                  </div>
+                  <div class="row">
+                      <label for="">Net Amount:</label>
+                      <p>{{ticketItem.totalAmnt}}</p>
+                  </div>
+                  <div class="row">
+                      <label for="">Allotted Max.Price :</label>
+                      <p>{{ticketItem.allotedRate}}</p>
+                  </div>
+                  <div class="row">
+                      <label for="">Request Price :</label>
+                      <p>{{ticketItem.reqRate}}</p>
+                  </div>
+                  <div class="row mb-2">
+                      <label for="">Approval Price :</label>
+                      <input type="number" formControlName="approvedPrice">
+                  </div>
+                 
+                  <div class="row">
+                      <label for="">Remarks<span class="text-danger">*</span>:</label>
+                      <textarea name="" id="" formControlName="reason" cols="20" rows="2"></textarea>
+                  </div>
+
+                  <p *ngIf="approvalFormProcess.value.approvedPrice > ticketItem.reqRate" class="text-danger mt-2"> Approved price is more than {{ticketItem.reqRate}}</p>
+
+                   
+              </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+          <button type="button" class="btn btn-sm btn-success" (click)="updateTicketStatus(approvalFormProcess.value)" [disabled]="approvalFormProcess.invalid || (approvalFormProcess.value.approvedPrice > ticketItem.reqRate)">Approve</button>
+      </div>
+  </ng-template>
+</div>
+
+<div class="example-preview">
+  <div>
+      <ng-template #riseRequest let-c="close" let-d="dismiss">
+      <div class="modal-header">
+          <h4 class="modal-title">Raise Request</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body">
+          <p>Are you sure you want to raise request ?</p>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Cancel</button>
+          <button type="button" class="btn btn-primary" (click)="updateTicketStatus(approvalFormProcess.value)">Yes</button>
+      </div>
+      </ng-template>
+  </div>
+</div>

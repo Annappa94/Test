@@ -1,0 +1,286 @@
+<div class="bg-white rounded mb-4 d-flex align-items-center py-2 sticky-header justify-content-between">
+    <ul id="breadcrumbs" *ngIf="orderDetails">
+        <li><span style="cursor: pointer;" class="hover-item"
+            (click)="goBack()">All Tussar Orders</span></li>
+        <li><span>{{orderDetails?.code}}</span></li>
+    </ul>
+    <div>
+        <button class="btn btn-secondary btn-sm font-weight-bolder font-size-sm py-3 px-6 mr-5"
+        (click)="goBack()">Back</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-4 mt-4">
+
+        <!--begin::Card-->
+        <div class="card card-custom gutter-b" *ngIf="orderDetails">
+        <!-- <div class="card card-custom gutter-b"> -->
+            <!--begin::Body-->
+            <div class="card-body pt-4">
+                <!--begin::Toolbar-->
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <div class="font-size-h5 mb-3 font-weight-bolder text-success">
+                        {{orderDetails?.code}}
+                    </div>
+
+                    <div class="float-right">
+                        <!-- <a *ngIf="orderDetails?.invoiceURL !== '' && orderDetails?.invoiceURL !== null && user.role !== 'READADMIN'" href="{{ orderDetails?.invoiceURL }}" target="_blank">
+                            <span matTooltip="Download Invoice" class="btn btn-icon btn-outline-success btn-sm mr-2">
+                                <i class="flaticon-download"></i>
+                            </span>
+                        </a> -->
+
+                        <!-- SAURABH: Show only if following is true:
+                         1. reelerPayments array is empty i.e reeler has not paid anything for this order
+                         2. paymentStatus == PENDING
+                     -->
+                        <span matTooltip="Delete" class="btn btn-icon btn-outline-danger btn-sm" *ngIf="!reelerKhata?.length && rolesService.checkAccess(user.role, {type: 'actions', component: 'CocoonOrderDetailsComponent', action: 'delete'})"
+                            (click)="deleteConfirmatin(deleteLot)">
+                            <i class="flaticon-delete"></i>
+                        </span>
+                    </div>
+
+                </div>
+                <!--end::Toolbar-->
+
+                <p class="mb-4">
+                    <span class="text-success font-weight-bold pr-1">Details</span>
+                </p>
+                <div class="mb-7">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Total Unit:</span>
+                        <span class="text-dark-75 font-weight-bold">{{orderDetails?.totalWeight?.toFixed(2)}} kgs/pcs</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="orderDetails?.grossAmount">
+                        <span class="text-muted font-weight-bold mr-2">Gross Amount:</span>
+                        <span class="text-dark-75 font-weight-bold">Rs. {{orderDetails?.grossAmount?.toLocaleString('en-IN')}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2" *ngIf="orderDetails?.discount > 0">
+                        <span class="text-muted font-weight-bold mr-2">Discount:</span>
+                        <span class="text-dark-75 font-weight-bold">Rs. {{orderDetails?.discount?.toLocaleString('en-IN')}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Total Amount:</span>
+                        <span class="text-dark-75 font-weight-bold">Rs. {{orderDetails?.totalAmount?.toLocaleString('en-IN')}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Credit Days:</span>
+                        <span class="text-dark-75 font-weight-bold">{{orderDetails?.creditDays}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Created Date:</span>
+                        <span class="text-dark-75 font-weight-bold">{{orderDetails?.createdDate}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Updated Date:</span>
+                        <span class="text-dark-75 font-weight-bold">{{orderDetails?.lastModifiedDate}}</span>
+                    </div>
+                </div>
+
+                <!-- <p class="mt-4 mb-4">
+                    <span class="text-success font-weight-bold pr-1">Logistics</span>
+                </p>
+                <div class="mb-7">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Driver Name:</span>
+                        <span class="text-dark-75 font-weight-bold">{{orderDetails?.logistics?.driverName}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Vehicle Number:</span>
+                        <span class="text-dark-75 font-weight-bold">{{orderDetails?.logistics?.vehicleNumber}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Driver Phone:</span>
+                        <span class="text-dark-75 font-weight-bold">{{orderDetails?.logistics?.driverNumber}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">Cost:</span>
+                        <span class="text-dark-75 font-weight-bold">{{orderDetails?.logistics?.totalCost}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2" *ngIf="orderDetails?.ewayBillNo">
+                        <span class="text-muted font-weight-bold mr-2">E-way bill number:</span>
+                        <span class="text-dark-75 font-weight-bold">{{orderDetails?.ewayBillNo}}</span>
+                    </div>
+
+                    <div *ngIf="orderDetails?.ewayBillImage" class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">E-way image:</span>
+                        <span>
+                            <a href="{{orderDetails?.ewayBillImage }}" target="_blank">
+                                Click to View
+                            </a>
+                        </span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <span class="text-muted font-weight-bold mr-2">No. Of Bags:</span>
+                        <span class="text-muted">{{}}</span>
+                    </div>
+                </div> -->
+
+                <p class="mt-4">
+                    <span class="text-success font-weight-bold pr-1">Reeler</span>
+                </p>
+                <div class="mb-7" *ngIf="reelerDetails">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Name:</span>
+                        <span class="text-dark-75 font-weight-bold">{{reelerDetails?.reeler?.name}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Phone:</span>
+                        <span class="text-dark-75 font-weight-bold">{{reelerDetails?.reeler?.phone}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Code:</span>
+                        <span class="btn btn-link-success font-weight-bold" (click)="goToReelerDetails()">{{reelerDetails?.reeler?.code}}</span>
+                    </div>
+                </div>
+                <p class="">
+                    <span class="text-dark-75 font-weight-bold font-weight-bold pr-1">Address</span>
+                </p>
+                <p *ngIf="reelerDetails">
+                    <span class="text-muted">
+                        {{reelerDetails.reeler?.address?.address}}, {{reelerDetails?.reeler?.address?.village}},
+                        {{reelerDetails?.reeler?.address?.taluk}}, {{reelerDetails?.reeler?.address?.city}} {{reelerDetails?.reeler?.address?.district ?
+                            reelerDetails?.reeler?.address?.district + ' District, ' : ''}} {{reelerDetails?.reeler?.address?.state}}
+                            {{reelerDetails.reeler?.address?.pincode}}
+                    </span>
+                </p>
+
+            </div>
+            <!--end::Body-->
+        </div>
+        <!--end::Card-->
+
+
+    </div>
+    <div class="col-lg-5 mt-4">
+
+        <!--begin::Card-->
+        <div class="card card-custom">
+            <!--begin::Body-->
+            <div class="card-body pt-4">
+                <!--begin::Toolbar-->
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <div class="font-size-h5 mb-3 font-weight-bold text-success">
+                        Tussar Lots
+                    </div>
+
+                </div>
+                <!--end::Toolbar-->
+
+                <div class="table-responsive">
+                    <table class="table table-borderless table-vertical-center">
+                        <thead>
+                            <tr>
+                                <th class="p-0 min-w-100px">Lot</th>
+                                <th class="p-0 min-w-80px">Type</th>
+                                <th class="p-0 min-w-100px">Amount</th>
+                                
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <ng-container *ngIf="orderDetails?.tussarSalesOrderItems?.length !== 0; else emptyTemplate">
+                                <tr *ngFor="let item of orderDetails?.tussarSalesOrderItems">
+                                    <td class="pl-0">
+                                        <a (click)="lotDetails(item)"
+                                            class="btn btn-link-success font-weight-bold">{{item?.tussarLotCode}}</a>
+                                    </td>
+
+                                    <td class="pl-0">
+                                        <div class="text-dark-75 font-weight-bold">Tussar</div>
+                                    </td>
+
+                                    <td class="pl-0">
+                                        <span class="text-dark-75 font-weight-bold d-block font-size-md" *ngIf="item?.totalAmount">Rs.
+                                            {{item?.totalAmount.toLocaleString('en-IN')}}</span>
+                                        <span class="text-muted font-weight-bold">{{item?.sellingPieces}}{{item?.uom}}@{{item?.sellingPricePerPc}}/unit 
+                                            <span *ngIf="item.discount"> and discount Rs. {{item.discount}}</span></span>
+                                    </td>
+
+                                </tr>
+                              </ng-container>
+                              <ng-template #emptyTemplate>
+                                <p class="p-5">Yet to be sold.</p>
+                              </ng-template>
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </div>
+            <!--end::Body-->
+        </div>
+        <!--end::Card-->
+
+    </div>
+    <div class="col-lg-3 mt-4">
+        
+        <div class="card card-custom " >    
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <div class="font-size-h5 font-weight-bold text-success">Payments</div>
+                            <app-payment-tussar-purchases-khata [customerId]="reelerDetails?.reeler?.id" [orderDetails]="orderDetails" (listenAndRefresh)="listenAndRefresh()"></app-payment-tussar-purchases-khata>
+                </div>
+                <div class="mt-4">
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Amount:</span>
+                        <span class="text-dark-75 font-weight-bold">{{orderDetails?.totalAmount?.toLocaleString('en-IN')}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-cente my-2">
+                        <span class="text-muted font-weight-bold mr-2">Due Amount:</span>
+                        <span class="text-danger font-weight-bold">{{orderDetails?.dueAmount?.toLocaleString('en-IN')}}</span>
+                    </div>
+                </div>
+
+
+                <div class="example example-basic mt-6" *ngIf="reelerKhata?.length">
+                    <div class="">
+                        <div class="timeline timeline-2">
+                            <div class="timeline-bar"></div>
+
+                            <!-- REPEAT for NO OF PAYMENTS-->
+                            <div class="timeline-item" *ngFor="let item of reelerKhata">
+                                <span class="timeline-badge bg-success"></span>
+                                <div class="timeline-content d-flex align-items-center justify-content-between">
+                                    <span class="mr-3 font-weight-bold text-dark-75 font-size-sm d-flex flex-column">Rs. {{item?.amount?.toLocaleString('en-IN')}}
+                                        <span class="label label-inline label-outline-success h-100">
+                                            {{item.referenceNumber}}</span>
+                                       </span>
+                                    <span class="text-muted font-italic text-right font-size-xs">{{item.paymentOn}}</span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!--end::Timeline-->
+                    </div>
+                </div>
+
+            </div>
+            <!--end: Card Body-->
+        </div>
+        <!--end: List Widget 9-->
+    </div>
+</div>
+
+<div class="details-confirmation-preview">
+    <div>
+        <ng-template #deleteLot let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Delete</h4>
+            </div>
+            <div class="modal-body">
+                <p><strong>Are You Sure You Want To Delete This Order?</strong></p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Cancel</button>
+                <button type="button" class="btn btn-sm btn-success" (click)="deleteOrder()">Yes</button>
+            </div>
+        </ng-template>
+    </div>
+</div>

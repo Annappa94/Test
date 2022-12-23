@@ -1,0 +1,14 @@
+<app-paginated-table
+[tableHeaders]="tableHeaders"
+(infoFromTable)="tableInfo($event)"
+[rowDataList]="plotsData"
+[totalRecords]="totalRecords"
+[titleOfTable]="'Plot Management'"
+(onPageChange)="onPageChange($event)"
+[searchClass]="'col-lg-11'"
+[searchHint]="'By Id,Device Name,Vendor,manufacturer'">
+ <div class="card-toolbar New">
+   
+ </div>
+</app-paginated-table>
+

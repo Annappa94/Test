@@ -1,0 +1,10 @@
+.dropdown-menu.show {
+    top: -70px !important;
+}
+.palns_activation_actions {
+    p{
+        &:hover {
+            background-color: #EEF0F8;
+        }
+    }
+}

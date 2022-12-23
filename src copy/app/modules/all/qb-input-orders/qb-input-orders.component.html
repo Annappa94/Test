@@ -1,0 +1,43 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+           <div class="card-title">
+             <h3 class="card-label">QB Input Orders</h3>
+           </div>
+         </div>    
+   <div class="form card-body form-label-right">
+       <div class="form-group  pb-0  row">
+         <div class="col-lg-6 pl-3">
+           <input [(ngModel)]="searchText" ngDefaultControl name="search" type="text" class="form-control" placeholder="Search"/>
+           <small class="form-text text-muted"><b>Search</b> in all fields.</small>
+         </div>
+         <div class="col-lg-3">
+              <mat-form-field>
+                <mat-select [formControl]="storeCtrl" #singleSelect>
+                  <mat-option>
+                    <ngx-mat-select-search  placeholderLabel="Search store"  [formControl]="storeFilterCtrl" ></ngx-mat-select-search>
+                  </mat-option>
+            
+                  <mat-option *ngFor="let store of filteredStores | async" [value]="store">
+                    {{store.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+         </div>
+         <div class="col-lg-3">
+          <!-- <label for="name">Available on<span class="text-danger">*</span></label> -->
+          <mat-form-field class="w-100 cursor-pointer" appearance="fill" (click)="dp.open()">
+            <input  class="cursor-pointer" matInput [matDatepicker]="dp" [(ngModel)]="date"
+            (click)="dp.open()" readonly>
+            <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+            <mat-datepicker (closed)="filterChange(storeCtrl.value)"  #dp disabled="false"></mat-datepicker>
+          </mat-form-field>
+        </div>
+   </div>
+   <RMtable 
+   [tableHeaders]="tableHeaders" 
+   [rowDataList]="invoiceList"  
+   [searchText]="searchText"
+   (listen)="routeToDetails($event)"
+   ></RMtable>
+   </div>
+   

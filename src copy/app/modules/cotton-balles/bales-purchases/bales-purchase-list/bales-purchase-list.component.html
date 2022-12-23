@@ -1,0 +1,49 @@
+<app-paginated-table [titleOfTable]="'Bale Purchases'"
+ [tableHeaders]="tableHeaders"
+ (infoFromTable)="tableInfo($event)"
+ [rowDataList]="balePOTableDataList"
+ [totalRecords]="totalRecords"
+ (onPageChange)="onPageChange($event)"
+ [searchClass]="'col-lg-5'"
+ (listenAndRefreshPayment)="getBalePurchasesList()"
+ [searchHint]="'By Id,Name'">
+
+  <div class="card-toolbar New" *ngIf="!ginnerId">
+    <div class="card-toolbar">
+      <button  [disabled]="selectedPurchaseLot.length == 0" type="button" class="btn btn-sm btn-outline-dark mr-2 py-3" (click)="onMarkSold();">
+        Mark Sold
+       <span class='badge badge-warning p-1' id='lblCartCount'> {{selectedPurchaseLot?.length}}</span>
+     </button>
+     </div>
+    <div>
+      <button type="button" class="btn btn-sm btn-success mr-2" routerLink="/resha-farms/bale-purchases/crud" (click)="routeToCrud()"> + New Bale Listing</button>
+    </div>
+  </div>
+  <div class="col-lg-2 mt-2">
+    <ng-container [formGroup]="filterForm">
+      <select class="form-control" name="status" formControlName="status"  placeholder="Filter by status">
+        <option value="(AVAILABLE,SOLD)">All</option>
+        <option value="AVAILABLE">Available</option>
+        <option value="SOLD">Sold</option>
+      </select><small class="form-text text-muted"><b>Filter</b> by Status</small>
+    </ng-container>
+   </div>
+  <div class="col-lg-2 mt-2">
+    <ng-container [formGroup]="filterForm">
+      <select class="form-control" name="paymentStatus" formControlName="paymentStatus"  placeholder="Filter by Payment Status">
+        <option value="(PENDING,PAID)">All</option>
+        <option value="PENDING">Pending</option>
+        <option value="PAID">Paid</option>
+      </select><small class="form-text text-muted"><b>Filter</b> by Payment Status</small>
+    </ng-container>
+   </div>
+   <div class="col-lg-2 mt-2">
+    <ng-container [formGroup]="filterForm">
+      <select class="form-control" name="cottonType" formControlName="cottonType"  placeholder="Filter by cottonType">
+        <option value="(BTCOTTON,DCHCOTTON)">All</option>
+        <option value="BTCOTTON">BT COTTON</option>
+        <option value="DCHCOTTON">DCH COTTON</option>
+      </select><small class="form-text text-muted"><b>Filter</b> cottonType</small>
+    </ng-container>
+   </div>
+</app-paginated-table>

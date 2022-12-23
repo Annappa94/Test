@@ -1,0 +1,30 @@
+<app-paginated-table [rowDataList]="rowDataList" [tableHeaders]="tableHeaders" [totalRecords]="totalRecords"
+  (infoFromTable)="infoFromTable($event)" (onPageChange)="onPageChange($event)" (listenAndRefreshPayment)="getPupaeLot()"
+  [titleOfTable]="'Pupae Sales'" [searchClass]="'col-lg-11'" [searchHint]="'By Name,Phone,Id'">
+
+</app-paginated-table>
+
+
+<div class="example-preview">
+  <div>
+    <ng-template #changeStatusPopUp let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title">Mark Order {{pupaeOrderStatus | titlecase}}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to mark the order {{pupaeOrderStatus | lowercase}}?</p>
+
+        <!-- if status is Cancelled -->
+      </div>
+      
+      <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+            <button type="button" class="btn btn-primary" (click)="markProcessing()">Mark {{pupaeOrderStatus |
+              lowercase}}</button>
+      </div>
+    </ng-template>
+  </div>
+</div>

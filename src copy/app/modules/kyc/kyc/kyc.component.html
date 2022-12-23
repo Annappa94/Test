@@ -1,0 +1,22 @@
+<div class="card card-custom gutter-b col-lg-12">
+
+    <div class="card-body">
+        <div class="row justify-content-between">
+            <h3>KYC Details</h3>
+            <div>
+                <app-back-button></app-back-button>
+            </div>
+        </div>
+        <div class="col-lg-3 mt-2 selectWrapper pl-0">
+            <div>
+                <label class="form-label">Customer Type</label>
+                <input type="text" readonly class="form-control form-control-lg form-control-solid"
+                    placeholder="Customer Type" autocomplete="off" [(ngModel)]="selectedCustomerType" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-kycgenric-component [customerId]="farmarID"
+    [personaType]="personaTypeFromURL()" [proofs]="proofs" [editData]="editData" (info)="saveInfo($event)"
+    [patchData]="patchingData"></app-kycgenric-component>

@@ -1,0 +1,306 @@
+
+  <div>
+    <mat-button-toggle-group #colorToggle="matButtonToggleGroup"
+                             value="primary"
+                             aria-label="Change color">
+      <mat-button-toggle value="primary" class="manufacture"  [routerLink]="[ '/resha-farms/cotton-bales/manufacture' ]"> Manufactured </mat-button-toggle>
+      <mat-button-toggle value="accent" class="purchase" [routerLink]="[ '/resha-farms/cotton-bales/purchase' ]" > Purchased </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+  <app-bales-purchase-list></app-bales-purchase-list>
+<!-- <div class="card card-custom gutter-b">
+  <div class="card-header">
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+        </div>
+        <div class="card-body pt-0">
+            <div class="form form-label-right">
+                <div class="form-group row">
+                    <div class="col-lg-4">
+                        <input type="text" class="form-control" placeholder="Search" />
+                    </div>
+                    <div class="col-lg-1">
+                        <button type="button" class="btn btn-sm btn-success mr-2 mt-1">Search</button>
+                    </div>
+
+                    <div class="col-lg-2">
+                        <select class="form-control" name="logisticstatus" placeholder="Filter by status">
+                            <option>All</option>
+                            <option value="">All</option>
+                            <option value="">All</option>
+                            <option value="">All</option>
+                            <option value="">Canceled</option>
+                        </select><small class="form-text text-muted"><b>Filter</b> by status</small>
+                    </div>
+                    <div class="col-lg-2">
+                        <select class="form-control" name="logisticstatus" placeholder="Filter by status">
+                            <option value="(NEW,CANCELLED,SHIPPED,DELIVERED)">All</option>
+                            <option value="">All</option>
+                            <option value="">All</option>
+                            <option value="">All</option>
+                            <option value="">Canceled</option>
+                        </select><small class="form-text text-muted"><b>Filter</b> by Current Warehouse</small>
+                    </div>
+                    <div class="col-lg-3">
+                        <button type="button" class="btn btn-light mr-2 mt-1">Create So</button>
+                        <button type="button" class="btn btn-sm btn-success mr-2 mt-1"  (click)="stock(stocktransfer)" >Stock Transfer</button>
+                    </div>
+                </div>  
+                    </div> 
+                    <div class="row">
+                        <div class="col-sm col-sm-2 col-sm-2 col-4">
+                            <div class="card card-stretch gutter-b whiteSmoke">
+                                <div class="card-body cursor-pointer">
+                                    <span class="card-title font-weight-bolder text-success font-size-h2 mb-0 d-block"></span>
+                                    <span class="font-weight-bold  font-size-sm">
+                                        <h6>Manufactured<br>Bales</h6>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm col-sm-2 col-sm-2 col-4">
+                            <div class="card card-stretch gutter-b whiteSmoke">
+                                <div class="card-body cursor-pointer">
+                                    <span class="card-title font-weight-bolder text-success font-size-h2 mb-0 d-block"></span>
+                                    <span class="font-weight-bold  font-size-sm">
+                                        <h6>Avaliabale<br>Bales</h6>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm col-sm-2 col-sm-2 col-4">
+                            <div class="card card-stretch gutter-b whiteSmoke">
+                                <div class="card-body cursor-pointer">
+                                    <span class="card-title font-weight-bolder text-success font-size-h2 mb-0 d-block"></span>
+                                    <span class="font-weight-bold  font-size-sm">
+                                        <h6>Total<br>Sold</h6>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+
+                <div class="table-responsive angular-bootstrap-table">
+                    <table id="excel-table" class="table table-head-custom table-vertical-center overflow-hidden">
+                        <thead>
+                            <tr>
+                                <th name="code">
+                                    RM CODE
+                                </th>
+                                <th name="name">
+                                    GINNING MILL
+                                </th>
+                                <th name="phone">
+                                    Current
+                                    <br>
+                                    Warehouse
+                                </th>
+                                <th name="phone">
+                                 TYPE
+                                </th>
+                                <th name="phone">
+                                    Avl Bales
+                                    <br>
+                                    No.of Bales
+                                </th>
+                                <th name="phone">
+                                    AVL.Qty
+                                    <br>
+                                    Total Qty
+                                </th>
+                                <th name="phone">
+                                    Status
+                                </th>
+                                <th name="phone">
+                             Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of balePurchaseList">
+                              <td><a matTooltip="Lot Details" class="btn btn-link-success font-weight-bold"> {{
+                                item.code }}</a></td>
+                                <td>{{item.ginnerName}}</td>
+                                <td>Devanahalli</td>
+                                <td>{{item.baleType}}</td>
+                                <td>{{item.noOfBales}}</td>
+                                <td>1000/2500</td>
+                                <td>Pending</td>
+                                      <ng-container >
+                                        <div ngbDropdown class="d-inline-block">
+                                          <button  class="btn btn-hover-text-primary p-0 ml-4 dropdown menu-item menu-item-submenu menu-item-rel"
+                                            id="approovalActionsdropdown" ngbDropdownToggle style="height:72px">
+                                            <i class="fas fa-ellipsis-v icon-lg text-muted"></i>
+                                          </button>
+                                          <div class="palns_activation_actions" style="max-width: 150px;top:-80px !important; transform: translate(-104px, 37px)!important" ngbDropdownMenu
+                                            aria-labelledby="approovalActionsdropdown">
+                                            <a matTooltip>
+                                              <p class="pl-4 cursor dropdow_list">Record Payout</p>
+                                            </a>
+                                            <a matTooltip>
+                                                <p class="pl-4 cursor dropdow_list">Blank</p>
+                                              </a>
+                                            </div>
+                                            </div>
+                                </ng-container>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="mr-2">
+              <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                  <li class="page-item">
+                    <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}" (click)="onPageChange(0)"
+                      href="javascript:void(0);">
+                      <span aria-hidden="true">&laquo;&laquo;</span>
+                      <span class="sr-only">First</span>
+                    </a>
+                  </li>
+                  <li class="page-item">
+                    <a class="page-link" [ngClass]="{'disabled': paginationData?.currentPage === 0}"
+                      (click)="onPageChange(paginationData.currentPage - 1)" href="javascript:void(0);">
+                      <span aria-hidden="true">&laquo;</span>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                  </li>
+                  <li class="page-item">
+                    <a class="page-link" *ngIf="paginationData?.currentPage !== 0 && paginationData?.currentPage !== 1"
+                      (click)="onPageChange(paginationData?.currentPage - 2)" href="javascript:void(0);">{{
+                      paginationData?.currentPage -1 }}</a>
+                  </li>
+                  <li class="page-item">
+                    <a class="page-link" *ngIf="paginationData?.currentPage !== 0"
+                      (click)="onPageChange(paginationData?.currentPage - 1)" href="javascript:void(0);">{{
+                      paginationData?.currentPage}}</a>
+                  </li>
+                  <li class="page-item">
+                    <a class="page-link active" href="javascript:void(0);">{{ paginationData?.currentPage + 1 }}</a>
+                  </li>
+                  <li class="page-item">
+                    <a class="page-link"
+                      *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1"
+                      (click)="onPageChange(paginationData?.currentPage + 1)" href="javascript:void(0);">{{
+                      paginationData?.currentPage + 2 }}</a>
+                  </li>
+                  <li class="page-item">
+                    <a class="page-link"
+                      *ngIf="paginationData?.pages.length !== 0 && paginationData?.currentPage !== paginationData.pages.length - 1 && paginationData?.currentPage !== paginationData.pages.length - 2"
+                      (click)="onPageChange(paginationData?.currentPage + 2)" href="javascript:void(0);">{{
+                      paginationData?.currentPage + 3 }}</a>
+                  </li>
+                  <li class="page-item">
+                    <a class="page-link"
+                      [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}"
+                      (click)="onPageChange(paginationData.currentPage + 1)" href="javascript:void(0);">
+                      <span aria-hidden="true">&raquo;</span>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </li>
+                  <li class="page-item">
+                    <a class="page-link"
+                      [ngClass]="{'disabled': paginationData?.currentPage === paginationData.pages.length - 1 || paginationData?.pages.length === 0}"
+                      (click)="onPageChange(paginationData.pages.length - 1)" href="javascript:void(0);">
+                      <span aria-hidden="true">&raquo;&raquo;</span>
+                      <span class="sr-only">Last</span>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+            <div class="mr-2">
+              <select class="custom-select" style="height: calc(1.2em + 1rem + 2px); padding: 0.35rem 2rem 0.35rem 1rem;"
+                [(ngModel)]="paginationData.pageSize" (change)="onPageSizeChange()">
+                <option [ngValue]="10">10 per page</option>
+                <option [ngValue]="50">50 per page</option>
+                <option [ngValue]="100">100 per page</option>
+              </select>
+            </div>
+            <div class="pt-2">
+              <small class="text-muted">(Total: {{totalElements}})</small>
+            </div>
+          </div>
+        <ng-template #stocktransfer let-c="close" let-d="dismiss">
+            <div class="modal-header">
+              <h3>STOCK TRANSFER</h3>
+              <h4 class="modal-title">
+              </h4>
+            </div>
+            <div class="modal-body" [formGroup]="stockcreateform">
+              <div class="section_with__border mt-5">
+                <h4 class="section_with__border--title">Warehouse <span class="text-danger">*</span></h4>
+                <div class="col-12">
+                  <div class="row">
+                    <div class="col-lg-6 mt-8">
+                      <label class="form-label positioned">From</label>
+                      <select class="form-control" name="logisticstatus" placeholder="Filter by status">
+                        <option value="">All</option>
+                      </select>
+                    </div>
+                    <div class="col-lg-6 mt-7">
+                      <label class="form-label positioned">To</label>
+                      <select class="form-control" name="logisticstatus" placeholder="Filter by status">
+                        <option value="">All</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 mt-3 ">
+                <label class="form-label positioned">Number Of Bales <span class="text-danger"></span> </label>
+                <input type="text" class="form-control form-control-lg " name="firstName" placeholder="First Name"
+                  autocomplete="off" />
+              </div>
+              <div class="section_with__border mt-8">
+                <h4 class="section_with__border--title">Driver Detailes <span class="text-danger">*</span></h4>
+                <div class="col-12">
+                  <div class="row">
+                    <div class="col-lg-6 mt-8">
+                      <label class="form-label positioned">Select Driver</label>
+                      <select class="form-control" name="logisticstatus" placeholder="Filter by status">
+                        <option value="">All</option>
+                      </select>
+                    </div>
+                    <div class="col-lg-6 mt-8">
+                      <label class="form-label positioned">Select Vehicle</label>
+                      <select class="form-control" name="logisticstatus" placeholder="Filter by status">
+                        <option value="">All</option>
+                      </select>
+                    </div>
+  
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-6 mt-8">
+                  <label class="form-label positioned">Logestic Cost(₹) <span class="text-danger"></span> </label>
+                  <input type="text" class="form-control form-control-lg " name="firstName" autocomplete="off" />
+                </div>
+                 <div class="col-lg-6 mt-6">
+                  <div class="image-input image-input-outline m-1" id="kt_profile_avatar">
+                    <img class="image-input-wrapper cursor-pointer"
+                      [src]="stockcreateform.get('vehiclceimage').value? stockcreateform.get('vehiclceimage')?.value?.includes('.pdf')?'./assets/media/svg/files/pdf.svg': './assets/media/svg/files/jpg.svg' : './assets/media/users/blank.png'"
+                      (click)="showImage(stockcreateform.get('vehiclceimage').value)"
+                      style="width: 50px; height: 50px;" />
+                    <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                      data-action="change" data-toggle="tooltip" title="" data-original-title="Change avatar">
+                      <i class="fa fa-pen icon-sm text-muted"></i>
+                      <input type="file" name="profile_avatar" (change)="onImageUpload($event);" />
+                      <input type="hidden" name="profile_avatar_remove" />
+                    </label>
+                  </div>
+                  <label>Upload Vehicle Image</label>
+                </div> 
+              </div>
+              <p></p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-sm btn-secondary" (click)="c('Close click')">Clear </button>
+              <button type="button" class="btn btn-sm btn-success" (click)="c('Close click')" >Save</button>
+            </div>
+          </ng-template> -->
