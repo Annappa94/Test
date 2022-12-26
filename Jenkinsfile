@@ -164,6 +164,17 @@ pipeline {
                emailext body: '''$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:
                Check console output at $BUILD_URL to view the results.''', subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!', to: '${BUILD_USER_EMAIL}'
             }
+
+            post { 
+           always { 
+               emailext body: '''$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:
+               Check console output at $BUILD_URL to view the results.''', subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!', to: '${BUILD_USER_EMAIL}'
+            }
+            post { 
+           always { 
+               emailext body: '''$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:
+               Check console output at $BUILD_URL to view the results.''', subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!', to: '${BUILD_USER_EMAIL}'
+            }
  
             success {
                slackSend channel: "${RM_SLACK_CHANNEL}", color: 'good', message: """
